@@ -1,6 +1,0 @@
-<search 
-   name="mysql"
-   method="GET"
-   action="http://mysql.com/doc/mysql/search.php" >
-<input name="q" user>
-</search>

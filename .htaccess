@@ -2,7 +2,3 @@ Options +Multiviews
 
 AddType application/x-httpd-php5 .php
 AddType application/x-httpd-php5 .phtml
-
-RewriteEngine On
-RewriteCond %{HTTP_HOST} ^www\.neo\.mlodzi\.pl$ [NC]
-RewriteRule ^(.*)$ http://neo.mlodzi.pl/$1 [R=301,L]

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500">
+
+	<desc>Dwusieczną kąta wyznaczonego przez 3 punkty uzyskujemy dzięki narzędziu <img src="design/ThreePointAngleBisector.png" />. Narzędzie jest czasem przydatne, gdy nie mamy dwu odcinków o wspólnym "wierzchołku", co jest konieczne do zwykłej dwusiecznej. Wystarczu tu tylko wskazać trzy punkty - środkowy jako wierzchołek. Program poprowadzi dwusieczną. Uwaga - program zawsze wskazuje dwusieczną kąta mniejszego niż π.</desc>
+		<g id="objects"><line x1="210" y1="376" x2="1241.3152930991469" y2="-90.70415277756098" style="stroke: rgb(253, 117, 29);" type="ThreePointAngleBisector" id="object3" parents="object0 object1 object2"/></g>
+		<g id="handles"><circle r="5" cx="466" cy="393" id="object0" parents="" children="object3"/><circle r="5" cx="210" cy="376" id="object1" parents="" children="object3"/><circle r="5" cx="342" cy="204" id="object2" parents="" children="object3"/></g>
+	</svg>

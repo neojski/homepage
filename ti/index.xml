@@ -1,0 +1,42 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+	<link rel="stylesheet" href="style.css" type="text/css" />
+	<script type="text/javascript" src="main.js"></script>
+	<title>Twierdzenie Tichonowa</title>
+</head>
+<body>
+	<h1>Twierdzenie Tichonowa</h1>
+	<h2>Trzy słowa o postaci</h2>
+	<p>Wielki rosyjski matematyk</p>
+	<h2>Topologia Tichonowa</h2>
+	<p>Przypuśćmy że <img class="tex" alt="\{X_i\}_{i\in I}" src="img/eb086a18fe98c6e1f74c506ff532c2c8.png" /> jest rodziną przestrzeni topologicznych i niech <img class="tex" alt="X=\prod_{i\in I} X_i" src="img/a6913f6de6e673703bfa925f51591d82.png" />. Rodzina złożona ze wszystkich zbiorów postaci <img class="tex" alt="\bigcap_{a \in A} p_{a}^{-1}(U_a)" src="img/5aeab731ab532b130492e43fa0359a65.png" />, gdzie <img class="tex" alt="A \subseteq I" src="img/7ab1d5484673481d4e3ac420d0d86ded.png" /> jest zbiorem skończonym i <span class="texhtml"><i>U</i><sub><i>a</i></sub></span> jest zbiorem otwartym w <span class="texhtml"><i>X</i><sub><i>a</i></sub></span>  - jest topologią.</p>
+	<h2>Zwartość</h2>
+	<p>Zwartość Jeśli z każdego pokrycia otwartego przestrzeni Hausdorffa
+	możemy wybrać podpokrycie skończone - mówimy, że przestrzeń jest zwarta.</p>
+	
+	<h2>Twierdzenie Tichonowa</h2>
+	<div id="svgdiv"><svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" id="svg" viewBox="0 0 100 100">
+	
+	<text x="0" y="50">Y</text>
+	<text x="50" y="100">X</text>
+
+	</svg></div><p>Twierdzenie Tichonowa mówi, że iloczyn kartezjański
+	przestrzeni topologicznych zwartych z topologią Tichonowa jest zwarty. Trudno o wizualizację
+	dla przecięcia nieskończonego, tym bardziej, że w dowodzie wykorzystuje
+	się aksjomat wyboru. Jednak dla dwu przestrzeni - twierdzenie jest
+	bardzo intuicyjne:</p>
+	<p>
+	Weźmy więc iloczyn kartezjański dwu przestrzeni <img class="tex" alt="X \times Y" src="img/72993a42be92952dd51584341f7c56a8.png" />.
+	Wybieramy (<button id="krok1">wybierz</button>) dowolne pokrycie zielonymi zbiorami z bazy, pokrycie to w
+	szczególności powinno być nieskończone (co ze względów technicznych należy
+	sobie "doobraźić")</p>
+	<p>Wybieramy dowolny punkt przestrzeni <img class="tex" alt="x \in X" src="img/735b05e6097f98da56f2ca14b8005d36.png" /> - <span id="krok2">wybierz więc jakiś punkt przestrzeni klikając go</span>. Wyróżniamy wszystkie zbiory pokrycia przecinające się z <img class="tex" alt="\{x\} \times Y" src="img/9c7163b2bace1bb57fcb3f7258ec16d3.png" /> niepusto - <button id="krok3">wyróżnij</button>. Ze zwartości Y, która oczywiście implikuje zwartość kreski <img class="tex" alt="\{x\} \times Y" src="img/9c7163b2bace1bb57fcb3f7258ec16d3.png" /> możemy z wyróżnionych zbiorów wybrać podpokrycie kreski skończone. Następnie - skoro mamy już tylko skończenie wiele zbiorów - możemy "wpisać" w nie czerwony prostokąt - <button id="krok4">wpisz więc</button>.</p>
+	<p>Konstrukcję wykonujemy dla każdego x, tworząc w ten sposób pokrycie
+	X czerwonymi prostokątami, a właściwie ich rzutami na X. Wybieramy z niego podpokrycie skończone. To już koniec, skończenie wiele prostokątów pokrywa X a każdy prostokąt pokrywany jest przez skończenie wiele szarych elementów z bazy. Zatem mamy skończone pokrycie całej przestrzeni. Raz jeszcze intuicyjnie: czerwone paski pokrywają całą przestrzeń i ze zwartości X wystarczy ich skończenie wiele. Natomiast żeby pokryć każdy czerony pasek wystarcza - dzięki zwartości Y - skończenie wiele szarych elementów z bazy. Jest więc jasne, że do pokrycia całej przestrzeni również wystarczy skończenie wiele zbiorów.</p>
+	
+	<div id="stopka">Tomasz Kołodziejski.</div>
+	
+</body>
+</html>

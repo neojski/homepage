@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500">
+
+	<desc>Okrąg trzech punktów uzyskujemy dzięki narzędziu <img src="design/ThreePointCircle.png" /> wskazując kolejno trzy dowolne (niewpółliniowe) punkty, przez które ma przechodzić okrąg.</desc>
+		<g id="objects"><circle cx="448.9166626891318" cy="294.7514438451625" r="136.08541200847344" style="fill: rgb(207, 41, 41);" type="ThreePointCircle" id="object3" parents="object0 object1 object2"/></g>
+		<g id="handles"><circle r="5" cx="379" cy="178" id="object0" parents="" children="object3"/><circle r="5" cx="325" cy="351" id="object1" parents="" children="object3"/><circle r="5" cx="585" cy="294" id="object2" parents="" children="object3"/></g>
+	</svg>

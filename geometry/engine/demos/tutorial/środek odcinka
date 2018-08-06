@@ -1,0 +1,6 @@
+	<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500">
+
+	<desc>Środek odcinka uzyskujemy dzięki narzędziu <img src="design/Midpoint.png" /> wskazując dwa punkty, między którymi zostanie wyznaczony środek.</desc>
+	<g id="objects"><line x1="133" y1="184" x2="694" y2="347" style="stroke: rgb(253, 117, 29);" id="object3" parents="object0 object1"/></g>
+	<g id="handles"><circle r="5" cx="133" cy="184" id="object0" parents="" children="object2 object3"/><circle r="5" cx="694" cy="347" id="object1" parents="" children="object2 object3"/><circle r="5" cx="413.5" cy="265.5" type="Midpoint" id="object2" parents="object0 object1"/></g>
+</svg>

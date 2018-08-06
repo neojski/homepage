@@ -1,0 +1,102 @@
+html {
+	background: #F0F0F0;
+	margin: 0;
+	padding: 0;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12pt;
+	color: #333;
+}
+
+body {
+	background: white;
+	margin: 20px;
+	padding: 20px;
+	border: solid 1px #bbb;
+	text-align: left;
+}
+
+h1 {
+	margin: 0 0 20px 20px;
+}
+
+h2 {
+	margin: 0 10px 5px;
+	padding: 0 0 2pt 2pt;
+	border-bottom: solid 3px #555;
+	font-size: 13pt;
+	color: #555;
+}
+
+h3 {
+	font-size: 11pt;
+	margin: 0 10px 5px;
+}
+
+div, p {
+	margin: 20px;
+}
+
+
+
+#stopka{
+	font-size: 7.5pt;
+	padding: 6pt;
+	width: 150px;
+	text-align: right;
+	background: #F0F0F0;
+	
+	margin: 0 0 0 auto;
+	
+	border: solid 1px #BBB;
+	
+	position:relative;
+	right:10px;
+	bottom:10px;
+}
+
+#svgdiv{
+	float: left;
+}
+
+span{
+	font-style: italic;
+}
+
+svg{
+	border-bottom: 2px solid;
+	border-left: 2px solid;
+}
+
+/* svg style */
+
+rect{
+	fill: #25B109;
+	stroke: #000;
+	opacity: .3;
+}
+
+rect.highlight{
+	fill: #555;
+	opacity: .5
+}
+
+rect.verticalRect{
+	fill: #ff0000;
+	opacity: .7
+}
+
+line.verticalLine{
+	stroke: #ff0000;
+}
+
+text{
+	font-size: 10px;
+}
+
+body{
+	line-height: 2em
+}
+
+img{
+	vertical-align:middle;
+}

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500">
+
+	<desc>Prostą równoległą uzyskujemy dzięki narzędziu <img src="design/ParallelLine.png" /> wskazując punkt przez który ma przechodzić prosta oraz prostą (odcinek), do którego ma być równoległa.</desc>
+		<g id="objects"><line x1="251" y1="309" x2="600" y2="384" style="stroke: rgb(253, 117, 29);" id="object2" parents="object0 object1" children="object4"/><line x1="1636.7329206415973" y1="394.83658753042926" x2="-576.7329206415973" y2="-80.83658753042923" style="stroke: rgb(65, 105, 225);" type="ParallelLine" id="object4" parents="object3 object2"/></g>
+		<g id="handles"><circle r="5" cx="251" cy="309" id="object0" parents="" children="object2"/><circle r="5" cx="600" cy="384" id="object1" parents="" children="object2"/><circle r="5" cx="530" cy="157" id="object3" parents="" children="object4"/></g>
+	</svg>

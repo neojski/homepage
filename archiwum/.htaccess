@@ -1,0 +1,4 @@
+RewriteEngine On
+RewriteBase /archiwum/
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule .* /archiwum/index.php/$0 [NE]

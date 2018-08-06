@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500">
+	<desc>Etykietę uzyskujemy dzięki narzędziu <img src="design/Label.png" /> wskazując punkt do którego ma być przyklejona. Program sam poprosi o wpisanie treści etykiety.</desc>
+
+	<g id="objects"><text x="348" y="196" type="Label" id="object2" parents="object0">Etykieta</text></g>
+	<g id="handles"><circle r="5" cx="338" cy="186" id="object0" parents="" children="object2"/></g>
+</svg>

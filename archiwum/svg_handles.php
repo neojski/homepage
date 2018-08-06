@@ -217,6 +217,7 @@ function Handle(node){
 	this.id = node.getAttribute('id');
 	
 	this.node = node;
+	node.object = this;
 	
 	this.selected = false;
 	

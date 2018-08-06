@@ -1,0 +1,273 @@
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<script type="text/javascript" src="jquery-1.4.2.min.js"></script>
+<script type="text/javascript">
+function Point(x, y){
+	this.x = x;
+	this.y = y;
+}
+Point.prototype.add = function(point){
+	return new Point(this.x + point.x, this.y + point.y);
+}
+Point.prototype.multiply = function(l){
+	return new Point(this.x * l, this.y * l);
+}
+Point.prototype.multiplyEquals = function(l){
+	this.x *= l;
+	this.y *= l;
+}
+Point.prototype.addEquals = function(point){
+	this.x += point.x;
+	this.y += point.y;
+}
+Point.prototype.normalizeEquals = function(){
+	this.multiplyEquals(1/this.length());
+}
+Point.prototype.length = function(){
+	return Math.sqrt(this.x * this.x + this.y * this.y);
+}
+
+
+
+function eulerPoints(ctx, vectorField, startPoint, step){
+	var pointsList = [startPoint];
+	var lastPoint = startPoint;
+	
+	for(var i = 0; i < 1e2; i++){
+		var field = vectorField(lastPoint);
+		field.multiplyEquals(step);
+		
+		var newPoint = lastPoint.add(field);
+		
+		if(!(Math.abs(newPoint.x) < ctx.canvas.width / 2 && Math.abs(newPoint.y) < ctx.canvas.height / 2)){
+			console.log('przycinam, bo wychodzimy poza ekran, iteracja nr '+i);
+			return pointsList;
+		}
+		
+		pointsList.push(newPoint);
+		lastPoint = newPoint;
+	} 
+	return pointsList;
+}
+
+
+function midpointPoints(ctx, vectorField, startPoint, step){
+	var pointsList = [startPoint];
+	var lastPoint = startPoint;
+	
+	for(var i = 0; i < 1e2; i++){
+		var field = vectorField(lastPoint.add( vectorField(lastPoint).multiply(step) ));
+		field.multiplyEquals(step);
+		
+		var newPoint = lastPoint.add(field);
+		
+		if(!(Math.abs(newPoint.x) < ctx.canvas.width / 2 && Math.abs(newPoint.y) < ctx.canvas.height / 2)){
+			console.log('przycinam, bo wychodzimy poza ekran, iteracja nr '+i);
+			return pointsList;
+		}
+		
+		pointsList.push(newPoint);
+		lastPoint = newPoint;
+	} 
+	return pointsList;
+}
+
+// http://en.wikipedia.org/wiki/Runge-Kutta_method
+function rungeKuttaPoints(ctx, vectorField, startPoint, step){
+	var pointsList = [startPoint];
+	var lastPoint = startPoint;
+	
+	for(var i = 0; i < 1e2; i++){
+		var k1 = vectorField(lastPoint); 
+		var k2 = vectorField(lastPoint.add(k1.multiply(.5 * step)));
+		var k3 = vectorField(lastPoint.add(k2.multiply(.5 * step)));
+		var k4 = vectorField(lastPoint.add(k3.multiply(step)));
+		
+		var newPoint = lastPoint.add(k1.multiply(1/6)).add(k2.multiply(1/3)).add(k3.multiply(1/3)).add(k4.multiply(1/6)).multiply(step);
+		
+// 		console.log(k1, k2, k3, k4, k1.multiply(1/6).add(k2.multiply(1/3)).add(k3.multiply(1/3)).add(k4.multiply(1/6)));
+// 		return;
+		
+		if(!(Math.abs(newPoint.x) < ctx.canvas.width / 2 && Math.abs(newPoint.y) < ctx.canvas.height / 2)){
+			console.log('przycinam, bo wychodzimy poza ekran, iteracja nr '+i);
+			return pointsList;
+		}
+		
+		pointsList.push(newPoint);
+		lastPoint = newPoint;
+	}
+	return pointsList;
+}
+
+// // general runge-kutta
+// var rk4 = [[[1/2], [0, 1/2], [0, 0, 1]], [1/6, 1/3, 1/3, 1/6]];
+// var euler = [[[1]], [1]];
+// //var midpoint = [[1/2]];
+// 
+// // rk4
+// var h = 1; // step
+// for(var i = 0, a = rk_method[1], k = [vectorField(lastPoint)]; i < a.length; i++){
+// 	
+// 	// generate rk_step, that is
+// 	// a_s1 h k_1 + a_2s h k_2 + ... + a_s(s-1) h k_(s-1)
+// 	for(var j = 0, rk_step = lastPoint; j < a[i].length; j++){
+// 		rk_step.addEquals(a[i][j] * h * k[j]);
+// 	}
+// 	
+// 	// here we get k_i
+// 	k[i+1] = vectorField(lastPoint.add(rk_step));
+// }
+// 
+// for(var i = 0, newPoint = lastPoint, b = rk_method[1]; i < k.length; i++){
+// 	newPoint.addEquals(h * b[i] * k[i]);
+// }
+
+
+function plot(ctx, pointsMethod, vectorField, startPoint, step){
+	var points = pointsMethod(ctx, vectorField, startPoint, step);
+	
+	ctx.beginPath();
+	ctx.moveTo(startPoint.x, startPoint.y);
+	
+	for(var i = 0; i < points.length; i++){
+		var point = points[i];	
+		ctx.lineTo(point.x, point.y);
+	}
+	
+	ctx.stroke();
+}
+
+
+function parseValues(val, name){
+	for(var i = 0, variables = ['x', 'y']; i < variables.length; i++){
+		val = val.replace(new RegExp(variables[i], 'g'), 'point.'+variables[i]);
+	}
+	return val;
+}
+
+$(document).ready(function(){
+	var canvas = $('#canvas')[0];
+	if(canvas.getContext){
+		var ctx = canvas.getContext('2d');
+		ctx.translate(canvas.width / 2, canvas.height / 2);
+	}
+	//redraw();
+	
+	
+	
+	
+	// clickable
+	$('#canvas').click(function(e){
+		var offset = $('#canvas').offset();
+		
+		
+		var x = parseValues($('#x').val(), 'x');
+		var y = parseValues($('#y').val(), 'y');
+		
+		var h = +$('#h').val();
+		
+		var i = e.pageX - offset.left - canvas.width / 2;
+		var j = e.pageY - offset.top - canvas.height / 2;
+		
+		console.log(e.pageX, offset.left);
+		
+		function vectorField(point){
+			return new Point(eval(x), eval(y));
+		}
+		
+		ctx.strokeStyle = "rgb(0,0,0)";  
+		plot(ctx, eulerPoints, vectorField, new Point(i, j), 1);
+		
+		ctx.strokeStyle = "rgb(255,0,0)";
+		plot(ctx, rungeKuttaPoints, vectorField, new Point(i, j), 1);
+	});
+	
+	// obsługa x, y z paska adresu -  prymitywnie, ale 
+	var urlsearch = unescape(document.location.search);
+	var newX = urlsearch.match(/x=(.*?)(?:&|$)/);
+	if(newX.length == 2){
+		$('#x').val(newX[1]);
+	}
+	var newY = urlsearch.match(/y=(.*?)(?:&|$)/);
+	if(newY.length == 2){
+		$('#y').val(newY[1]);
+	}
+});
+
+
+function redraw(){
+	var canvas = $('#canvas')[0];
+	if(canvas.getContext){
+		var ctx = canvas.getContext('2d');
+		var width = canvas.width;
+		var height = canvas.height;
+		
+		ctx.clearRect(-width / 2, -height / 2, width, width);
+		
+		
+		var x = parseValues($('#x').val(), 'x');
+		var y = parseValues($('#y').val(), 'y');
+		
+		var h = +$('#h').val();
+		
+		
+		function vectorField(point){
+			return new Point(eval(x), eval(y));
+		}
+		
+		
+		/*for(var i = -width / 2; i < width; i += h){
+			for(var j = -height / 2; j < height; j += h){
+				plot(ctx, rungeKuttaPoints, vectorField, new Point(i, j), 1);
+			}
+		}*/
+		
+		for(var i = 0; i < h; i++){
+			plot(ctx, rungeKuttaPoints, vectorField, new Point(Math.random()*width - width/2, Math.random()*height - height/2), 1);
+		}
+	}else{
+		alert('nie działa canvas');
+	}
+}
+
+// TODO, FIXME:
+// WARNING!!!
+// rungeKutta przy kroku innym niż 1 robi kuriozalne wykresy. Przebadać
+
+try{
+	console
+}catch(e){
+	console = function(){}
+	console.log = function(){}
+}
+</script>
+<style type="text/css">
+canvas{ border: 1px solid }
+</style>
+</head>
+<body>
+
+<h1>Przepływacz</h1>
+<p>Przepływacz równań różniczkowych metodą <a href="http://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods">Rungego-Kutty</a></p>
+<p>Są dwie możliwości - można wpisać równanie i: ilość przepływów, które chcemy ujrzeć lub samemu możemy klikać w punkt raczej dowolny - wtedy dostaniemy dwie nitki: czerwoną - Rungego-Kutty i czarną, mniej dokładną - Eulera</p>
+<h2>Uwagi</h2>
+<p>tymczasem źle dobrana skala powoduje, że najlepiej zamiast <kbd>x</kbd> pisać <kbd>.1*x</kbd></p>
+<p>jak łatwo zauważyć czas płynie tylko w przód</p>
+
+<canvas id="canvas" width="400" height="400">
+<p>Wymaga nowoczesnej przeglądarki - ściągnij najnowszą wersję firefoksa, opery, chromium czy czegokolwiek obsługującego canvas</p>
+</canvas>
+
+
+<form onsubmit="redraw(); return false;">
+<ul>
+<li><input id="x" type="text" value=".1*(x+3*y)" /></li>
+<li><input id="y" type="text" value=".1*(y+2*x)" /></li>
+<li><input id="h" type="text" value="20" /></li>
+<li><input type="submit" value="przerysuj" /></li>
+</ul>
+</form>
+
+</body>
+</html>

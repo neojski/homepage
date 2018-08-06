@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500">
+
+	<desc>Punkt symetryczny uzyskujemy dzięki narzędziu <img src="design/ReflectionHandle.png" /> wskazując odbijany punkt i odcinek względem którego dany punkt będziemy odbijać.</desc>
+		<g id="objects"><line x1="214" y1="165" x2="639" y2="327" style="stroke: rgb(253, 117, 29);" id="object3" parents="object0 object1" children="object4"/></g>
+		<g id="handles"><circle r="5" cx="214" cy="165" id="object0" parents="" children="object3"/><circle r="5" cx="639" cy="327" id="object1" parents="" children="object3"/><circle r="5" cx="483" cy="154" id="object2" parents="" children="object4"/><circle r="5" cx="407.42573802744727" cy="352.26581073046225" type="ReflectionHandle" id="object4" parents="object2 object3"/></g>
+	</svg>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<head>
+<meta charset="UTF-8">
+<script type="text/javascript">
+// 	* idea:
+// 	* po kliknięciu w jakiś element pobieramy jego wszystkie tekstowe dzieci i zamieniamy na każde słowo otoczone dict
+// 	* dzięki czemu potrafimy wyróżnić pojedyncze słowo
+// 	* algorytm:
+// 	* wybieraj tylko nodes typu tekstowego. potem odcinaj po kawałku od przodu ciąg dzieląc na białe znaki - kopiujemy bezpośrednio lub niebiałe - wrzucamy w <dict>
+
+document.onclick = function(e){
+	var target = e.target;
+	var copy = target.cloneNode(true);
+	
+// 	insert dummy nodes
+	for(var i = 0; i < target.childNodes.length; i++){
+		var node = target.childNodes[i];
+		if(node.nodeType == 3){ // text
+			var text = node.nodeValue;
+			while(text.length > 0){
+				if(text.match(/^\s/)){
+					var substr = text.match(/^\s+/)[0];
+					node.parentNode.insertBefore(document.createTextNode(substr, node), node);
+				}else{
+					var substr = text.match(/^\S+/)[0];
+					var dict = document.createElement('dummy');
+					dict.appendChild(document.createTextNode(substr));
+					node.parentNode.insertBefore(dict, node);
+				}
+				text = text.slice(substr.length);
+			}
+			target.removeChild(node);
+		}
+	}
+	var word = document.elementFromPoint(e.clientX, e.clientY).textContent;
+	
+	alert(word);
+	
+// 	przywróć poprzednie
+	target.parentNode.insertBefore(copy, target);
+	target.parentNode.removeChild(target);
+}
+</script>
+
+<title>Klikacz słów</title>
+</head>
+
+
+<h1>Klikacz słów</h1>
+<p>Czasem trzeba kliknąć pojedyncze słowo i z nim coś zrobić. Okazuje się, że można to zrobić stosunkowo łatwo nie zarzucając dokumentu miliardem znaczników</p>
+
+<h2>Motywacja</h2>
+<p>Słowniki. Wystarczy spojrzeć w źródło: <a href="http://lingro.com/translate/english-english/en.wikipedia.org">lingro</a>, żeby przekonać się, że rzeczywiście tak byłoby lepiej</p>
+
+<h2>Testuj poniżej <small>kliknij gdziekolwiek</small></h2>
+<p><em><b>Lorem</b> ipsum dolor</em> sit amet, consectetur adipiscing elit. Morbi ut massa metus. Cras sed mauris lacus, vel tristique libero. Vivamus vitae lorem libero. Sed risus tellus, suscipit tristique aliquet a, tempor a diam. Ut a ligula tellus. Etiam a quam ut odio condimentum pulvinar. Quisque sed augue id leo condimentum vehicula id luctus massa. Donec eros leo, porta vitae aliquet sit amet, ornare non tortor. Curabitur lobortis vehicula erat, non malesuada dolor eleifend et. Nam id sapien eget eros iaculis viverra eu at mauris.</p>
+
+<p>Sed eu erat vel nibh mattis aliquam vitae at magna. Vivamus vitae odio eget massa viverra ullamcorper. Pellentesque sed massa felis, et adipiscing lectus. Vivamus in lacus magna, quis consequat ligula. Vestibulum ac dolor non est interdum aliquam. Sed scelerisque augue venenatis neque scelerisque sagittis. Curabitur vestibulum diam at urna hendrerit commodo. Donec placerat cursus eros vel eleifend. Nulla facilisi. Praesent lobortis tempor rhoncus. </p>

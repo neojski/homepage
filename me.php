@@ -3,8 +3,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="pl">
 	<head>
 		<title>Fuck spam, my address</title>
-		<link rel="stylesheet" href="me3.css" type="text/css" title="default" />
-		<link rel="alternate stylesheet" href="me2.css" type="text/css" title="High contrast" />
+		<link rel="stylesheet" href="/style/me3.css" type="text/css" title="default" />
+		<link rel="alternate stylesheet" href="/style/me2.css" type="text/css" title="High contrast" />
 	</head>
 	<body>
 		<h1>Kontakt</h1>
@@ -13,7 +13,7 @@
 <?php
 $dane=array(
 	'mail'=>'tkolodziejski@gmail.com',
-	'jabbber'=>'neo007@jabber.org',
+	'jabbber'=>'tkolodziejski@gmail.com',
 	'gadu-gadu'=>'5878983',
 	'site'=>'neo.infeo.pl'
 );

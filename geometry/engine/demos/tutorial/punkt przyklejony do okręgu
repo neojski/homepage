@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500">
+
+	<desc>Punkt przyklejony do okręgu uzyskujemy dzięki narzędziu <img src="design/onCircleHandle.png" /> wskazując okrąg, do którego punkt ma być przyklejony.</desc>
+		<g id="objects"><circle cx="414" cy="261" r="161.00931650062986" style="fill: rgb(253, 117, 29);" type="CenterPointCircle" id="object2" parents="object0 object1" children="object3"/></g>
+		<g id="handles"><circle r="5" cx="414" cy="261" id="object0" parents="" children="object2"/><circle r="5" cx="574" cy="279" id="object1" parents="" children="object2"/><circle r="5" cx="324.01938604772795" cy="127.48037929662848" angle="-2.16" type="onCircleHandle" id="object3" parents="object2"/></g>
+	</svg>

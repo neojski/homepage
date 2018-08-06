@@ -1,0 +1,22 @@
+<?php
+
+setlocale(LC_ALL, 'pl_PL.UTF8');
+
+$files = array_merge(glob('demos/*'), glob('demos/tutorial/*'));
+
+include('view.php');
+
+foreach($files as $demo){
+	
+	$data = view($demo);
+
+	
+	$filename = 'cached/'.str_replace(' ', '_', basename($demo)).'.xhtml';
+
+	touch($filename);
+	file_put_contents($filename, $data);
+	
+}
+
+?>
+<html>jest ok, to tylko header z view.php</html>

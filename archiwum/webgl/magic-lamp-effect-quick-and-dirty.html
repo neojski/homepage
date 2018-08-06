@@ -1,0 +1,312 @@
+<!doctype html>
+<html>
+<head>
+<title>Texture grid</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<script type="text/javascript" src="http://www.google-analytics.com/ga.js"></script>
+<script type="text/javascript">
+	//<![CDATA[
+	var pageTracker = _gat._getTracker("UA-441633-3");
+	pageTracker._initData();
+	pageTracker._trackPageview();
+	//]]>
+</script>
+
+<script type="text/javascript" src="webgl-utils.js"></script>
+
+<script id="shader-fs" type="x-shader/x-fragment">
+#ifdef GL_ES
+precision highp float;
+#endif
+
+varying vec2 vTextureCoord;
+
+uniform sampler2D uSampler;
+
+void main(void) {
+	gl_FragColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
+}
+</script>
+
+<script id="shader-vs" type="x-shader/x-vertex">
+attribute vec3 aVertexPosition;
+attribute vec2 aTextureCoord;
+
+varying vec2 vTextureCoord;
+
+// we basically don't need any projection here
+void main(void) {
+	gl_Position = (vec4(aVertexPosition, 1.0) - vec4(.5, .5, 0, 0));
+	vTextureCoord = aTextureCoord;
+}
+</script>
+
+
+<script type="text/javascript">
+var shaderProgram;
+function initShaders() {
+	var fragmentShader = getShader(gl, "shader-fs");
+	var vertexShader = getShader(gl, "shader-vs");
+
+	shaderProgram = gl.createProgram();
+	gl.attachShader(shaderProgram, vertexShader);
+	gl.attachShader(shaderProgram, fragmentShader);
+	gl.linkProgram(shaderProgram);
+
+	if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
+		alert("Could not initialise shaders");
+	}
+
+	gl.useProgram(shaderProgram);
+
+	// position
+	shaderProgram.vertexPositionAttribute = gl.getAttribLocation(shaderProgram, "aVertexPosition");
+	gl.enableVertexAttribArray(shaderProgram.vertexPositionAttribute);
+
+	// color
+	shaderProgram.vertexColorAttribute = gl.getAttribLocation(shaderProgram, "aVertexColor");
+	gl.enableVertexAttribArray(shaderProgram.vertexColorAttribute);
+	
+	// texture
+	shaderProgram.textureCoordAttribute = gl.getAttribLocation(shaderProgram, "aTextureCoord");
+	gl.enableVertexAttribArray(shaderProgram.textureCoordAttribute);
+}
+
+
+var neheTexture;
+function initTexture() {
+	neheTexture = gl.createTexture();
+	neheTexture.image = new Image();
+	neheTexture.image.onload = function() {
+		handleLoadedTexture(neheTexture);
+		
+		// warning: redraw scene
+		drawScene();
+	}
+	neheTexture.image.src = "droga.jpg";
+}
+
+
+
+function setMatrixUniforms() {
+	//gl.uniformMatrix4fv(shaderProgram.pMatrixUniform, false, pMatrix);
+	//gl.uniformMatrix4fv(shaderProgram.mvMatrixUniform, false, mvMatrix);
+}
+
+var cubeVertexPositionBuffer;
+var cubeVertexColorBuffer;
+var cubeVertexIndexBuffer;
+
+function f1(x, y, t){
+	if(t < 1){
+		return (1 - t) * x + t * (y * y + (1 - y * y) * x);
+	}else{
+		var t1 = t - 1;
+		var y1 =  (1 - t1) * y + t1 * 1;
+		return y1 * y1 + (1 - y1 * y1) * x
+	}
+}
+
+function f2(x, y, t){
+	if(t < 1){
+		return y;
+	}else{
+		var t1 = t - 1;
+		return (1- t1) * y + t1 * 1;
+	}
+}
+
+var m = 5;
+function initBuffers() {
+	cubeVertexPositionBuffer = gl.createBuffer();
+	gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexPositionBuffer);
+	
+	// 0 to 1 from bottom to top, m parts
+	// for vertices per row (since we want rectangles, each individually textured)
+	var vertices = [];
+	for(var i = 0; i < m + 1; i++){
+		for(var j = 0; j < m+1; j++){
+			vertices.push(
+				j/m, i/m, 0
+			);
+		}
+	}
+	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+	cubeVertexPositionBuffer.itemSize = 3;
+	cubeVertexPositionBuffer.numItems = 3 * (m + 1) * (m + 1);
+
+	// color for each individual vertex (each row has the same color)
+// 	cubeVertexColorBuffer = gl.createBuffer();
+// 	gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexColorBuffer);
+// 	var colors = [];
+// 	for(var i = 0; i < m; i++){
+// 		var color = [Math.random(), Math.random(), Math.random(), 1];
+// 		for(var j = 0; j < 4; j++){
+// 			colors = colors.concat(color);
+// 		}
+// 	}
+// 	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
+// 	cubeVertexColorBuffer.itemSize = 4;
+// 	cubeVertexColorBuffer.numItems = 4 * 4 * m;
+	
+	// texture buffer
+	cubeVertexTextureCoordBuffer = gl.createBuffer();
+	gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexTextureCoordBuffer);
+	var textureCoords = [];
+	for(var i = 0; i < m + 1; i++){
+		for(var j = 0; j < m + 1; j++){
+			textureCoords.push(
+				j/m, i/m
+			);
+		}
+	}
+	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(textureCoords), gl.STATIC_DRAW);
+	cubeVertexTextureCoordBuffer.itemSize = 2;
+	cubeVertexTextureCoordBuffer.numItems = 2 * (m + 1) * (m + 1);
+
+	// indices to draw everything from triangles
+	cubeVertexIndexBuffer = gl.createBuffer();
+	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeVertexIndexBuffer);
+	var indices = [];
+	for(var i = 0; i < m; i++){
+		for(var j = 0; j < m; j++){
+			indices.push(
+				(m + 1) * i + j, (m + 1) * i + j + 1, (m + 1) * (i + 1) + j,
+				(m + 1) * i + j + 1, (m + 1) * (i + 1) + j, (m + 1) * (i + 1) + j + 1
+			);
+		}
+	}
+	gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW);
+	cubeVertexIndexBuffer.itemSize = 1;
+	cubeVertexIndexBuffer.numItems = 3 * 2 * m * m;
+}
+
+
+var rCube = 0;
+
+var zproj = -1.2;
+var xproj = -.5;
+document.onkeyup = function(e){
+	console.log(e);
+	switch(e.keyCode){
+		case 87: // w
+			zproj += 1;
+		break;
+		case 83: // s
+			zproj -=1;
+		break;
+		
+		case 65: // a
+			xproj -= 1;
+		break;
+		case 68: // d
+			xproj += 1;
+		break;
+	}
+}
+
+time = 0;
+function drawScene() {
+	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+
+	// positions
+	gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexPositionBuffer);
+	var vertices = [];
+	for(var i = 0; i < m + 1; i++){
+		for(var j = 0; j < m+1; j++){
+			vertices.push(
+				f1(j/m, i/m, time), f2(j/m, i/m, time), 0
+			);
+		}
+	}
+	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+	gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, cubeVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+	// color
+// 	gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexColorBuffer);
+// 	gl.vertexAttribPointer(shaderProgram.vertexColorAttribute, cubeVertexColorBuffer.itemSize, gl.FLOAT, false, 0, 0);
+	
+	// texture
+	gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexTextureCoordBuffer);
+	gl.vertexAttribPointer(shaderProgram.textureCoordAttribute, cubeVertexTextureCoordBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+	gl.activeTexture(gl.TEXTURE0);
+	gl.bindTexture(gl.TEXTURE_2D, neheTexture);
+
+	// indices, draw
+	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeVertexIndexBuffer);
+	setMatrixUniforms();
+	gl.drawElements(gl.TRIANGLES, cubeVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
+}
+
+
+
+function tick(){
+	time += .05
+	if(time < 2){
+		drawScene();
+		
+		requestAnimFrame(tick);
+	}
+	
+	if(time <= 3 && time > 1){
+		
+		var div = document.getElementById('anim');
+		div.style.opacity = Math.round(1 - (time / 2 - 1) * 100) / 100;
+		
+		if(time >= 2)
+		requestAnimFrame(tick);
+	}else{
+		div.style.display = 'none';
+	}
+	
+}
+
+
+function webGLStart() {
+	var canvas = document.getElementById("lesson04-canvas");
+	gl = WebGLUtils.setupWebGL(canvas);
+	gl.viewportWidth = canvas.width;
+	gl.viewportHeight = canvas.height;
+	initShaders()
+	initBuffers();
+	initTexture();
+
+	gl.clearColor(0.0, 0.0, 0.0, 0.0);
+// 	gl.clearDepth(1.0);
+	gl.viewport(-.5*gl.viewportWidth, -.5*gl.viewportHeight, 2*gl.viewportWidth, 2*gl.viewportHeight);
+
+	gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
+	gl.enable(gl.BLEND);
+}
+
+
+onload = function(){
+	webGLStart();
+	// warning: drawScene() is in handle loaded texture
+}
+
+function hide(){
+	tick();
+}
+
+
+</script>
+
+
+</head>
+
+
+<body>
+	<h1>Magick lamp effect</h1>
+	<p>Quick and dirty implementation of magick lamp effect using WebGL.</p>
+	<p>Just wanted to learn some graphics</p>
+	<p>Click on the <kbd>x</kbd> over an image. You have to have WebGL enabled browser.</p>
+	<div style="position: relative; width: 320px; height: 240px; border: 2px solid" id="anim">
+		<canvas id="lesson04-canvas" width="320" height="240"></canvas>
+		<div style="position: absolute; top: -15px; right: -15px; background: white; width: 30px; height: 30px; border: 2px solid black; -moz-border-radius: 15px; font-size: 20px; text-align: center" onclick="hide()">x</div>
+	</div>
+	<p>This image is taken by <a href="http://www.flickr.com/photos/heypaul/1428677/">Hey Paul</a> and licensed as <a href="http://creativecommons.org/licenses/by/2.0/deed.en">CC BY 2.0</a></p>
+</body>
+</html>

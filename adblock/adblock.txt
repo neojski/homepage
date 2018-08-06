@@ -10,4 +10,14 @@ wykop.pl#div(cover-in-recommend)
 wykop.pl#div(cover-in)
 wykop.pl#div(apraca)
 wykop.pl##img[src^="http://static.nasza-klasa.pl"][src*="sledzik"]
-wykop.pl#ul(allegro)#ul(allegro)
+wykop.pl#ul(allegro)
+wykop.pl#ins
+wykop.pl##a[href*="polecamy"]
+wykop.pl##div.polecamyContainer
+wykop.pl##embed[src="http://www.wykop.pl/imgdesign/ad/home/home.swf"]
+wykop.pl##a[href="http://binguj.pl/"]
+wykop.pl##iframe.FB_SERVER_IFRAME
+wykop.pl##div.ad-box
+wykop.pl##div.add-full
+wykop.pl##li.sponsoredby
+wykop.pl##ul.entry-list-notification.passage

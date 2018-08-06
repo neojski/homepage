@@ -1,0 +1,16 @@
+<?php
+
+$svg = stripslashes($_POST['svg']);
+
+$name = 'demos/'.stripslashes($_POST['name']);
+
+if(file_exists($name)){
+	die('nie zapiszę bo istnieje');
+}else{
+	
+	file_put_contents('demos/'.$_POST['name'], $svg);
+	
+	echo 'zapisano';
+}
+
+?>

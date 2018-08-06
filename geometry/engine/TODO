@@ -1,0 +1,14 @@
+onLineHandle się zawiesza!
+
+
+-	Dwusieczna:
+		wymagałoby mądrej optymalizacji - bo jeśli dwusieczna jest zależna od linii, to jest niepotrzebnie aktualizowana dwa razy!
+		być może zrobić silnik, który zbierze wszystkie rzeczy, które należy zauktualizować - przeleci się po wszystkich obiektach - zrobi listę i każe dopiero to wszystko wykonać (możnaby wtedy ustawić aktualizację co 10ms na przykład, czy co więcej, co poprawiłoby wydajność na gorszym sprzęcie)
+		
+	Czegoś takiego nie powinno być (automat)
+		node.setAttribute('type', 'ReflectionHandle');
+		
+
+
+
+(czy po zaokrągleniu jednostek będzie lepiej?)

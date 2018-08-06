@@ -19,6 +19,9 @@ echo display('me.php');
 	<loc>http://neo.infeo.pl/zamiana-walut</loc>
 	<priority>1.0</priority>
 	<changefreq>daily</changefreq>
+	<lastmod><?php
+		echo date('c', mktime(0, 0, 0)); // dzisiejsza data 0 godzin, 0 minut, 0 sekund
+	?></lastmod>
 </url>
 
 <!-- archiwum -->

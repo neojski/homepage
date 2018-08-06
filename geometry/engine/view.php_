@@ -1,0 +1,42 @@
+<?php
+
+setlocale(LC_ALL, 'pl_PL.UTF8');
+
+header('content-type: application/xhtml+xml; charset=utf-8');
+
+$demo = stripslashes($_GET['demo']);
+
+function view($demo){
+	$demo_data = file_get_contents($demo);
+	
+	$main = 'index.xhtml';
+	
+	$data = file_get_contents($main);
+	
+	// wrzuć svg
+	$data = preg_replace('#<svg.*?/svg>#si', $demo_data, $data);
+	
+	// tytuł
+	$title = basename($demo);
+	
+	// złap opis
+	preg_match('#<desc>(.*?)</desc>#si', $demo_data, $matches);
+	$desc = $matches[1];
+	
+	// wrzuć opis
+	$data = preg_replace('#<div id="desc">.*?</div>#si', '<h1>'.$title.'</h1><div id="desc">'.$desc.'</div>', $data);
+	
+	// wrzuć tytuł
+	$data = preg_replace('#<title>(.*?)</title>#', '<title>$1 - '.$title.'</title>', $data);
+	
+	// WARNING! usuń formularz
+	$data = preg_replace('#<form.*?save.php.*?/form>#si', '', $data);
+	
+	return $data;
+}
+
+$demo = view($demo);
+
+echo $demo;
+
+?>

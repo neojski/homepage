@@ -4,60 +4,89 @@
 	<meta http-equiv="content-type" content="text/html;charset=utf-8" />
 	<title>Zamiana i przeliczanie walut</title>
 	<meta name="description" content="Szybkie, proste i zawsze aktualne przeliczanie walut. Kursy pobierane prosto z NBP." />
-	<meta name="keywords" content="przeliczanie walut, waluty, zamiana walut, pieniądze" />
+	<meta name="keywords" content="przeliczanie walut, waluty, zamiana walut, pieniądze, przelicz, zamień, kalkulator" />
 	<script type="text/javascript" src="http://www.google-analytics.com/ga.js"></script>
-	<script type="text/javascript">
-		//<![CDATA[
-		var pageTracker = _gat._getTracker("UA-441633-3");
-		pageTracker._initData();
-		pageTracker._trackPageview();
-		//]]>
-	</script>
+	<script type="text/javascript" src="/analytics.js"></script>
+	<link type="text/css" href="/style/zamiana-walut-style.css" rel="stylesheet" />
 <?php
-// kursy walut 0.2
+// kursy walut 0.3
 // created 5.01.2006
 // modified 14.09.2007
-// author neo
+// modified 13.11.2009
+
+// funkcje
+$format = 'd-m-Y';
+
+function ymd2timestamp($str){
+	return strtotime('20'.$str);
+}
+
+$warnings = array();
+function warning($str){
+	global $warnings;
+	array_push($warnings, $str);
+}
+
+function display_warnings(){
+	global $warnings;
+	if(!empty($warnings)){
+		if(count($warnings) == 1){
+			echo '<p>'.$warnings[0].'</p>';
+		}else{
+			echo '<ul>';
+			foreach($warnings as $warning){
+				echo '<li>'.$warning.'</li>';
+			}
+			echo '</ul>';
+		}
+	}
+}
 
 // znajdź nazwę pliku
 if(isset($_GET['date']) && strlen($_GET['date'])==6){
-	$date=$_GET['date'];
+	$mdate = $_GET['date'];
 }else{
-	$date='';
+	$mdate = date('ymd');
+}
+$mdate = ymd2timestamp($mdate);
+
+// typ zamienianych pieniędzy, tj. czy dużo kursów czy mniej
+$type = 'a';
+
+// pobierz listę kursów
+$list = explode("\n", trim(file_get_contents('http://www.nbp.pl/Kursy/xml/dir.txt')));
+
+
+
+
+// pobierz daty w odpowiednim formacie i nazwy plików
+$dates = array();
+foreach($list as $date){
+	if(substr($date, 0, 1) == $type){
+		$date = trim($date);
+		array_push($dates, array(
+			'date' => ymd2timestamp(substr($date, -6)),
+			'human-date' => substr($date, -6),
+			'file' => $date
+		));
+	}
 }
 
-$list=file_get_contents('http://www.nbp.pl/Kursy/xml/dir.txt');
-
-// kurs chciany
-preg_match(
-	'#a[0-9]{3}z('.$date.')#',
-	$list,
-	$match
-);
-
-
-// jeśli nie ma chcianego to dzisiejszy kurs
-if(empty($match[1])){
-	preg_match(
-		'#a[0-9]{3}z('.date('ymd').')#',
-		$list,
-		$match
-	);
+// przesortuj w poszukiwaniu najbliższego kursu względem poszukiwanego
+// http://neo.infeo.pl/archiwum/sortowanie-wg-odleglosci-od-liczby.html
+function absSort($a, $b){
+	global $mdate;
+	return abs($a['date'] - $mdate) > abs($b['date'] - $mdate);
 }
+usort($dates, 'absSort');
 
-// jeśli nie ma to pobierz wczorajszy
-if(empty($match[1])){
-	preg_match(
-		'#a[0-9]{3}z('.date('ymd', time() - 3600 * 24).')#',
-		$list,
-		$match
-	);
-}
 
-if(isset($match[1]) && !empty($match[1])){
-	$name = 'http://www.nbp.pl/kursy/xml/'.$match[0].'.xml';
+$chosen = $dates[0];
+if(!empty($chosen)){
+	$name = 'http://www.nbp.pl/kursy/xml/'.$chosen['file'].'.xml';
 	
-	$date = $match[1];
+	// data, którą obrabiamy
+	$date = $chosen['date'];
 
 	$file = file_get_contents($name);
 
@@ -86,16 +115,18 @@ if(isset($match[1]) && !empty($match[1])){
 		$end = number_format($c / $array[$t]['count'] * $array[$f]['count'], 2).' '.$t;
 	}
 	
+	// wyświetl uwagę, jeśli nie ma dokładnego kursu
+	if(isset($_GET['c']) && (date('ymd', $mdate) != date('ymd', $date))){
+		warning('Uwaga! Dane z dnia '.date($format, $mdate).' były niedostępne.');
+	}
 }
-$human_date=date('d-m-Y',strtotime('20'.$date));
-
-
+$human_date = date($format, $date);
 ?>
 	</head>
 	<body>
 	<h1>Zamiana walut</h1>
-	<h2>Aby przeliczyć pieniądze należy wybrać odpowiednie waluty i wpisać kwotę, zatwierdzając przyciskiem przelicz</h2>
-	<form action="/zamiana-walut" method="get">
+	<p>Aby przeliczyć walutę wpisz do kalkulatora odpowiednie dane i naciśnij <em>przelicz</em></p>
+	<form action="<?php echo $_SERVER['SCRIPT_URL'];?>" method="get">
 	<dl>
 		<dt><label for="count">Ilość pieniędzy:</label></dt>
 		<dd><input type="text" name="c" id="count" value="<?php echo $_GET['c'];?>" /></dd>
@@ -103,11 +134,12 @@ $human_date=date('d-m-Y',strtotime('20'.$date));
 		<dd><select name="f" id="from"><?php echo $walutyf;?></select></dd>
 		<dt><label for="to">Waluta docelowa:</label></dt>
 		<dd><select name="t" id="to"><?php echo $walutyt;?></select></dd>
-		<dt><label for="date">Sprawdź kurs z dnia: (rrmmdd, np.: <?php echo date('ymd');?>; nie wszystkie kursy są dostępne)</label></dt>
+		<dt><label for="date">Sprawdź kurs z dnia: (rrmmdd, np.: <?php echo date('ymd');?>)</label></dt>
 		<dd><input type="text" name="date" id="date" value="<?php echo !empty($_GET['date'])?$_GET['date']:date('ymd')?>" /></dd>
 	</dl>
 	<p><input type="submit" value="Przelicz" /></p>
-	<p>Wynik na dzień <?php echo $human_date;?> wynosi: <strong><?php echo $end;?></strong></p>
 	</form>
+	<p>Wynik na dzień <?php echo $human_date;?> wynosi: <strong><?php echo $end;?></strong></p>
+	<?php display_warnings(); ?>
 </body>
 </html>

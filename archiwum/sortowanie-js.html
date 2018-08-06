@@ -9,44 +9,38 @@
   .sort{background:yellowgreen}
   .sort:after{content:'#przesortuj tę kolumnę'; font-size:0.8em}
   </style>
-  <script type="text/javascript">
-  // author neo
-  // www.neo.mlodzi.pl
-  // licensed under Creatives Common license
-  // creativecommons.org/licenses/by-sa/2.0/pl/
-  onl=(window.onload||new Function);
-  onload=function(){
-    onl();
-    for(var i=0,d; d=document.getElementsByTagName('tr')[i++];){
-        for(var j=0,e; e=d.getElementsByTagName('td')[j];j++){
-            if(e.className=='sort'){
-                e.n=j;
-                e.onclick=function(){sort(this.n,this);}
-            }
-        }
-    }
-  }
-  function sort(v,d){
-   d.o>0?(d.o=-1):(d.o=1);
-   var t=d.parentNode.parentNode.parentNode.getElementsByTagName('tbody')[0];
-   var c=[];   
-   for(var i=0,w;w=t.getElementsByTagName('tr')[i];i++){    
-     c[i]=[];
-     for(var j=0;k=w.getElementsByTagName('td')[j];j++){
-      c[i][j]=k.firstChild.data;
-     }
-   }  
-   c.sort(function(a,b){return a[v]>b[v]?d.o:-d.o});
-   for(var i=0,w;w=t.getElementsByTagName('tr')[i];i++){
-     for(var j=0;k=w.getElementsByTagName('td')[j];){
-      k.firstChild.data=c[i][j++];
-     }
-   }
-  }
+<script type="text/javascript">
+// author neo
+// neo.infeo.pl
+// licensed under Creatives Common license
+// creativecommons.org/licenses/by-sa/2.0/pl/
+// as a cmp function you may choose natcompare from this website http://sourcefrog.net/projects/natsort/natcompare.js
+function cmp(a, b){
+	return a>b;
+}
+onl=(window.onload||new Function);
+onload=function(){
+	onl();
+	for(var i=0, e, tds=document.getElementsByTagName('td'); td=tds[i]; i++){
+		if(/\s?sort\s?/.test(td.className)){
+			td.n=i;
+			td.onclick=function(){sort(this.n,this);}
+		}
+	}
+}
+function sort(v,d){
+	d.o=d.o>0?-1:1;
+	var tbody=d.parentNode.parentNode.parentNode.getElementsByTagName('tbody')[0];
+	for(var i=0, c=[], tr, trs=tbody.getElementsByTagName('tr'); tr=trs[i]; i++){c[i]=tr} // just make an array from trs
+	c.sort(function(a,b){return cmp(a.getElementsByTagName('td')[v].firstChild.data,b.getElementsByTagName('td')[v].firstChild.data)>0?d.o:-d.o});
+	for(var i=0; i<c.length; i++){
+		tbody.appendChild(c[i]);
+	}
+}
   </script>
 </head>
 <body>
-<h1>Sortowanie tabeli <em>na żywo</em>, bez przeładowywania strony za pomocą javascript.</h1>
+<h1>Sortowanie tabeli <em>na żywo</em>, bez przeładowywania strony, za pomocą javascript</h1>
 <p>Skrypt przesortuje dowolną tabelę przy jak najmniejszej ingerencji użytkownika</p>
 <p>Żeby przesortować tabelę potrzebujemy tabelę o tradycyjnej strukturze, obowiązkowo
 z elementem thead jako nagłówkiem.</p>
@@ -56,7 +50,7 @@ z elementem thead jako nagłówkiem.</p>
    &lt;tr&gt;&lt;td class="sort"&gt;Ocena&lt;/td&gt;&lt;td class="sort"&gt; Imię&lt;/td&gt;&lt;/tr&gt;
   &lt;/thead&gt;
   &lt;tbody&gt;
-   &lt;tr&gt;&lt;td&gt;5&lt;/td&gt;   &lt;td&gt;ñ&lt;/td&gt;&lt;td&gt;cokolwiek5&lt;/td&gt;&lt;/tr&gt;
+   &lt;tr&gt;&lt;td&gt;5&lt;/td&gt;&lt;td&gt;ñ&lt;/td&gt;&lt;td&gt;cokolwiek5&lt;/td&gt;&lt;/tr&gt;
    &lt;tr&gt;&lt;td&gt;1&lt;/td&gt;&lt;td&gt;B&lt;/td&gt;&lt;td&gt;cokolwiek1&lt;/td&gt;&lt;/tr&gt;
    &lt;tr&gt;&lt;td&gt;2&lt;/td&gt;&lt;td&gt;D&lt;/td&gt;&lt;td&gt;cokolwiek2&lt;/td&gt;&lt;/tr&gt;
    &lt;tr&gt;&lt;td&gt;4&lt;/td&gt;&lt;td&gt;C&lt;/td&gt;&lt;td&gt;cokolwiek4&lt;/td&gt;&lt;/tr&gt;
@@ -64,54 +58,19 @@ z elementem thead jako nagłówkiem.</p>
  &lt;/table&gt;</code></p>
 <p>Komórce nagłówka, pod którą komórki mają być sortowane <strong>muszą mieć</strong>
 klasę sort</p>
-<p>Cały skrypt wygląda następująco:</p>
-<p><code>
-  // author neo
-  // www.neo.mlodzi.pl
-  // licensed under Creatives Common license
-  // creativecommons.org/licenses/by-sa/2.0/pl/
-  onl=(window.onload||new Function);
-  onload=function(){
-    onl();
-    for(var i=0,d; d=document.getElementsByTagName('tr')[i++];){
-        for(var j=0,e; e=d.getElementsByTagName('td')[j];j++){
-            if(e.className=='sort'){
-                e.n=j;
-                e.onclick=function(){sort(this.n,this);}
-            }
-        }
-    }
-  }
-  function sort(v,d){
-   d.o>0?(d.o=-1):(d.o=1);
-   var t=d.parentNode.parentNode.parentNode.getElementsByTagName('tbody')[0];
-   var c=[];   
-   for(var i=0,w;w=t.getElementsByTagName('tr')[i];i++){    
-     c[i]=[];
-     for(var j=0;k=w.getElementsByTagName('td')[j];j++){
-      c[i][j]=k.firstChild.data;
-     }
-   }  
-   c.sort(function(a,b){return a[v]>b[v]?d.o:-d.o});
-   for(var i=0,w;w=t.getElementsByTagName('tr')[i];i++){
-     for(var j=0;k=w.getElementsByTagName('td')[j];){
-      k.firstChild.data=c[i][j++];
-     }
-   }
-  }
-</code></p>
-<p>I jak zawsze przykładowe działanie poniżej: (komórki o klasie sort są sformatowane
+<p>Treść skryptu zobacz w nagłówku kodu stron.</p>
+<p>I przykładowe działanie poniżej: (komórki o klasie sort są sformatowane
 w arkuszu stylów - odsyłam do źródła)</p>
 <samp>
   <table id="s">
   <thead>
-   <tr><td class="sort">Ocena</td><td class="sort"> Imię</td></tr>
+   <tr><td class="sort inna_klasa">Ocena</td><td class="sort"> Imię</td><td>i nieklikalny nagłówek</td></tr>
   </thead>
    <tbody>
-   <tr><td>5</td>   <td>ñ</td><td>cokolwiek5</td></tr>
+   <tr><td>5</td><td>ñ</td><td>cokolwiek5</td></tr>
    <tr><td>1</td><td>B</td><td>cokolwiek1</td></tr>
    <tr><td>2</td><td>D</td><td>cokolwiek2</td></tr>
-   <tr><td>4</td><td>C</td><td>cokolwiek4</td></tr>
+   <tr><td>4</td><td>C</td><td>cok<em>neo</em>iek4</td></tr>
    </tbody>
   </table>
 </samp>

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500">
+<desc>
+	<p>Łatwo zauważyć, że przy ustalonym jednym punkcie na okręgu zbiór środków wszystkich cięciw przechodzących przez ten punkt jest równy okręgowi przechodzącemu przez środek danego okręgu oraz zadany punkt.</p>
+	<p>Zastanów się, co się stanie, gdy nasz ustalony punkt będzie wewnątrz (a może i na zewnątrz) okręgu.</p>
+</desc>
+<g id="objects"><circle cx="314" cy="305" r="71.7007670809734" style="fill: rgb(207, 41, 41);" type="CenterPointCircle" id="object7" parents="object6 object0"/><circle cx="360" cy="250" r="143.4015341619468" style="fill: rgb(240, 200, 50);" type="CenterPointCircle" id="object2" parents="object0 object1" children="object3"/><line x1="268" y1="360" x2="503.39647117417314" y2="248.7949876371918" style="stroke: rgb(207, 41, 41);" id="object4" parents="object1 object3"/></g>
+	<g id="handles"><circle r="5" cx="360" cy="250" id="object0" parents="" children="object2 object6 object7"/><circle r="5" cx="268" cy="360" id="object1" parents="" children="object2 object4 object5 object6"/><circle r="5" cx="503.39647117417314" cy="248.7949876371918" angle="-0.01" type="onCircleHandle" id="object3" parents="object2" children="object4 object5"/><circle r="5" cx="385.6982355870866" cy="304.3974938185959" type="Midpoint" id="object5" parents="object1 object3"/><circle r="5" cx="314" cy="305" type="Midpoint" id="object6" parents="object1 object0" children="object7"/></g>
+</svg>

@@ -1,0 +1,93 @@
+html {
+	background: #F0F0F0;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12pt;
+	color: #333;
+}
+
+
+/* pudełka */
+
+#svgBox{
+	width: 820px;
+	float: right;
+	position: absolute;
+	top: 0;
+	right: 0;
+}
+
+svg{
+	background: #fff
+}
+
+/* desc, czyli opis konstukcji */
+#box{
+	width: 100%;
+	float: left;
+}
+#desc{
+	margin: 0 860px 0 20px;
+}
+
+#color{
+	float: left;
+}
+
+
+/* konstrolki */
+#controls{
+	
+}
+
+/* pudełko z guzikami do włączania obiektów */
+#newObject{
+	width: 800px;
+	float: left;
+	list-style: none;
+}
+#newObject li{
+	border: 3px solid;
+	border-color: grey black black grey;
+	float: left;
+	padding: 0 2px 2px 0;
+	margin: 2px;
+}
+#newObject li.selected{
+	border-color: black grey grey black;
+	padding: 2px 0 0 2px;
+}
+#newObject img{
+	width: 38px;
+}
+
+/* inne */
+#selected{
+	display: none;
+	width: 200px;
+	border: 2px solid;
+	float: left;
+	
+	position: absolute;
+	bottom: 40px;
+	left: -220px;
+	background: white;
+}
+#selected li.selected{
+	color: blue
+}
+
+
+/* svg styles */
+circle{fill: #000;}
+line{stroke: #000; stroke-width: 4}
+
+#objects circle{ fill:black; opacity: .4 }
+
+line{stroke: #ff0000;}
+line[type="PerpendicularLine"]{stroke: #00ff00;}
+line[type="AngleBisector"]{stroke: #0000ff;}
+line[type="LineBisector"]{stroke: #008000;}
+
+circle[type="Midpoint"],circle[type="LinesIntersection"],circle[type="ReflectionHandle"]{
+	fill: #808080;
+}

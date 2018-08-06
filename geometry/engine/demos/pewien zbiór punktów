@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500">
+<desc><p>Na płaszczyźnie dane są dwa różne punty A i B. Chodzi nam o zbiór punktów powstałych przez odbicie symetryczne punktu A względem prostych przechodzących przez punkt B.</p>
+	<p>Postaraj się dowieść dlaczego ten zbiór wygląda jak na prezentacji</p>
+	</desc>
+				<g id="objects"><circle cx="301" cy="192" r="120.88010589009261" style="fill: #F0C832" type="CenterPointCircle" id="object2" parents="object0 object1"/><line x1="301" y1="192" x2="618" y2="341" style="stroke: rgb(253, 117, 29);" id="object4" parents="object0 object3" children="object5"/><text x="422.01" y="154.159" type="Label" id="object6" parents="object5">A'</text><text x="345" y="318" type="Label" id="object7" parents="object1">A</text><text x="311" y="202" type="Label" id="object8" parents="object0"/><text x="311" y="202" type="Label" id="object9" parents="object0">B</text></g>
+				<g id="handles"><circle r="5" cx="301" cy="192" id="object0" parents="" children="object2 object4 object8 object9"/><circle r="5" cx="335" cy="308" id="object1" parents="" children="object2 object5 object7"/><circle r="5" cx="618" cy="341" id="object3" parents="" children="object4"/><circle r="5" cx="412.01025348439157" cy="144.15939359360993" type="ReflectionHandle" id="object5" parents="object1 object4" children="object6"/></g>
+			</svg>

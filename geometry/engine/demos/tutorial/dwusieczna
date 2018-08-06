@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500">
+
+	<desc>Dwusieczną uzyskujemy dzięki narzędziu <img src="design/AngleBisector.png" />. Należy wybrać dwa odcinki tworzące kąt. Program narysuje jego dwusieczną. Ograniczeniem jest fakt, że narysowana zostanie dwusieczna kąta mniejszego od π. Co więcej - do poprawnego działania konieczne jest, aby wybrane odcinki miały wspólny wierzchołek!</desc>
+		<g id="objects"><line x1="345" y1="194" x2="133" y2="438" style="stroke: rgb(128, 128, 0);" id="object3" parents="object0 object1" children="object5"/><line x1="133" y1="438" x2="538" y2="376" style="stroke: rgb(128, 128, 0);" id="object4" parents="object1 object2" children="object5"/><line x1="133" y1="438" x2="1124.4179757574634" y2="-108.36471092574584" style="stroke: rgb(65, 105, 225);" type="AngleBisector" id="object5" parents="object3 object4"/></g>
+		<g id="handles"><circle r="5" cx="345" cy="194" id="object0" parents="" children="object3"/><circle r="5" cx="133" cy="438" id="object1" parents="" children="object3 object4"/><circle r="5" cx="538" cy="376" id="object2" parents="" children="object4"/></g>
+	</svg>

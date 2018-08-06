@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500">
+
+	<desc>Symetralną uzyskujemy dzięki narzędziu <img src="design/LineBisector.png" /> wskazując odcinek, do którego wystawiamy symetralną.</desc>
+		<g id="objects"><line x1="265" y1="315" x2="601" y2="268" style="stroke: rgb(65, 105, 225);" id="object2" parents="object0 object1" children="object3"/><line x1="276.1815379977217" y1="-829.5851751652235" x2="589.8184620022782" y2="1412.5851751652235" style="stroke: rgb(207, 41, 41);" type="LineBisector" id="object3" parents="object2"/></g>
+		<g id="handles"><circle r="5" cx="265" cy="315" id="object0" parents="" children="object2"/><circle r="5" cx="601" cy="268" id="object1" parents="" children="object2"/></g>
+	</svg>
