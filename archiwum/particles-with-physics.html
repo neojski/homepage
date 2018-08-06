@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Simple particle system with gravity</title>
+<style type="text/css">
+*{margin: 0; padding: 0}
+body{overflow:hidden}
+</style>
+<script type="text/javascript">
+window.requestAnimFrame = (function(){
+return  window.requestAnimationFrame       || 
+	window.webkitRequestAnimationFrame || 
+	window.mozRequestAnimationFrame    || 
+	window.oRequestAnimationFrame      || 
+	window.msRequestAnimationFrame     || 
+	function( callback ){
+		window.setTimeout(callback, 1000 / 60);
+	};
+})();
+onload = function(){
+	var i;
+	var canvas = document.getElementById('canvas');
+	var NUM = 50;
+	
+	var WIDTH, HEIGHT, SCREEN_WIDTH, SCREEN_WIDTH_HALF, SCREEN_HEIGHT, SCREEN_HEIGHT_HALF;
+	
+	function resize(){
+		SCREEN_WIDTH = window.innerWidth;
+		SCREEN_HEIGHT = window.innerHeight;
+		SCREEN_WIDTH_HALF = window.innerWidth / 2;
+		SCREEN_HEIGHT_HALF = window.innerHeight / 2;
+		WIDTH = SCREEN_WIDTH;
+		HEIGHT = SCREEN_HEIGHT;
+	}
+	resize();
+
+	function generatePart(x, y){
+		return {
+			x: x || WIDTH / 2,
+			y: y || HEIGHT * 2 / 3,
+			speedX: (Math.random()) * 10 - 5,
+			speedY: (Math.random()) * 7 - 7,
+			size: 10
+		}
+	}
+	canvas.width = WIDTH;
+	canvas.height = HEIGHT;
+	ctx = canvas.getContext('2d');
+	
+	var x = 0;
+	var y = 0;
+	
+	
+	particles = [];
+	
+	function init(){
+		for(i = 0; i < NUM; i++){
+			particles.push(generatePart());
+		}
+	}
+	
+	init();
+	loop();
+	var t = 0;
+	
+	function explode(x, y){
+		for(i = 0; i < NUM; i++){
+			particles.push(generatePart(x, y));
+		}
+	}
+	
+	document.addEventListener('click', function(e){
+		explode(e.clientX, e.clientY);
+	}, false);
+	addEventListener('resize', function(){ console.log('a');
+		resize();
+	}, false);
+	
+	function loop(){
+		var i, part;
+		t++;
+		t %= 360;
+// 		ctx.clearRect(0, 0, WIDTH, HEIGHT);
+		
+		ctx.fillStyle = 'rgba(0,0,0,0.1)';
+		ctx.fillRect(0, 0, WIDTH, HEIGHT);
+		
+		
+		ctx.fillStyle = 'hsl('+t+', 100%, 50%)';
+		
+		if(Math.random() < .005){
+			explode((.3 * Math.random() + .3) * WIDTH, (.3 * Math.random() + .3) * HEIGHT);
+		}
+		
+		n = particles.length;
+		while(n--){
+			part = particles[n];
+
+			ctx.beginPath();
+			ctx.arc(part.x, part.y, part.size, 0, 2 * Math.PI, 0);
+			ctx.closePath();
+			ctx.fill();
+			
+			part.size *= .994;
+			
+			part.x += part.speedX;
+			part.y += part.speedY;
+			
+			part.speedY += .1;
+			
+			if(part.y > HEIGHT){
+				part.speedY = -part.speedY * .5;
+				part.y = HEIGHT - 1;
+			}
+			
+// 			if(part.speedX * part.speedX + part.speedY * part.speedY < .1){
+// 				particles[i] = generatePart();
+// 			}
+			
+			if(part.x > WIDTH || part.x < 0 || part.size < 1){
+// 				particles[i] = generatePart();
+				particles.splice(n, 1);
+			}
+			
+// 			if(part.x > WIDTH || part.x < 0 || part.y > HEIGHT || part.y < 0){
+// 				particles[i] = generatePart();
+// 			}
+		}
+		
+		requestAnimFrame(loop);
+	}
+}
+</script>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+
+</body>
+</html>

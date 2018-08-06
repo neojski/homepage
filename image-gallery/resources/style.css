@@ -1,0 +1,334 @@
+/* general setup */
+@font-face {
+    font-family: 'Chunk';
+    src: url('fonts/chunkfive-webfont.eot');
+    src: local('?'), url('fonts/chunkfive-webfont.woff') format('woff'), url('fonts/chunkfive-webfont.ttf') format('truetype'), url('fonts/chunkfive-webfont.svg#webfontAzRiHJA9') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+*{
+	padding: 0;
+	margin: 0;
+}
+
+body{
+	background: url(noise.jpg);
+	font: 16px Helvetica,Verdana,Arial,sans-serif;
+	margin: 0 auto;
+	padding: 0;
+	width: 100%;
+}
+
+#header{
+	background: none repeat scroll 0 0 #71C42B;
+	border-radius: 0px 20px 20px 0px;
+	color: #FFFFFF;
+	font: 2em Chunk,serif;
+	margin: 20px 100px 20px 0;
+	position: relative;
+	padding: 10px 120px 10px;
+	text-align: right;
+	text-shadow: 2px -2px 10px #777777;
+	
+	
+	perspective: 600px;
+}
+
+#header #htmlLogo{
+	bottom: -64px;
+    height: 64px;
+	position: absolute;
+	left: 0px;
+	z-index: -1;
+	
+	
+	backface-visibility: hidden;
+	transform: rotateX(-100deg);
+	transform-origin: top;
+	transition: .5s;
+}
+
+#header:hover > #htmlLogo{
+	backface-visibility: hidden;
+	transform: rotateX(0deg);
+}
+
+#header h1{
+	margin: 0;
+	padding: 0;
+}
+
+#footer{
+    background: none repeat scroll 0 0 #71C42B;
+    border-radius: 20px 0px 0px 20px;
+    clear: both;
+    color: #fff;
+    font: 10px Chunk,serif;
+    margin: 20px 0px 20px 100px;
+    position: relative;
+    padding: 10px 120px 10px;
+    text-align: right;
+    text-shadow: 0px 0px 2px #777777;
+}
+#footer a{
+    color: #fff;
+}
+
+section#section{
+	margin: 0 auto;
+	width: 900px;
+}
+
+
+
+.neoGalleryBoxContainer{
+	height: 100%;
+	left: 0;
+	overflow: hidden;
+	position: fixed;
+	top: 0;
+	width: 100%;
+
+
+	perspective: 600px
+}
+
+.neoGalleryBox{
+	height: 375px;
+	width: 800px;
+
+
+    /*backface-visibility: hidden;*/
+	/*transition: all 1s ease-out 0s;*/
+	transform-style: preserve-3d;
+}
+
+.neoGalleryBox .bottom{
+	background: rgba(0, 0, 0, .8);
+	bottom: 0;
+	color: #fff;
+	font-size: 2em;
+	height: 2em;
+	line-height: 2em;
+	padding: 0 20px;
+	position: absolute;
+	text-align: right;
+	/*text-shadow: 0px 0px 10px #fff;*/ /* terrible firefox performance */
+	width: 560px;
+
+
+	transform-style: preserve-3d;
+}
+
+.neoGalleryBox .rest{
+	height: 375px;
+	left: 0;
+	position: absolute;
+	top: 0;
+	width: 800px;
+
+
+	transform-style: preserve-3d;
+    -webkit-transform: translate3d(0, 0, .1px);  /*webkit hack: webkit doesn't respect z-index when in 3d mode*/
+}
+
+.neoGalleryBox .controls{
+	left: 0;
+	position: absolute;
+	top: 0;
+	width: 600px;
+
+
+	transform-style: preserve-3d;
+}
+
+.neoGalleryBox .controls .prev{
+	left: 0;
+	position: absolute;
+	top: 150px;
+}
+
+.neoGalleryBox .controls .next{
+	right: 0;
+	position: absolute;
+	top: 150px;
+}
+
+.neoGalleryBox .controls .close{
+	right: 0;
+	position: absolute;
+	top: 0;
+}
+
+.neoGalleryBox .image{
+	float: left;
+	height: 375px;
+	left: 0;
+	position: absolute;
+	top: 0;
+	width: 600px;
+
+
+	transform-style: preserve-3d;
+}
+
+
+.neoGalleryBox .right{
+	background: #5288DB;
+	color: #fff;
+	font-size: small;
+	height: 335px;
+	padding: 20px;
+	position: absolute;
+	right: 0;
+	top: 0;
+	width: 160px;
+
+
+	transform-style: preserve-3d;
+}
+
+.neoGalleryBox .right ul{
+	list-style: none;
+}
+
+.neoGalleryBox .right ul li{
+	padding: 5px 0;
+}
+
+.neoGalleryBox .right a{
+	color: #fff;
+}
+
+#gallery{
+    width: 900px;
+}
+#gallery figure{
+    float: left;
+}
+
+figure.neoGallery{
+	background: #fff;
+	border: 1px solid #333;
+	height: 150px;
+	margin: 20px;
+	overflow: hidden;
+	position: relative;
+	width: 240px;
+	
+	
+	perspective: 600px;
+}
+figure.neoGallery .shortDesc{
+	background: rgba(0, 0, 0, .75);
+	bottom: 0;
+	color: #fff;
+	font: 30px Helvetica,Verdana,Arial,sans-serif;
+	height: 1em;
+	opacity: 0;
+	position: absolute;
+	text-align: right;
+	width: 100%;
+	
+	
+	transform: rotateY(60deg);
+	transform-origin: left;
+	transition: .5s linear;
+}
+figure.neoGallery:hover .shortDesc{
+	opacity: 1;
+	
+	
+	transform: rotateY(0deg);
+}
+
+figure.neoGallery .longDesc{
+	display: none;
+}
+
+/* effects swtichers */
+#gallery{
+    overflow: hidden;
+}
+
+#effects{
+    clear: both;
+    overflow: hidden;
+    position: relative;
+}
+
+#effects #randomEffects{
+    background: #5288DB;
+    border-radius: 4px;
+    color: #fff;
+    font-size: 20px;
+    margin: 4px;
+    padding: 10px;
+    position: absolute;
+    right: 0;
+    text-align: center;
+    top: 0;
+    width: 100px;
+
+    transition: .5s;
+}
+#effects #randomEffects:hover{
+    background: #2764BE;
+}
+
+#effects div{
+    clear: both;
+}
+#effects h2{
+    float: left;
+    font-size: 22px;
+    padding: 4px 0 0;
+    width: 160px;
+}
+#effects ul li{
+    background: #5288DB url("./WebGL_logo.png") no-repeat 200px;
+    border-radius: 4px;
+    border: 1px solid transparent;
+    color: #fff;
+    display: block;
+    float: left;
+    margin: 4px;
+    min-width: 52px;
+    padding: 3px;
+    text-align: center;
+
+    transition: .5s;
+}
+
+#effects ul li:hover{
+    background: #2764BE url("./WebGL_logo.png") no-repeat 200px;
+}
+
+#effects ul li.webGLEffect.unavailable{
+    background: #aaa;
+    color: #bbb;
+}
+
+#effects ul li.webGLEffect:hover{
+    background: url("./WebGL_logo.png") no-repeat;
+    border: 1px solid #990000;
+    color: transparent;
+
+    transition: 1s .2s;
+}
+
+#effects ul li.selected{
+    background: #01243B url("./WebGL_logo.png") no-repeat 200px;
+}
+#effects ul li.selected.webGLEffect:hover{
+    background: #95A6B1 url("./WebGL_logo.png") no-repeat;
+    border: 1px solid transparent;
+    color: transparent;
+    transition: 1s;
+}
+
+/* grid */
+.grid{
+    transform-style: preserve-3d;
+}

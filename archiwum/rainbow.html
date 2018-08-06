@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Flying rainbows!</title>
+<style type="text/css">
+*{margin: 0; padding: 0}
+body{overflow:hidden}
+</style>
+<script type="text/javascript">
+window.requestAnimFrame = (function(){
+return  window.requestAnimationFrame       || 
+	window.webkitRequestAnimationFrame || 
+	window.mozRequestAnimationFrame    || 
+	window.oRequestAnimationFrame      || 
+	window.msRequestAnimationFrame     || 
+	function( callback ){
+		window.setTimeout(callback, 1000 / 60);
+	};
+})();
+onload = function(){
+	var i, mouseX = mouseY = 0;
+	var canvas = document.getElementById('canvas');
+	var NUM = 10;
+	
+	var WIDTH, HEIGHT, SCREEN_WIDTH, SCREEN_WIDTH_HALF, SCREEN_HEIGHT, SCREEN_HEIGHT_HALF;
+	
+	function resize(){
+		SCREEN_WIDTH = window.innerWidth;
+		SCREEN_HEIGHT = window.innerHeight;
+		SCREEN_WIDTH_HALF = window.innerWidth / 2;
+		SCREEN_HEIGHT_HALF = window.innerHeight / 2;
+		WIDTH = SCREEN_WIDTH;
+		HEIGHT = SCREEN_HEIGHT;
+	}
+	resize();
+
+	canvas.width = WIDTH;
+	canvas.height = HEIGHT;
+	ctx = canvas.getContext('2d');
+	
+	var x = 0;
+	var y = 0;
+	
+	function init(){
+		
+	}
+	
+	init();
+	
+
+	
+	document.addEventListener('click', function(e){
+// 		var i;
+// 		var d = 500;
+// 		for(i = 0; i < NUM; i++){
+// 			createRainbow([mouseX, mouseY], [mouseX + Math.cos(Math.PI * i / NUM) * d, mouseY + Math.sin(Math.PI * i / NUM)]);
+// 		}
+	}, false);
+	document.addEventListener('mousemove', function(e){
+		mouseX = e.clientX;
+		mouseY = e.clientY;
+	}, false);
+	addEventListener('resize', function(){ console.log('a');
+		resize();
+	}, false);
+	
+	
+		
+	function dp(p){
+		ctx.save();
+		ctx.fillColor = '#000';
+		ctx.beginPath();
+		ctx.arc(p[0], p[1], 5, 0, 2 * Math.PI);
+		ctx.fill();
+		ctx.restore();
+	}
+	
+	function clamp(value, min, max) {
+		return Math.min(Math.max(value, min), max);
+	}
+	
+	rainbows = [];
+	function createRainbow(p1, p2, anti){
+		rainbows.unshift({
+			startPoint: p1,
+			endPoint: p2,
+			t: 0,
+			anticlockwise: anti || false,
+			child: 0
+		});
+	}
+	
+	function getMidPoint(p1, p2){
+		return [(p1[0] + p2[0]) / 2, (p1[1] + p2[1]) / 2];
+	}
+	
+	createRainbow([160, 350], [560, 390]);
+	
+	NUMCOLOR = 7;
+	LINEWIDTH = 120;
+	t = 0;
+	var s = 0;
+	var n;
+	ctx.lineCap = 'round';
+// 	ctx.globalCompositeOperation = 'source-over';
+	function loop(){
+		ctx.clearRect(0, 0, WIDTH, HEIGHT);
+// 		ctx.fillStyle = 'rgba(0,0,0,0.1)';
+// 		ctx.fillRect(0, 0, WIDTH, HEIGHT);
+		
+		n = rainbows.length;
+		while(n--){
+			rainbow = rainbows[n];
+			ctx.lineWidth = LINEWIDTH / NUMCOLOR;
+			
+			// many fancy colors!
+			for(i = 0; i < NUMCOLOR; i++){
+				ctx.strokeStyle = 'hsl('+(360 * i/NUMCOLOR)+', 100%, 50%)';
+
+				var c = getMidPoint(rainbow.startPoint, rainbow.endPoint);
+				
+				var dist = Math.sqrt(Math.pow(rainbow.startPoint[0] - c[0], 2) + Math.pow(rainbow.startPoint[1] - c[1], 2));
+				var calcStart = Math.atan2(rainbow.startPoint[1] - c[1], rainbow.startPoint[0] - c[0]);
+				var calcEnd = Math.atan2(rainbow.endPoint[1] - c[1], rainbow.endPoint[0] - c[0]);
+				
+				ctx.beginPath();
+				
+				tend = clamp(2 * rainbow.t, 0, 1);
+				tstart = clamp(2 * rainbow.t - 1, 0, 1);
+				ctx.arc(c[0], c[1], dist + i * LINEWIDTH / NUMCOLOR, (1 - tstart) * calcStart + tstart * calcEnd, (1 - tend) * calcStart + tend * calcEnd, rainbow.anticlockwise);
+				ctx.stroke();
+				
+// 				dp(c);
+// 				dp(rainbow.startPoint);
+			}
+			
+			// shadow
+			ctx.strokeStyle = '#fff';
+			ctx.arc(c[0], c[1], dist, calcStart, calcEnd, rainbow.anticlockwise);
+			
+			
+			rainbow.t += .01;
+			if(rainbow.t > .5){ // remove rainbow
+				if(rainbow.child == 0){
+					createRainbow(rainbow.endPoint, [.7 * mouseX + .3 * rainbow.endPoint[0], .7 * mouseY + .3 * rainbow.endPoint[1]], mouseY < rainbow.endPoint[1]);
+					rainbow.child = 1;
+				}
+				if(rainbow.t > 1){
+					rainbows.splice(n, 1);
+				}
+			}
+		}
+		requestAnimFrame(loop);
+	}
+	loop();
+}
+</script>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+    <script type="text/javascript">
+	function buildTree(n, l, r){
+	    var i = 0;
+	    // tree with probability of having left branch l, right r
+	    function genTree(n, l, r){
+		l = l || 1;
+		r = r || 1;
+		if(n==0){
+		    return;
+		}
+		var root = {};
+		root.i = i++;
+		if(Math.random() <= l){
+		    root.left = genTree(n - 1, l, r);
+		}
+		if(Math.random() <= r){
+		    root.right = genTree(n - 1, l, r);
+		}
+		return root;
+	    }
+	    return genTree(n, l, r);
+	}
+
+	function cursorS(root){
+	    var s = "";
+	    var nodesLength = 0;
+	    function cursor(root){
+		if(root){
+		    nodesLength++;
+		    s += (root.left ? root.left.i + 1 : 0) + " " + (root.right ? root.right.i + 1 : 0) + " ";
+		    if(root.left){
+		    	cursor(root.left);
+		    }
+		    if(root.right){
+			cursor(root.right);
+		    }
+		}
+	    }
+	    cursor(root);
+	    
+  	    console.log(nodesLength);
+	    return s;
+	}
+	
+	function preOrderS(root){
+	    var s = "";
+	    function preOrder(root){
+		if(root){
+		    s += root.i + " ";
+		    preOrder(root.left);
+		    preOrder(root.right);
+		}
+	    }
+	    preOrder(root);
+	    return s;
+	}
+	
+	function postOrderS(root){
+	    var s = "";
+	    function postOrder(root){
+		if(root){
+		    postOrder(root.left);
+		    postOrder(root.right);
+		    s += root.i + " ";
+		}
+	    }
+	    postOrder(root);
+	    return s;
+	}
+	
+	function inOrderS(root){
+	    var s = "";
+	    function inOrder(root){
+		if(root){
+		    inOrder(root.left);
+		    s += root.i + " ";
+		    inOrder(root.right);
+		}
+	    }
+	    inOrder(root);
+	    return s;
+	}
+    </script>
+</html>

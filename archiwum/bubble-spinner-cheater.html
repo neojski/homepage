@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<title>Bubble Spinner Cheater</title>
+</head>
+
+<script type="text/javascript">
+var xmin = 20;
+var xmax = 482;
+var ymin = 65;
+var ymax = 521;
+var startx = 250;
+var starty = 42;
+var num = 3;
+var maxNum = 5;
+
+id = function(id){return document.getElementById(id)};
+onload = function(){
+	var svg = id('svg');
+	var div = id('div');
+	var l = [];
+	for(var i = 0; i < maxNum; i++){
+		l[i] = id('l' + i);
+	}
+	
+	
+	document.onmousemove = function(e){
+		var x = e.pageX - div.offsetLeft;
+		var y = e.pageY - div.offsetTop;
+		
+		start = [startx, starty];
+		dir = [x, y]
+		
+		
+		for(var i = 0; i < num; i++){
+			l[i].setAttribute('x1', start[0]);
+			l[i].setAttribute('y1', start[1]);
+			
+			// quick normalization of dir - so it's _probably_ not outside rectangle
+			tmp = dir[0];
+			dir[0] -= start[0];
+			dir[1] -= start[1];
+			dir[0] /= 2e6;
+			dir[1] /= 2e6;
+			dir[0] += start[0];
+			dir[1] += start[1];
+			
+		
+			start = calcLine(start, dir);
+		
+			l[i].setAttribute('x2', start[0]);
+			l[i].setAttribute('y2', start[1]);
+			
+			if(xmin == start[0] || start[0] == xmax){
+				// top-bottom
+				dir[1] += 2 * (start[1] - dir[1]);
+			}else{
+				// left-right
+				
+				dir[0] += 2 * (start[0] - dir[0]);
+			}
+		}
+	}
+	id('on').onclick = function(){
+		div.style.display = div.style.display == 'none' ? 'block' : 'none';
+		this.innerHTML = this.innerHTML == 'on' ? 'off' : 'on';
+	}
+	id('num').onchange = function(){
+		if(+this.value <= 5 && this.value >= 0){
+			num = +this.value;
+			for(i = num; i < maxNum; i++){
+				l[i].setAttribute('x1', 1e3);
+				l[i].setAttribute('x2', 1e3);
+			}
+		}else{
+			alert('Wpisz liczbę między 0 a 5');
+		}
+	}
+}
+
+// slope: y/x
+function calcLine(a, b){
+	var ax = a[0];
+	var ay = a[1];
+	var bx = b[0];
+	var by = b[1];
+	
+	// intersection left-right
+	if(bx > ax){
+		var cx = xmax;
+	}else{
+		var cx = xmin;
+	}
+	var cy = (by - ay) / (bx - ax) * (cx - bx) + by;
+	if(ymin <= cy && cy <= ymax){
+		return [cx, cy];
+	}
+	
+	// intersection top-bottom
+	if(by > ay){
+		var cy = ymax;
+	}else{
+		var cy = ymin;
+	}
+	var cx = (bx - ax) / (by - ay) * (cy - by) + bx;
+	return [cx, cy];
+	
+}
+
+</script>
+
+<style type="text/css">
+*{margin: 0; padding: 0}
+line{stroke: #000; stroke-width: 22px; opacity: .1}
+
+#div{pointer-events: none;}
+</style>
+
+<body>
+
+
+
+<div style="z-index: 0; width: 500px; height: 540px; background: #eee">
+
+<object type="application/x-shockwave-flash" data="774u.swf" height="540" width="500">
+<param name="wmode" value="transparent" />
+<param name="movie" value="774u.swf">
+<param name="quality" value="high">
+</object>
+
+</div>
+
+<div id="div" style="height: 540px; width: 500px; position: absolute; left: 0; top: 0; z-index: 1000">
+<svg id="svg" height="540" width="500" viewBox="0 0 500 540">
+
+<line id="l0" />
+<line id="l1" />
+<line id="l2" />
+<line id="l3" />
+<line id="l4" />
+  
+</svg>
+</div>
+
+<ul id="controls">
+<li><button id="on">on</button></li>
+<li><input id="num" type="text" value="3" /><li>
+</ul>
+
+</body>
+</html>

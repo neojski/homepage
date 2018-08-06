@@ -13,6 +13,7 @@
 // created 5.01.2006
 // modified 14.09.2007
 // modified 13.11.2009
+// modified 8.08.2012 (fix wrong comma behaviour)
 
 // funkcje
 $format = 'd-m-Y';
@@ -84,6 +85,9 @@ usort($dates, 'absSort');
 $chosen = $dates[0];
 if(!empty($chosen)){
 	$name = 'http://www.nbp.pl/kursy/xml/'.$chosen['file'].'.xml';
+
+
+	echo '<!-- '.$name.'-->';
 	
 	// data, którą obrabiamy
 	$date = $chosen['date'];
@@ -95,7 +99,8 @@ if(!empty($chosen)){
 		'PLK'=>array(
 			'name'=>'polski złoty',
 			'count'=>1,
-			'code'=>'PLK'
+			'code'=>'PLK',
+			'factor'=>1
 		)
 	);
 	
@@ -106,13 +111,17 @@ if(!empty($chosen)){
 		$array[$key]['name'] = (string)$v->nazwa_waluty;
 		$array[$key]['code'] = (string)$v->kod_waluty;
 		$array[$key]['count'] = (float)str_replace(',','.',$v->kurs_sredni);
+		$array[$key]['factor'] = (float)str_replace(',','.',$v->przelicznik);
 		
 		$walutyf.='<option value="'.$array[$key]['code'].'"'.(($_GET['f']==$array[$key]['code'])?' selected="selected"':'').'>'.$array[$key]['name'].'</option>';
 		$walutyt.='<option value="'.$array[$key]['code'].'"'.(($_GET['t']==$array[$key]['code'])?' selected="selected"':'').'>'.$array[$key]['name'].'</option>';
 	}
 	
 	if(($f=$_GET['f']) && ($t=$_GET['t']) && ($c=$_GET['c'])){
-		$end = number_format($c / $array[$t]['count'] * $array[$f]['count'], 2).' '.$t;
+		
+		$c = floatval(str_replace(',', '.', $c));
+	
+		$end = number_format($c / ($array[$t]['count'] / $array[$t]['factor']) * ($array[$f]['count'] / $array[$f]['factor']), 2).' '.$t;
 	}
 	
 	// wyświetl uwagę, jeśli nie ma dokładnego kursu

@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Wzorce projektowe</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+        <script type="text/javascript">
+            onload = function(){
+                var buttons = document.getElementsByTagName("button");
+                for(i = 0; i < buttons.length; i++){
+                    buttons[i].onclick = function(){
+                        var button = this;
+                        button.nextSibling.style.display = "none";
+
+                        setTimeout(function(){
+                            button.nextSibling.style.display = "block";
+                        }, (1 + Math.random()) * 500);
+                    }
+                }
+            }
+        </script>
+
+        <style type="text/css">
+            pre{border: 2px solid #000; padding: 20px;}
+            .result{display: none}
+
+            html {
+                background: #F0F0F0;
+                font-family: Verdana, Arial, Helvetica, sans-serif;
+                font-size: 9pt;
+                color: #333;
+            }
+            body {
+                width: 750px;
+                background: white;
+                margin: 0 auto;
+                padding: 20px;
+                border: solid 1px #bbb;
+                border-top: 0;
+                text-align: left;
+            }
+
+            p {
+                text-align: justify;
+                text-indent: 20pt;
+                margin: 0;
+                padding: 0 0 10pt;
+            }
+
+            a {
+                color: #197e05;
+                text-decoration: none;
+            }
+
+            a:hover {
+                color: #25b109;
+            }
+
+            pre{
+                border: 1px solid #888;
+                border-left-width: 5px;
+                background: #f5f5f5;
+                margin: 5pt;
+                padding: 5pt;
+                display:block;
+                overflow: auto;
+                width: 690px;
+            }
+
+            footer{
+                margin: 50px;
+                text-align: right;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Wzorce projektowe</h1>
+        <h2>Prototype</h2>
+        <ul>
+            <li>uniknięcie tworzenia podklas po stronie klienta</li>
+            <li>uniknięcie wytwarzania obiektów używając <tt>new</tt></li>
+    </ul>
+
+    <h3>Struktura</h3>
+    <img src="prototype_UML.png" />
+
+    <h2>Przykład</h2>
+    <pre>/**
+ * Prototype class
+ */
+abstract class Prototype implements Cloneable {
+        @Override
+        public Prototype clone() throws CloneNotSupportedException {
+                return (Prototype)super.clone();
+        }
+ 
+        public abstract void setX(int x);
+ 
+        public abstract void printX();
+ 
+        public abstract int getX();
+}
+ 
+/**
+ * Implementation of prototype class
+ */
+class PrototypeImpl extends Prototype {
+        int x;
+ 
+        public PrototypeImpl(int x) {
+                this.x = x;
+        }
+ 
+        public void setX(int x) {
+                this.x = x;
+        }
+ 
+        public void printX() {
+                System.out.println(&quot;Value :&quot; + x);
+        }
+ 
+        public int getX() {
+                return x;
+        }
+}
+ 
+/**
+ * Client code
+ */
+public class PrototypeTest {
+        public static void main(String args[]) throws CloneNotSupportedException {
+                Prototype prototype = new PrototypeImpl(1000);
+ 
+                for (int i = 1; i &lt; 10; i++) {
+                        Prototype tempotype =  prototype.clone();
+ 
+                        // Usage of values in prototype to derive a new value.
+                        tempotype.setX( tempotype.getX() * i);
+                        tempotype.printX();
+                }
+        }
+}</pre>
+
+    <button>run</button><pre class="result">Value :1000
+Value :2000
+Value :3000
+Value :4000
+Value :5000
+Value :6000
+Value :7000
+Value :8000
+Value :9000</pre>
+
+    <h3>Przykład 1</h3>
+    <p>Gra. Budujemy labirynt. Generujemy planszę używając tych samych obiektów. Zamiast <i>hardcodować</i> planszę (używając <tt>new</tt>) ściany, drzwi itd. tworzymy z prototypowych.</p>
+
+<h3>Przykład 2</h3>
+<p>Analiza bazy danych. Pobierz z bazy, zanalizuj. Jeśli potrzebne po raz drugi - znowu pobierz i zanalizuj. Zły pomysł. Lepiej sklonować.</p>
+
+<h3>Prototype manager</h3>
+<p>Jeśli dużo - można używać</p>
+
+<h3>Deep clone vs. shallow clone</h3>
+<p>Należy wziąć pod rozwagę</p>
+
+<h2>Leniwe inicjowanie</h2>
+<ul>
+    <li>opóźnienie wytworzenia obiektu</li>
+    <li>typowo: użycie flagi
+</ul>
+
+<h3>Leniwa fabryka</h3>
+<ul>
+    <li>użycie fabryki do wytworzenia obiektu</li>
+    <li>przechowywanie wszystkich obiektów utworzonych w mapie</li>
+    <li>użycie wyżej wytworzonych obiektów gdy trzeba</li>
+</ul>
+
+<h3>Przykład</h3>
+<p>Leniwe tworzenie obiektów</p>
+<pre>import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+ 
+enum FRUIT_TYPE {
+        NONE,
+        APPLE,
+        BANANA,
+}
+ 
+class Program {
+ 
+        /**
+         * @param args
+         */
+        public static void main(String[] args) {
+                Fruit.getFruitByTypeName(FRUIT_TYPE.BANANA);
+                Fruit.showAll();
+                Fruit.getFruitByTypeName(FRUIT_TYPE.APPLE);
+                Fruit.showAll();
+                Fruit.getFruitByTypeName(FRUIT_TYPE.BANANA);
+                Fruit.showAll();
+        }
+}
+ 
+class Fruit {
+        private static Map&lt;FRUIT_TYPE, Fruit&gt; types = new HashMap&lt;FRUIT_TYPE, Fruit&gt;();
+ 
+        /**
+         * Using a private constructor to force the use of the factory method.
+         * @param type
+         */
+        private Fruit(FRUIT_TYPE type) {
+        }
+ 
+        /**
+         * Lazy Factory method, gets the Fruit instance associated with a certain
+         * type. Instantiates new ones as needed.
+         * @param type Any allowed fruit type, e.g. APPLE
+         * @return The Fruit instance associated with that type.
+         */
+        public static Fruit getFruitByTypeName(FRUIT_TYPE type) {
+                Fruit fruit;
+ 
+                if (!types.containsKey(type)) {
+                        // Lazy initialisation
+                        fruit = new Fruit(type);
+                        types.put(type, fruit);
+                } else {
+                        // OK, it's available currently
+                        fruit = types.get(type);
+                }
+ 
+                return fruit;
+        }
+ 
+        /**
+         * Lazy Factory method, gets the Fruit instance associated with a certain
+         * type. Instantiates new ones as needed. Uses double-checked locking 
+         * pattern for using in highly concurrent environments.
+         * @param type Any allowed fruit type, e.g. APPLE
+         * @return The Fruit instance associated with that type.
+         */
+        public static Fruit getFruitByTypeNameHighConcurrentVersion(FRUIT_TYPE type) {
+                if (!types.containsKey(type)) {
+                        synchronized (types) {
+                                // Check again, after having acquired the lock to make sure
+                                // the instance was not created meanwhile by another thread
+                                if (!types.containsKey(type)) {
+                                        // Lazy initialisation
+                                        types.put(type, new Fruit(type));
+                                }
+                        }
+                }
+ 
+                return types.get(type);
+        }
+ 
+        /**
+         * Displays all entered fruits.
+         */
+        public static void showAll() {
+                if (types.size() &gt; 0) {
+                        System.out.println(&quot;Number of instances made = &quot; + types.size());
+ 
+                        for (Entry&lt;FRUIT_TYPE, Fruit&gt; entry : types.entrySet()) {
+                                System.out.println(
+                                                entry.getKey().toString());
+                        }
+ 
+                        System.out.println();
+                }
+        }
+}</pre>
+
+<button>run</button><pre class="result">Number of instances made = 1
+BANANA
+
+Number of instances made = 2
+APPLE
+BANANA
+
+Number of instances made = 2
+APPLE
+BANANA</pre>
+
+<h3>Przykład</h3>
+<p>Leniwe własności</p>
+<pre>using System;
+
+class Test{
+	
+	private string GetComplicated(){
+		System.Console.WriteLine("long computation here");
+		return "test";	
+	}
+	
+	private string complicated = null;
+	
+	public string Complicated{
+		get{
+			if(complicated == null){
+				complicated = GetComplicated();
+			}
+			return complicated;
+		}
+	}
+	
+	public static void Main(){
+		Test t = new Test();
+		for(int i = 0; i < 10; i++){
+			System.Console.WriteLine(t.Complicated);
+		}
+	}
+}
+</pre>
+
+<button>run</button><pre class="result">long computation here
+test
+test
+test
+test
+test
+test
+test
+test
+test
+test</pre>
+
+<h3>Przykład (?)</h3>
+<p>Leniwe wartościowanie</p>
+<pre>a = funkcja_B(b) || funkcja_C(c) ? b : c;</pre>
+
+<footer>
+    <ul><li><a href="http://www.oodesign.com/prototype-pattern.html">http://www.oodesign.com/prototype-pattern.html</a></li>
+        <li><a href="http://en.wikipedia.org/wiki/Software_design_pattern">http://en.wikipedia.org/wiki/Software_design_pattern</a></li>
+    </ul>
+    Tomasz Kołodziejski</footer>
+
+</body>
+</html>
+
