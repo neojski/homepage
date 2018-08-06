@@ -1,0 +1,28 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-3" /><title>Testowanie skryptow javascript</title>
+
+<script type="text/javascript">
+r=0
+function wczytaj(n){
+    document.getElementById('h'+n).style.display='block'
+    document.getElementById('h'+r).style.display='none'
+    r=n
+}
+</script>
+</head>
+<body>
+
+<div id="div"><div id="h0" style="display:none">to jest jaksssis tekst</div>
+<div id="h1" style="display:none">to jest jakasdfis tekst</div>
+<div id="h2" style="display:none">to jest jakasdaaaaaaafis tekst</div></div>
+
+<a href="javascript:wczytaj(0)">0</a>
+<a href="javascript:wczytaj(1)">1</a>
+<a href="javascript:wczytaj(2)">2</a>
+
+
+
+</body>
+</html>

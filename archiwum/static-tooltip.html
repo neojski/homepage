@@ -1,0 +1,57 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+  <title>Tooltip w javsacript - wersja niezależna od pozycji myszy.</title>
+  <style type="text/css">
+  #tooltip{
+  	position:absolute;
+  	display:none;
+  	background:yellowgreen;
+  	padding:10px;
+  	border:2px solid black;
+  }
+  </style>
+  <script type="text/javascript">
+    onl=window.onload||Function;
+    onload=function(){
+    onl();
+    for(var i=0,d,D=document,E=D.documentElement,B=D.body,span;d=D.getElementsByTagName('*')[i++];){
+        if(d.getAttribute('title')){
+            d.old=d.title;
+            d.removeAttribute('title');
+            d.onmouseover=function(e){
+              var t=this;
+              this.t=setTimeout(
+                function(){
+                  with(span.style){
+                      display='inline';
+                      top=t.offsetTop+t.offsetHeight+20+'px'
+                      left=t.offsetLeft+20+'px'
+                  }
+                  span.firstChild.nodeValue=t.old;
+                }, 300)//tutaj ustawiamy zwłokę po ktrórej wyświetli się tooltip, w milisekundach!
+            };
+            d.onmouseout=function(){
+                clearTimeout(this.t);
+                span.style.display='none';
+            }
+        }
+    }
+    /* tworzenie tooltipa */
+    span=D.createElement('span');
+    span.id='tooltip';
+    span.appendChild(D.createTextNode('test'));
+    D.body.appendChild(span);
+    }
+  </script>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+  </head>
+  <body>
+  <h1>Statyczny tooltip.</h1>
+  <p>Podobnie jak w <a href="tooltip.html">poprzednim skrypcie</a> wyświetlona zostanie "chmurka" z zawartością atrybutu title.</p>
+  <p>Tym razem jednak tooltip zostanie wyświetlony zawsze w tym samym miejscu (niezależnie od pozycji myszy). Można też dodać opóźnienie wyświetlania "chmurek".</p>
+  <p>Przykłady poniżej:</p>
+  <div title="Tak, wszystko działa!">test</div>
+  <p title="Ale fajna chmurka.">Najedź na mnie.</p>
+  </body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+	<head>
+		<title>Płynne przejście obrazków, javascript.</title>
+		<script type="text/javascript">
+		/*
+			author: neo, neo.mlodzi.pl
+			date: 5.12.2006
+			licence: http://creativecommons.org/licenses/by-sa/2.5/deed.pl
+			use only with this comment
+		*/
+		function opac(img, m, o){
+			clearTimeout(img.t);
+			o=img.style.opacity=+(o=img.style.opacity)+.01*m;//.01 oznacza o ile zmieniać opacity w jednym kroku. im więcej - tym szybciej
+			o>0&&o<1?img.t=setTimeout(function(){opac(img,m)},1):0;//ostatnia jedynka tego wiersza oznacza po ilu milisekundach zmodyfikować przezroczystość
+		}
+		
+		var on=window.onload||Function;
+		onload=function(){
+			on();
+			for(var i=0,d,el,img; d=document.getElementsByTagName('ul')[i++];){
+				if(d.className=='change'){
+					d.className='change_s';
+					
+					el=d.getElementsByTagName('img');
+					img=el[el.length-1];
+					
+					img.t=0;
+					img.style.opacity=1;
+					
+					d.style.height=img.height+'px';
+					
+					img.onmouseover=function(){opac(this, -1)}
+					img.onmouseout=function(){opac(this, 1)}
+				}
+			}
+		}
+		</script>
+		<style type="text/css">
+		.change_s{
+			list-style:none;
+			position:relative;
+		}
+		.change_s li{
+			position:absolute;
+			left:0;
+			top:0;
+		}
+		</style>
+		<meta http-equiv="content-type" content="text-html;charset=utf-8" />
+	</head>
+	<body>
+		<h1>Płynne przejście obrazków.</h1>
+		<p>Prosty kod javascript, który umożliwia stworzenie przejścia obrazków po najechaniu na nie.</p>
+		<p>Aby skorzystać ze skryptu należy wkleić w sekcję head cały kod (poza znacznikiem <code>meta</code> i <code>title</code>) znajdujący się w źródle tego dokumentu.</p>
+		<p>Przy wyłączonym, czy nieobsługiwanym <abbr title="javascript">js</abbr> użytkownik dostanie obrazki wewnątrz listy nieuporządkowanej. Tą listę można ostylować korzystając z klasy <code>.change</code>.</p>
+		<p>Natomiast do wstawienia obrazków wykorzystujemy poniższą strukturę:</p>
+		<ul class="change">
+			<li><img src="http://www.free-nature-photos.org/fotodb/55_poppies_0.jpg" alt="mak polny" /></li>
+			<li><img src="http://www.free-nature-photos.org/fotodb/63_poppies_7.jpg" alt="inny polny mak" /></li>
+		</ul>
+		<p>Najlepszy efekt uzyskamy, gdy nasze zdjęcia będą jednakowej wielkości. Mnie, niestety, nie udało się znaleźć takich zdjęć ;-)</p>
+		<p>Zdjęcia pochodzą ze strony <a href="http://www.free-nature-photos.org/pl/Maki/Polne_kwiaty_maki/">darmowych zdjęć natury</a>.</p>
+	</body>
+</html>

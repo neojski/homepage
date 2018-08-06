@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="ISO-8859-2"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><HTML XMLNS="http://www.w3.org/1999/xhtml" XML:LANG="pl" LANG="pl">
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-2" /><TITLE>Testowanie skryptow javascript</TITLE>
+<SCRIPT TYPE="text/javascript">
+// Autorem skryptu jest Tomasz Kołodziejski
+// neo007 <neo007@poczta.onet.pl>
+// Jeśli chcesz wykorzystać ten skrypt na swojej stronie, nie usuwaj tego komentarza!
+
+var czas
+window.onload=function(){
+  var i=0
+  while(el=document.getElementById('menu'+i++)){
+    el.className='menu'
+    el.onclick=klik
+    with(el.childNodes){
+      for(var x=0; x<length; x++){
+        if(item(x).nodeName.toLowerCase()=='li'){
+          item(x).className='podmenu'
+        }
+      }
+    }
+  }
+}
+function klik(){
+  with(this.childNodes){
+    for(i=0, el; i<length; i++){
+      if(item(i).nodeName.toLowerCase()=='li'){
+        if(item(i).style.visibility=='visible'){
+          zwin(this)
+          break
+        }else{
+          rozwin(this)
+          break
+        }
+      }
+    }
+  }
+}
+function zwin(c){
+  co=c
+  clearTimeout(czas)
+  if(el=co.childNodes[Math.floor(Math.random()*co.childNodes.length)]){
+    if(el.nodeName.toLowerCase()=='li'){
+       el.style.visibility='hidden'
+    }
+    czas=setTimeout('zwin(co)',20)
+  }
+}
+function rozwin(c){
+  co=c
+  clearTimeout(czas)
+  if(el=co.childNodes[Math.floor(Math.random()*co.childNodes.length)]){
+    if(el.nodeName.toLowerCase()=='li'){
+       el.style.visibility='visible'
+    }
+      czas=setTimeout('rozwin(co)',20)
+  }
+}
+</SCRIPT>
+<STYLE TYPE="text/css">
+.menu {width: 200px; list-style-type: none; margin: 0; padding: 0}
+.podmenu{background: yellowgreen; border-top: 1px dashed; visibility: hidden}
+.opis{background: yellowgreen; border: 2px solid}
+</STYLE>
+</HEAD>
+<UL ID="menu0"><DIV CLASS="opis">klik</DIV>
+<LI>cos</LI>
+<LI>cos</LI>
+<LI>cos</LI>
+</UL>
+<UL ID="menu1"><DIV CLASS="opis">klik</DIV>
+<LI>cos</LI>
+<LI>cos</LI>
+<LI>cos</LI>
+<LI>cos</LI>
+<LI>cos</LI>
+<LI>cos</LI>
+<LI>cos</LI>
+<LI>cos</LI>
+<LI>cos</LI>
+</UL>
+</BODY>
+</HTML>

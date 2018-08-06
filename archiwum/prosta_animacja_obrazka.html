@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+	<head>
+		<meta http-equiv="content-type" content="text-html; charset=utf-8" />
+		<title>Prosta animacja obrazka w javascript.</title>
+		<script type="text/javascript">
+		/*
+			author: neo, neo.mlodzi.pl
+			date: 6.12.2006
+			licence: http://creativecommons.org/licenses/by-sa/2.5/deed.pl
+			use only with this comment
+		*/
+		
+		function init(){
+			/* ścieżka obrazka */
+			var src='http://www.free-nature-photos.org/fotodb/51_poppies_15.jpg';
+			
+			/* "jakość" - liczba naturalna, im mniej tym lepsza jakość */
+			quality=1;
+			
+			/* kontener */
+			container=document.getElementById('test');
+			
+			container.innerHTML='';
+			
+			v=0;
+			
+			/* tablica dzieci */
+			c=[];
+			
+			var img=new Image();
+			img.src=src;
+			
+			height=img.height/quality;
+			px_height=img.height;
+			width=img.width;
+		
+			for(var i=0; i<height; i++){
+				var div=document.createElement('div');
+				var img=document.createElement('img');
+				
+				img.src=src;
+				
+				div.appendChild(img);
+				div.style.height=quality+'px';
+				div.style.overflow='hidden';
+				
+				img.style.position='relative';
+				img.style.top=-quality*i+'px';
+				
+				document.getElementById('test').appendChild(div);
+				
+				c[i]=div;
+			}
+		}
+		
+		
+		function animate(){
+			
+			for(var i=0,d; d=c[i++];){
+				
+				/* falowanie */
+				// d.style.marginLeft=Math.sin((i+v)*Math.PI/180*2)*100+'px';
+				
+				
+				d.style.marginLeft=v*(height-i)/width/2+'px';
+				
+				
+				d.firstChild.style.width=width-v*(height-i)/width+'px';
+				
+				
+				d.firstChild.style.height=px_height+'px';
+			}
+			
+			v+=10;
+			
+		}
+		
+		onload=init;
+		</script>
+	</head>
+	<body>
+		<h1>Animacja obrazka w <abbr title="javascript">js</abbr>.</h1>
+		<p>Skrypt jest raczej prezentacją potencjalnych możliwości tkwiących w <abbr title="javascript">js</abbr>. Nie ma z niego żadnego praktycznego użytku, może poza stworzeniem jakiejś galerii.</p>
+		<p>Prostą animację można odpalić guziczkami poniżej.</p>
+		<p>Skrypt jest niepraktyczny, nieoptymalny, mocno obciążający procesor ;-)</p>
+		<p>Inspirowany projektem <a href="http://beryl-project.org">beryl</a>.</p>
+		<div id="test" style="position:relative"></div>
+		<input type="button" onclick="anim=setInterval('animate()',100)" value="start animacji" />
+		<input type="button" onclick="init()" value="restart animacji" />
+		<input type="button" onclick="clearInterval(anim)" value="zatrzymaj" />
+	</body>
+</html>

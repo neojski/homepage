@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" 
+"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <title>Pseudosłownik ajax.</title>
+        <script type="text/javascript">
+        /*<![CDATA[*/
+        function makeRequest(url) {
+            var http_request = false;
+            if (window.XMLHttpRequest) { 
+                http_request = new XMLHttpRequest();
+                if (http_request.overrideMimeType) {
+                    http_request.overrideMimeType('text/xml');
+                }
+            } else if (window.ActiveXObject) {
+                try {
+                    http_request = new ActiveXObject("Msxml2.XMLHTTP");
+                } catch (e) {
+                    try {
+                        http_request = new ActiveXObject("Microsoft.XMLHTTP");
+                    } catch (e) {}
+                }
+            }
+    
+            if (!http_request) {
+                return false;
+            }
+            http_request.onreadystatechange = function() { alertContents(http_request); };
+            http_request.open('GET', 'slownik.txt', true);
+            http_request.send(0);
+    
+        }
+    
+        function alertContents(http_request) {
+    
+            if (http_request.readyState == 4) {
+                if (http_request.status == 200) {
+                    var t=http_request.responseText;
+                    
+                    var tablica=document.getElementById('t').value.split(' ');
+                    for(var i=0,d; i<tablica.length; i++){
+                      d=tablica[i];
+                      if(t.indexOf(d+' ')!=-1){
+                        alert('slowo "'+d+'" istnieje');
+                      }else{
+                        alert('slowa "'+d+'" nie ma');
+                    }
+
+                }
+            }
+        }
+            
+        }
+        /*]]>*/
+        </script>
+    </head>
+    <body>
+        <h1>Pobranie danych ze słownika (plik slownik.txt). Jeśli słowo istnieje w słowniku - wyświetlony zostanie odpowiedni alert</h1>
+        <p>Zawartość słownika <q>slowo inne jeszcze costam</q>.</p>
+        <p>Wpisz coś w poniższe pole i wciśnij przycisk sprawdź.</p>
+        <p>
+        <textarea id="t" cols="50" rows="10"></textarea>
+        <input type="button" onclick="makeRequest()" value="sprawdz" />
+        </p>
+    </body>
+</html>

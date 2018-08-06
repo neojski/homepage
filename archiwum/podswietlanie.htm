@@ -1,0 +1,195 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-2" />
+        <title>
+            Testowanie skryptow javascript
+        </title>
+<script type="text/javascript">
+t=[['d','110,100,200','234,234,234',50],
+['e','9ac234','234,234,234',50]]
+onload=function(){
+for(i=0;d=document.getElementsByTagName('*')[i++];){
+for(j=0;j<t.length;j++){
+if(d.className==t[j][0]){
+init(d,t[j][1],t[j][2],t[j][3])
+}
+}
+}
+}
+function init(d,s,e,k){
+d.s=toRgb(s)
+d.e=toRgb(e)
+d.k=k
+d.r=[(d.s[0]-d.e[0])/d.k,(d.s[1]-d.e[1])/d.k,(d.s[2]-d.e[2])/d.k]
+d.c=d.e
+d.l=0
+d.onmouseover=function(){f(this,1)}
+d.onmouseout=function(){f(this,0)}
+}
+function f(c,g){
+clearTimeout(c.t)
+for(i=0;i<3;i++){
+c.c[i]+=g?c.r[i]:-(c.r[i])
+}
+c.style.background='rgb('+parseInt(c.c[0])+','+parseInt(c.c[1])+','+parseInt(c.c[2])+')'
+g?c.l++:c.l-=1
+if(c.l>0 && c.l<c.k)c.t=setTimeout(function(){f(c,g)},10)
+else clearTimeout(c.t)
+}
+function toRgb(zm){
+if(/[0-9a-f]{6}/.test(zm)){
+return[parseInt(zm.substr(0,2),16),parseInt(zm.substr(2,2),16),parseInt(zm.substr(4,2),16)]
+}else{
+zm=zm.split(',');return[parseInt(zm[0]),parseInt(zm[1]),parseInt(zm[2])]
+}
+}
+</script>
+    </head>
+    <body>
+        <div class="d">
+            podswietl
+        </div>
+        <div class="e">
+            podswietl
+        </div>
+        <div class="d">
+            podswietl
+        </div>
+        <div class="e">
+            podswietl
+        </div>
+        <div class="d">
+            podswietl
+        </div>
+        <div class="e">
+            podswietl
+        </div>
+        <div class="d">
+            podswietl
+        </div>
+        <div class="e">
+            podswietl
+        </div>
+        <div class="d">
+            podswietl
+        </div>
+        <div class="e">
+            podswietl
+        </div>
+        <div class="d">
+            podswietl
+        </div>
+        <div class="e">
+            podswietl
+        </div>
+        <div class="d">
+            podswietl
+        </div>
+        <div class="e">
+            podswietl
+        </div>
+        <div class="d">
+            podswietl
+        </div>
+        <div class="e">
+            podswietl
+        </div>
+        <div class="d">
+            podswietl
+        </div>
+        <div class="e">
+            podswietl
+        </div>
+        <div class="d">
+            podswietl
+        </div>
+        <div class="e">
+            podswietl
+        </div>
+        <div class="d">
+            podswietl
+        </div>
+        <div class="e">
+            podswietl
+        </div>
+        <div class="d">
+            podswietl
+        </div>
+        <div class="e">
+            podswietl
+        </div>
+        <div class="d">
+            podswietl
+        </div>
+        <div class="e">
+            podswietl
+        </div>
+        <div class="d">
+            podswietl
+        </div>
+        <div class="e">
+            podswietl
+        </div>
+        <div class="d">
+            podswietl
+        </div>
+        <div class="e">
+            podswietl
+        </div>
+        <div class="d">
+            podswietl
+        </div>
+        <div class="e">
+            podswietl
+        </div>
+        <div class="d">
+            podswietl
+        </div>
+        <div class="e">
+            podswietl
+        </div>
+        <div class="d">
+            podswietl
+        </div>
+        <div class="e">
+            podswietl
+        </div>
+        <div class="d">
+            podswietl
+        </div>
+        <div class="e">
+            podswietl
+        </div>
+        <div class="d">
+            podswietl
+        </div>
+        <div class="e">
+            podswietl
+        </div>
+        <div class="d">
+            podswietl
+        </div>
+        <div class="e">
+            podswietl
+        </div>
+        <div class="d">
+            podswietl
+        </div>
+        <div class="e">
+            podswietl
+        </div>
+        <div class="d">
+            podswietl
+        </div>
+        <div class="e">
+            podswietl
+        </div>
+        <div class="d">
+            podswietl
+        </div>
+        <div class="e">
+            podswietl
+        </div>
+    </body>
+</html>

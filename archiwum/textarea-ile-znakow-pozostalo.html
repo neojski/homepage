@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Ograniczenie ilości wpisywanych znaków w textarea.</title>
+<script type="text/javascript">
+onl=window.onload||Function;
+onload=function(){
+    onl();
+    for(var i=0,d,k; d=document.getElementsByTagName('*')[i++];){
+        if(d.className=='zostalo'){
+            d.m=+d.innerHTML;
+            (k=d.previousSibling).onkeypress=k.onkeyup=function(){
+                var n=this.nextSibling;
+                if(this.value.length>n.m)this.value=this.value.slice(0,n.m);
+                n.innerHTML=n.m-this.value.length;
+            }
+        }
+    }
+}
+</script>
+</head>
+<body>
+
+<h1>Ograniczenie ilości znaków wpisywanych do pola textarea</h1>
+<p>Aby wprowadzić takie ograniczenie wystarczy zaraz za polem textarea wstawić dowolny znacznik klasy zostalo, do którego należy wpisać wartość maksymalnej ilości znaków.</p>
+
+<p><code>
+&lt;textarea rows="6" cols="40"&gt;&lt;/textarea&gt;&lt;span class="zostalo"&gt;3&lt;/span&gt;
+</code></p>
+
+<p>Przykłady:</p>    
+<p><textarea rows="6" cols="40"></textarea><span class="zostalo">3</span></p>
+<p><textarea rows="6" cols="40"></textarea><span class="zostalo">30</span></p>
+
+</body>
+</html>

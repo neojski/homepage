@@ -1,0 +1,28 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-2" />
+        <title>
+            Testowanie skryptow javascript
+        </title>
+    </head>
+    <body>
+<script type="text/javascript">
+var tablica = new Array()
+r=true
+z=2
+for(i=2,p=parseInt(prompt('Podaj liczbę do której szukać liczb pierwszych',''));i<p;i++){
+r=true
+for(j=0;j<tablica.length;j++){
+if(i%tablica[j]==0){
+r=false;break
+}
+}
+if(r){
+document.write(i+'<br />')
+tablica[z++]=i
+}
+}
+</script>
+    </body>
+    </html>

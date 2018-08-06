@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="ISO-8859-2"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html XMLNS="http://www.w3.org/1999/xhtml" XML:LANG="pl" LANG="pl">
+    <head>
+        <meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-2" />
+        <title>
+            Testowanie skryptow javascript
+        </title>
+<script TYPE="text/javascript">
+var i=new Array()
+var litery=new Array('a', 'b', 'c', 'd', 'e')
+function g(){
+for(licz=0; licz<litery.length; licz++){
+x=0
+while(el=document.getElementById(litery[licz]+x)){
+i[litery[licz]+x++]=parseInt(el.style.left);
+}
+}
+f()
+}
+function f(){
+for(licz=0; licz<litery.length; licz++){
+x=0
+while(el=document.getElementById(litery[licz]+x)){
+if(i[litery[licz]+x]>0){
+i[litery[licz]+x]-=(4-licz)*8
+}else{
+i[litery[licz]+x]=600
+}
+document.getElementById(litery[licz]+x).style.left=i[litery[licz]+x++]+"px"
+}
+}
+setTimeout('f()',1)
+}
+</script>
+    </head>
+    <body>
+        <div ONCLICK="g()">
+            uruchom
+        </div>
+        <div STYLE="width:600px; height:300px; border:2px solid; overflow:hidden; position:relative">
+            <div ID="neo" STYLE="font-size:10px; position:absolute; left:210px; top:140px; background: white; z-index: 10">
+                > |^^^^^^^^^^^^^^^^^^^\|| 
+                <br />
+                > | F R A T E R        | ||'""|""\__,_
+                <br />
+                > | _____________ l ||__ |__|___ |)
+                <br />
+                > |(@) |(@)"""**|(@)(@)****|(@)
+                <br />
+            </div>
+            <div ID="a0" STYLE="position:absolute; top:140px; left:10px; font-size: 30px">
+                a
+            </div>
+            <div ID="a1" STYLE="position:absolute; top:140px; left:110px; font-size: 30px">
+                a
+            </div>
+            <div ID="a2" STYLE="position:absolute; top:140px; left:210px; font-size: 30px">
+                a
+            </div>
+            <div ID="a3" STYLE="position:absolute; top:140px; left:310px; font-size: 30px">
+                a
+            </div>
+            <div ID="a4" STYLE="position:absolute; top:140px; left:410px; font-size: 30px">
+                a
+            </div>
+            <div ID="a5" STYLE="position:absolute; top:140px; left:510px; font-size: 30px">
+                a
+            </div>
+            <div ID="b0" STYLE="position:absolute; top:100px; left:10px; font-size: 20px">
+                b
+            </div>
+            <div ID="b1" STYLE="position:absolute; top:100px; left:155px; font-size: 20px">
+                b
+            </div>
+            <div ID="b2" STYLE="position:absolute; top:100px; left:300px; font-size: 20px">
+                b
+            </div>
+            <div ID="b3" STYLE="position:absolute; top:100px; left:430px; font-size: 20px">
+                b
+            </div>
+            <div ID="c0" STYLE="position:absolute; top:60px; left:10px; font-size: 14px">
+                c
+            </div>
+            <div ID="c1" STYLE="position:absolute; top:60px; left:85px; font-size: 14px">
+                c
+            </div>
+            <div ID="c2" STYLE="position:absolute; top:60px; left:160px; font-size: 14px">
+                c
+            </div>
+            <div ID="c3" STYLE="position:absolute; top:60px; left:235px; font-size: 14px">
+                c
+            </div>
+            <div ID="c4" STYLE="position:absolute; top:60px; left:310px; font-size: 14px">
+                c
+            </div>
+            <div ID="c5" STYLE="position:absolute; top:60px; left:385px; font-size: 14px">
+                c
+            </div>
+            <div ID="c6" STYLE="position:absolute; top:60px; left:460px; font-size: 14px">
+                c
+            </div>
+            <div ID="c7" STYLE="position:absolute; top:60px; left:535px; font-size: 14px">
+                c
+            </div>
+            <div ID="d0" STYLE="position:absolute; top:20px; left:10px; font-size: 10px">
+                e
+            </div>
+            <div ID="d1" STYLE="position:absolute; top:20px; left:85px; font-size: 10px">
+                e
+            </div>
+            <div ID="d2" STYLE="position:absolute; top:20px; left:160px; font-size: 10px">
+                e
+            </div>
+            <div ID="d3" STYLE="position:absolute; top:20px; left:235px; font-size: 10px">
+                e
+            </div>
+            <div ID="d4" STYLE="position:absolute; top:20px; left:310px; font-size: 10px">
+                e
+            </div>
+            <div ID="d5" STYLE="position:absolute; top:20px; left:385px; font-size: 10px">
+                e
+            </div>
+            <div ID="d6" STYLE="position:absolute; top:20px; left:460px; font-size: 10px">
+                e
+            </div>
+            <div ID="d7" STYLE="position:absolute; top:20px; left:535px; font-size: 10px">
+                e
+            </div>
+        </div>
+    </body>
+</htm

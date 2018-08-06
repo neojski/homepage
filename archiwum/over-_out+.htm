@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="ISO-8859-2"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml" xml:lang="pl" lang="pl">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-2" /><title>Testowanie skryptow javascript</title>
+<script type="text/javascript">
+var i=new Array(60,60,60,60);
+var czas;
+p=60;
+k=0;
+if(p<k){
+    alert('liczba poczatkowa musi być mniejsza, skrypt nie zadziala!')
+}
+function pokaz(nr){
+    clearTimeout(czas);
+    if(i[nr]>k && i[nr]<=p){
+        i[nr]-=1;
+        document.getElementById('nr'+nr).innerHTML=i[nr];
+    }
+    for(var x=0; x<i.length; x++){
+        if(i[x]<p && x!=nr){
+            i[x]+=1;
+            document.getElementById('nr'+x).innerHTML=i[x];
+        }
+    }
+    czas=setTimeout("pokaz('"+nr+"')", 3);
+}
+function wylacz(){
+    clearTimeout(czas);
+    for(var x=0; x<i.length; x++){
+        if(i[x]<p){
+            i[x]+=1;
+            document.getElementById('nr'+x).innerHTML=i[x];
+        }
+    }
+    czas=setTimeout("wylacz()", 3)
+}
+</script>
+</head>
+<body>
+<div onmouseout="wylacz()">
+<div id="nr0" onmouseover="pokaz(0)" style="width: 200px; border: 2px solid; position: relative">jeden</div>
+<div id="nr1" onmouseover="pokaz(1)" style="width: 200px; border: 2px solid; position: relative">jeden</div>
+<div id="nr2" onmouseover="pokaz(2)" style="width: 200px; border: 2px solid; position: relative">jeden</div>
+<div id="nr3" onmouseover="pokaz(3)" style="width: 200px; border: 2px solid; position: relative">jeden</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,131 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+	<head>
+		<title>Śnieg, wersja poprawiona.</title>
+		<script type="text/javascript">
+		/*
+			author: neo, neo.mlodzi.pl
+			date: 7.12.2006
+			licence: http://creativecommons.org/licenses/by-sa/2.5/deed.pl
+			use only with this comment
+		*/
+		d=0;
+		promien=0
+		
+		function snow(){
+			d++;
+			t_y=-Math.sin(d*Math.PI/180);
+			t_x=Math.cos(d*Math.PI/180);
+			
+			document.getElementById('a').innerHTML=d;
+			
+			end=0;
+			
+			if(d<360){
+				promien++;
+			}else if(d<720){
+				promien--;
+			}
+			
+			if(d%1080==0){
+				d=0;
+				
+				t_sx=Math.random()*width;
+				t_sy=Math.random()*height;
+				
+				end=1;
+			}
+		
+			for(var i=0; i<c; i++){
+				
+				
+				var odleglosc=Math.max( promien-Math.sqrt( Math.pow(a[i].top-t_sy, 2) + Math.pow(a[i].left - t_sx, 2) ), 0);
+				
+				if(a[i].top-100<height){
+					a[i].top+=a[i].size/5 * vy
+					a[i].style.top=a[i].top  + t_y*odleglosc + 'px';
+				}else{
+					a[i].top=-Math.random()*height;
+					a[i].style.top=a[i].top+'px'
+				}
+				
+				
+				if(a[i].left-100< width){
+					a[i].left+=a[i].size/5 * vx
+					a[i].style.left=a[i].left+ t_x*odleglosc + 'px'
+				}else{
+					a[i].left=-Math.random()*width;
+					a[i].style.left=a[i].left+'px'
+				}
+			}
+			
+			
+			
+			setTimeout('snow()', 10);
+		}
+
+		
+		onload=function(){
+			var s=document.getElementById('snow');
+			
+			width=400;
+			height=400;
+			
+			c=40;
+			
+			vx=vy=1;
+			vx_e=vy_e=0;
+			
+			t_x=t_y=t_sx=t_sy=0;
+			
+			
+			
+			s.style.width=width+'px';
+			s.style.height=height+'px';
+			s.style.border='2px solid black';
+			
+			s.style.overflow='hidden';
+			
+			//s.style.position='absolute'
+			
+			a=[];
+			
+			for(var i=0,d; i<c; i++){
+				d=document.createElement('img');
+				d.src='snow.gif';
+				
+				d.style.position='absolute';
+				
+				d.left=-Math.random()*width
+				d.top=-Math.random()*height
+				
+				d.style.left=d.left+'px';
+				d.style.top=d.top+'px';
+				
+				
+				
+				d.size=Math.random()*30;
+				
+				d.style.width=d.size+'px';
+				d.style.width=d.size+'px';
+				
+				s.appendChild(d);
+				
+				a[i]=d;
+			}
+			snow()
+		}
+		</script>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	</head>
+	<body>
+		<h1>Śnieg w <abbr title="javascript">js</abbr>. Wersja alpha.</h1>
+		<h2>Kliknij, aby odpalić skrypt.</h2>
+		<p>Wersja testowa skryptu padającego śniegu.</p>
+		<p><ins datetime="Friday, 09 December 2006">Skrypt działa już dość dobrze</ins>, być może zostaną wprowadzone jeszcze jakieś kosmetyczne zmiany.</p>
+		<p>A oto link do <a href="snieg.html">poprzedniej wersji śniegu</a>.</p>
+		<h2 style="position:relative; top:350px; left: 190px; display:inline;">no flash here</h2>
+		<div id="snow" style="position:relative;overflow:hidden;"></div>	
+		<div id="a"></div>
+	</body>
+</html>

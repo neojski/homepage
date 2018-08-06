@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+  <title>neo homepage - dynamiczna animacja</title>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+  <meta name="description" content="Pokaz umiejętności javascriptu. Animacja samochodu poruzsanego za pomocą strzałek." />
+  <meta name="keywords" content="neo, javascript, animacja, strzałki, ruch, samochód, dynamiczna" />
+  <script type="text/javascript">
+  //<![CDATA[
+  onload=function(){
+    d=[];
+    d[0]=document.getElementById('d0');
+    f();
+  }
+  k=[];//tablica klawiszowa
+  document.onkeydown=function(e){
+    e=e||event;
+    k[e.keyCode]=1;
+  }
+  document.onkeyup=function(e){  
+    e=e||event;
+    k[e.keyCode]=0;
+  }
+  kat=0;//kat obrotu
+  v=5;//predkosc
+  x=0;//pozycja pozioma
+  y=0;//pozycja pionowa
+  function f(){
+    if(k[37]==1){//lewo
+      kat+=3;    
+    };
+    if(k[39]==1){//prawo
+      kat-=3;
+    };
+    if(k[38]==1){//dol
+      v<=10?v+=.1:v=10;
+    };
+    if(k[40]==1){//gora
+      v>=-2?v-=.1:v=-2;
+    };
+    x+=Math.sin(kat*Math.PI/180)*v;
+    y+=Math.cos(kat*Math.PI/180)*v;
+    
+    for(i=0;i<d.length;i++){
+      d[i].style.left=~~(x+Math.sin(kat*Math.PI/180)*i*20)+'px';
+      d[i].style.top=~~(y+Math.cos(kat*Math.PI/180)*i*20)+'px';
+    }
+    setTimeout('f()',20);
+  } 
+  c=1; 
+  function generuj(){
+    el=document.createElement('div');
+    el.className='s';
+    el.id='d'+c;
+    document.body.appendChild(el);
+    d[c++]=document.getElementById(el.id);
+  }
+  function usun(){
+    if(document.getElementById('d'+ --c)&&c>0)document.body.removeChild(document.getElementById('d'+c));
+  }
+  //]]>
+  </script>
+  <style type="text/css">
+  .s{
+    background:black;width:10px;height:10px;position:absolute;left:0;top:0;font-size:0
+  }
+  </style>
+  
+  </head>
+  <body>
+  <div onclick="generuj()">Dodaj człon</div>
+  <div onclick="usun()">Usuń człon</div>
+  <div id="d0" class="s"></div>
+  </body>
+</html>

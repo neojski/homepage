@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>Wyróżnianie linków, które prowadzą do bierzącej strony.</title>
+        <style type="text/css">
+            .hereIam{color:red}
+            code{white-space: pre; margin-left: 30px; }
+            samp{border-left: 20px solid; display:block; margin-left:30px}
+            samp *{margin:0;padding:0}
+        </style>
+        <script type="text/javascript">
+        onl=(window.onload||new Function);
+        onload=function(){
+            onl();
+            for(var i=0;d=document.getElementsByTagName('a')[i++];){
+                if(d.href==document.location){
+                    d.className='hereIam';
+                }
+            }
+        }
+        </script>
+    </head>
+    <body>
+        <h1>Linki prowadzące do strony, na której aktualnie jesteś otrzymają klasę
+        <em>hereIam</em>.</h1>
+        <p>Skrypt wystarczy wstawić do sekcji head i przypisać klasie hereIam odpowiednie
+        właściwości css</p>
+        <p>Oto skrypt</p>
+        <p><code>
+        onl=(window.onload||new Function);
+        onload=function(){
+            onl();
+            for(var i=0;d=document.getElementsByTagName('a')[i++];){
+                if(d.href==document.location){
+                    d.className='hereIam';
+                }
+            }
+        }
+        </code></p>
+        <p>Przykład działania poniżej:</p>
+        
+        <samp><p><a href="linki.htm">Link prowadzi do bierzącej strony</a>
+        <a href="test.htm">A ten do fikcyjnego dokumentu</a></p>
+        <div>Lorem ipsum ble ble <a href="linki.htm">Ten także prowadzi do bierzącej strony.</a></div></samp>
+    </body>
+</html>

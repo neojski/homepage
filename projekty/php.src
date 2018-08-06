@@ -1,0 +1,6 @@
+<search 
+   name="php"
+   method="GET"
+   action="http://pl2.php.net/manual-lookup.php" >
+<input name="pattern" user>
+</search>

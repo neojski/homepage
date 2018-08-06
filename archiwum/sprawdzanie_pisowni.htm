@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-2" />
+        <title>
+            Testowanie skryptow javascript
+        </title>
+<script type="text/javascript">
+onload=function(){
+el=document.getElementById('e')
+el.onkeydown=function(){c=true}
+}
+var s,e,c,of=0
+function f(){
+if(el.value.indexOf('[e]')!=-1){
+if(el.value.lastIndexOf('[/e]')+4==of)of=0
+s=el.value.indexOf('[e]',(c)?0:of)
+e=el.value.indexOf('[/e]',(c)?(0,c=false):of)+4
+of=e
+zaznacz(s,e)
+}else{
+alert('Sprawdzanie zostało ukońcozne')
+}
+}
+function zaznacz(s,e){
+if(el.setSelectionRange){
+el.focus()
+el.setSelectionRange(s,e)
+}else if(el.createTextRange){
+range=el.createTextRange()
+range.collapse(true)
+range.moveEnd('character',e)
+range.moveStart('character',s)
+range.select()
+}
+}
+</script>
+    </head>
+    <body>
+        <div onclick="f()">
+            next error
+        </div>
+<textarea id="e" cols="50" rows="10">astępny błąd [e]error[/e] test [e]ruża[/e] a tu jest następny błąd [e]error[/e] ste</textarea>
+    </body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-3" /><title>Testowanie skryptow javascript</title>
+
+<script type="text/javascript">
+window.onload=function(){
+    for(i=0;x=document.body.childNodes[i++];){
+        if(x.nodeName.toLowerCase()=='div'){
+            new f(x)
+        }
+    }
+}
+function f(c){
+    c.ile=0
+    c.czas=0
+    c.style.position='relative'
+    c.style.width='200px'
+    c.style.border='2px solid'
+    c.onmouseover=function(){(c.ile<200)?c.style.left=c.ile++ +'px':'';clearTimeout(c.czas);c.czas=setTimeout(c.onmouseover,10)}
+    c.onmouseout=function(){(c.ile)?c.style.left=c.ile-- +'px':'';clearTimeout(c.czas);c.czas=setTimeout(c.onmouseout,10)}
+}
+</script>
+</head>
+<body>
+
+<div>0</div>
+<div>0</div>
+<div>0</div>
+<div>0</div>
+<div>0</div>
+<div>0</div>
+<div>0</div>
+
+test
+
+<div>0</div>
+<div>0</div>
+<div>0</div>
+
+</body>
+</html>

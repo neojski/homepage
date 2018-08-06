@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="pl">
+  <head>
+  <title></title>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <script type="text/javascript">
+    x=0;
+    y=0;
+    document.onmousemove=function(e){
+        e=e||event;
+        x=e.clientY-250;
+        y=e.clientX-250;
+    }
+    
+   function s(){
+        for(var i=0,d; d=document.getElementsByTagName('*')[i++];){
+            if(d.className=='r'){
+                d.alfa+=x/10000;
+                d.beta+=y/10000;
+                elx=Math.round(Math.sin((d.alfa+90)*Math.PI/180)*250+250);
+                ely=Math.round(Math.sin((d.beta+90)*Math.PI/180)*250+250);
+                size=Math.round(((Math.sin((d.alfa%360)*Math.PI/180))+Math.sin((d.beta%360)*Math.PI/180))*20+21);
+                d.style.top=elx+'px';
+                d.style.left=ely+'px';
+                d.style.width=d.style.height=d.style.zIndex=size+'px'
+            }
+        }
+        setTimeout('s()',100);
+    }
+   
+  
+   
+   onload=function(){
+        for(var i=0,d; d=document.getElementsByTagName('*')[i++];){
+            if(d.className=='r'){
+                d.alfa=Math.random()*360;
+                d.beta=Math.random()*360;
+                d.style.position='absolute';
+                ///d.style.background='black';
+            }
+        }
+     el=document.getElementById('c');
+     document.getElementById('b').onmousemove=s;
+   } 
+  </script>
+  </head>
+  <body>
+    <div id="b" style="width:500px;height:500px; border:1px solid; position:absolute; top:-1px; left:-1px">
+        <div class="r" style="width:20px;heigth:20px; background:blue">t</div>
+        <div class="r" style="width:20px;heigth:20px; background:lightblue">t</div>
+        <div class="r" style="width:20px;heigth:20px; background:yellowgreen">t</div>
+        <div class="r" style="width:20px;heigth:20px; background:gray">t</div>
+        <div class="r" style="width:20px;heigth:20px; background:#abcdef">t</div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-2" /><title>Testowanie skryptow javascript</title>
+</head>
+<body>
+
+<script type="text/javascript">
+var tablica = new Array(2,3)
+z=2
+ref=false
+function roz(x){
+    if(x>2){
+    ref=false
+    for(i=0;i<tablica.length;i++){
+        if(x%(tablica[i])==0){
+            document.write(x+'|'+tablica[i]+'<br />')
+            ref=true
+            break
+        }
+    }
+    if(ref){
+        roz(x/tablica[i])
+    }else{
+        for(i=2;;i++){
+            if(x%i==0){
+                document.write(x+'|'+i+'<br />')
+                tablica[z++]=i
+                roz(x/i)
+                break
+            }
+        }
+    }
+    }else{
+        document.write('1')
+    }
+}
+roz(parseInt(prompt('Podaj liczbę do której szukać liczb pierwszych')))
+</script>
+
+
+</body>
+</html>
+

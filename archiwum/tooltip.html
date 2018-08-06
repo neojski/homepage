@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="pl">
+  <head>
+  <title>Nieruchomy tooltip, czyli "chmurki" w javascript.</title>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <script type="text/javascript">
+  var onl=window.onload||Function;
+  onload=function(){
+    onl();
+    for(var i=0,d,dE,D=document,span;d=D.getElementsByTagName('*')[i++];){
+        if(d.getAttribute('title')){
+            d.onmouseover=function(e){
+                var e=e||event;
+                span=D.createElement('span');
+                span.id='tooltip';
+                span.appendChild(D.createTextNode(this.getAttribute('title')));
+                with(span.style){
+                    position='absolute';
+                    top=e.clientY+(dE=D.documentElement).scrollTop+20+'px';
+                    left=e.clientX+dE.scrollLeft+20+'px';
+                }
+                this.title_ex=this.title;
+                this.title='';
+                D.body.appendChild(span);
+            }
+            d.onmouseout=function(){
+                this.title=this.title_ex;
+                D.body.removeChild(span);
+            }
+        }
+    }
+  }
+  </script>
+  <style type="text/css">
+    #tooltip{background:yellowgreen; display:block; width:200px}
+  </style>
+  </head>
+  <body>
+    <h1 title="Tytuł pierwszego rzędu">Tooltip w javascript.</h1>
+    <p title="Opis skryptu">Prosty skrypt wyświetlający tooltip o zawartości równej z zawartością atrybutu title.</p>
+    <p>Tooltip jest nieruchomy, ponieważ ruchome "chmurki" bardzo utrudniają czytanie.</p>
+    <p title="Wszystko działa jak należy">Najedź na mnie!</p> 
+  </body>
+</html>

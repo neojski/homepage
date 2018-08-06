@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="ISO-8859-2"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml" xml:lang="pl" lang="pl">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-2" /><title>Testowanie skryptow javascript</title>
+<script type="text/javascript">
+window.onload=f
+function f(){
+    x=0;
+    while(document.getElementById('nr'+x)){
+        document.getElementById('nr'+x).onmouseover=a
+        x++
+    }
+}
+function a(){
+    a=this.id
+    pokaz(a.substring(2,a.length))
+}
+var i=new Array(0,0,0,0);
+var czas;
+function pokaz(nr){
+    clearTimeout(czas);
+    if(i[nr]>=0 && i[nr]<50){
+        i[nr]+=1;
+    }
+    document.getElementById('nr'+nr).style.left=i[nr]+"px";
+    for(var x=0; x<i.length; x++){
+        if(i[x]>0 && x!=nr){
+            i[x]-=1;
+            document.getElementById('nr'+x).style.left=i[x]+"px";
+        }
+    }
+    czas=setTimeout("pokaz('"+nr+"')", 3);
+}
+function wylacz(){
+    clearTimeout(czas);
+    for(var y=0; y<i.length; y++){
+        if(i[y]>0){
+            i[y]-=1;
+            document.getElementById('nr'+y).style.left=i[y]+"px";
+        }
+    }
+    czas=setTimeout("wylacz()", 3)
+}
+</script>
+</head>
+<body>
+
+<div onmouseout="wylacz()">
+<div id="nr0" style="width: 200px; border: 2px solid; position: relative">jeden</div>
+<div id="nr1" style="width: 200px; border: 2px solid; position: relative">jeden</div>
+<div id="nr2" style="width: 200px; border: 2px solid; position: relative">jeden</div>
+<div id="nr3" style="width: 200px; border: 2px solid; position: relative">jeden</div>
+
+</body>
+</html>

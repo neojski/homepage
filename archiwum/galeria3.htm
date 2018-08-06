@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-3" />
+    <title>
+        Testowanie skryptow javascript
+    </title>
+<script type="text/javascript">
+z=200//dlugosc boku
+x=z
+onload=function(){
+c=null
+a=document.getElementById('galeria')
+b=document.getElementById('klatka').style
+if(a.offsetWidth>a.offsetHeight){a.style.width=z+'px'}else{a.style.height=z+'px'}
+b.width=z+'px'
+b.height=z+'px'
+b.position='absolute'
+b.left=z+'px'
+b.top='0'
+with(document.getElementById('galeria').parentNode.style){
+height=z+'px'
+width=z*2+'px'
+position='relative'
+}
+}
+function f(s){
+img=new Image();img.src=s
+function wsun(){clearTimeout(c);b.left=(x+=4)+'px';if(x<z){c=setTimeout(wsun,1)}}
+function load(){clearTimeout(c);if(img.complete){if(img.width<img.height){a.removeAttribute('style');a.style.height=z+'px'}else{a.removeAttribute('style');a.style.width=z+'px'}a.src=s;wsun()}else{c=setTimeout(load,100)}}
+(function wysun(){clearTimeout(c);b.left=(x-=4)+'px';(x>0)?c=setTimeout(wysun,1):load()})()
+}
+</script>
+</head>
+<body>
+    <div id="x">
+    </div>
+    <div>
+        <img id="galeria" src="3.jpg" />
+        <div id="klatka" style="background: lightblue">
+        </div>
+    </div>
+    <div onclick="f('http://images.google.com/images?q=tbn:Q-ZwxP7H2ZEXdM:umbra.nascom.nasa.gov/eit/images/eclipse/williams/eit_20010621_1238_304.jpg')">
+        1.jpg
+    </div>
+    <div onclick="f('http://images.google.com/images?q=tbn:-FKhJaLSbqOWBM:lcweb2.loc.gov/pnp/cph/3a50000/3a53000/3a53200/3a53289r.jpg')">
+        2.jpg
+    </div>
+    <div onclick="f('http://images.google.com/images?q=tbn:bKzoEfO-OLZMtM:earthobservatory.nasa.gov/Newsroom/NewImages/Images/mideast_amo_2006021_lrg.jpg')">
+        3.jpg
+    </div>
+    <div onclick="f('http://images.google.com/images?q=tbn:q9Orf3LWXRIsaM:www.tytanclub.com/images/odbyt%2520szczura.jpg')">
+        4.jpg
+    </div>
+    <div onclick="f('http://images.google.com/images?q=tbn:oRcOHGzM6LcoUM:www.etrim.sk/novinky/img/foto2.jpg')">
+        5.jpg
+    </div>
+</body>
+</html>

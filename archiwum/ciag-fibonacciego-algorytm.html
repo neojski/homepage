@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <script type="text/javascript">
+  //<![CDATA[
+  function fib(m){
+    for(var a=b=1,s=c=2;c<m;){s+=c++%2?a+=b:b+=a}return m<2?null:[s,a<b?b:a];
+  }	
+  onload=function(){
+  	var p=document.getElementById('przyklad');
+  	p.removeChild(p.firstChild);
+  	var f=document.createElement('form');
+  	var t=document.createElement('input');
+  	var s=document.createElement('input');
+  	f.onsubmit=function(){
+  		alert(fib(+this.firstChild.value));
+  		return false;
+  	}
+  	t.type='text';
+  	s.type='submit';
+  	s.value='Oblicz';
+  	f.appendChild(t);
+  	f.appendChild(s);
+  	p.appendChild(f);
+  }
+  //]]>
+  </script>
+  <title>Ciąg Fibonacciego - algorytm.</title>
+  </head>
+  <body>
+  <h1><a href="http://pl.wikipedia.org/wiki/Ci%C4%85g_Fibonacciego" title="Ciąg Fibonacciego w Wikipedii">Ciąg Fibonacciego</a>, kalkulator.</h1>
+  <p>Napisałem prosty algorytm w javascript umożliwiający wyznaczenie n-tej liczby ciągu Fibonacciego i sumy pierwszych n liczb.</p>
+  <p>Oto on:</p>
+  <pre><code>function fib(m){
+  for(var a=b=1,s=c=2;c&lt;m;){s+=c++%2?a+=b:b+=a}return m&lt;2?null:[s,a&lt;b?b:a];
+  }</code></pre>
+  <p>Przykładowe działanie:</p>
+  <p id="przyklad">Aby obejrzeć przykład musisz mieć włączone javascript. Skrypt możesz też odpalić samodzielnie korzystając z podanego powyżej kodu.</p>
+  <p>Skrypt zwraca tablicę w postaci:</p>
+  <pre>Array
+(
+    [0] => suma pierwszych n liczb
+    [1] => n-ta liczba ciągu
+)</pre>
+  </body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>Ruszanie elementami strony</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<script type="text/javascript">
+	/*
+		author: neo, neo.mlodzi.pl
+		licence: http://creativecommons.org/licenses/by-sa/2.5/deed.pl
+		use only with this comment
+	*/
+	(function(){
+	var el,l=0;
+	(d=document).onmousemove=function(e,D){
+		x=(e=e||event).clientX+(D=d.documentElement).scrollLeft;
+		y=e.clientY+D.scrollTop;
+		el?e.shiftKey?(el.style.width=x+xb+'px',el.style.height=y+yb+'px'):(el.style.left=x-xs+'px',el.style.top=y-ys+'px'):0;
+	}
+	d.onmouseup=function(){
+		el=0
+	}
+	
+	function m(c){
+		(el=c).style.zIndex=++l;
+		xs=x-c.offsetLeft;
+		ys=y-c.offsetTop;
+		xb=c.offsetWidth-x;
+		yb=c.offsetHeight-y;
+	}
+	
+	//nadawanie klasie r odpowiednich funkcji + ostylowania (konieczne jest position)
+	var on=window.onload||Function;
+	onload=function(){
+		on();
+		for(var i=0,f;f=d.getElementsByTagName('*')[i++];){
+			if(f.className=='r'){
+				f.onmousedown=function(){m(this);return !1}
+				f.onselectstart=function(){return !1}
+				f.style.position='absolute';
+			}
+		}
+	}
+	})()
+	</script>
+	<style type="text/css">
+	*{
+		margin:0;
+		padding:0;
+	}
+	.r{
+		border:1px solid black;
+	}
+	body{
+		background:url("http://img65.imageshack.us/img65/7928/redeyetransparent8eb.jpg") no-repeat;
+		height:2000px;
+	}
+	</style>
+</head>
+<body>
+	<h1 class="r" style="background:url('http://img97.imageshack.us/img97/294/zaba26rf.jpg') fixed">Poruszanie elementami strony.</h1>
+	
+	<p class="r" style="top:50px;left:40px; background:white">Możesz ruszać myszą wszystkimi elementami tej strony, a trzymając przycisk <kbd>shift</kbd>
+	zmieniać ich rozmiary.</p>
+	
+	<p class="r" style="top:150px;right:40px;width:200px">Ruchomemu elementowi wystarczy nadać klasę <code>r</code>.</p>
+	
+	<p class="r" style="top:300px;left:430px; background:#9ac234; opacity:.8">Jest to wersja minimalna, pozbawiona wszelkich "bajerów".</p>
+	
+	<img class="r" style="top:380px;left:30px" src="http://www.free-nature-photos.org/fotodb/50_poppies_16.jpg" alt="maki polne" />
+	
+	<p class="r" style="top:530px; left: 94px; width: 230px; background:white; opacity:.8">Nic nie stoi na przeszkodzie, żeby obrazek miał ustawioną klasę <code>r</code>, tak jak ten powyżej ;-)</p>
+</body>
+</html>

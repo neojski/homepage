@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="pl" lang="pl">
+  <head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <title>Zamiana tekstu na emotikony przez javascript.</title>
+<script type="text/javascript">
+//skrypt na licencji creative commons, patrz folder wyżej
+var f=1;
+onload=function(d){
+//obowiązkowo zamiast \ trzeba użyć \\
+//1 podajemy obiekt zawierający ilonki i nazwy plików
+var e={
+	':?':'confused.gif',
+	'xD':'mrgreen.gif',
+	':)':'smile.gif',
+	';\\':'wink.gif',
+	']:->':'twisted.gif',
+	':*':'buziak.gif'
+}
+//2 podajemy folder z ikonkami, ja podałem dodatkowo prefiks ikonek
+var r='http://racek.blox.pl/resource/icon_';
+//główna pętla
+for(var i in e){
+	f?
+	(d=document.body).innerHTML=d.innerHTML.replace(RegExp(i.replace(/([\\)?*+.^])/g,'\\'+'$1').replace(/>/g,'&gt;'),'g'),'<img src="'+r+e[i]+'" alt="'+e[i]+'">')
+	:
+	(d=document.body).innerHTML=d.innerHTML.replace(RegExp('<img src="'+r+e[i]+'" alt="'+e[i]+'">','gi'),i);
+}
+f=f?0:1;
+//odpowiedzialne za tworzenie przycisku włącz/wyłącz
+if(d=document.getElementById('switch')){document.body.removeChild(d);}
+var d=document.createElement('span');
+d.id='switch';
+d.appendChild(document.createTextNode(f?'włącz':'wyłącz'));
+with(d.style){
+	position='absolute';
+	right=0;
+	top=0;
+	background='yellowgreen';
+}
+d.onclick=function(){onload()}
+document.body.appendChild(d);
+}
+</script> 
+ </head>
+  <body>
+    <h1>Zamiana tekstu na emotikony w statycznej stronie.</h1>
+    <p>Język javascript ma wielkie możliwości. Z jego pomocą możemy zamienić popularne uśmieszki na graficzne odpowiedniki. :)</p>
+    <p>Inne przykłady: xD ]:-> :) :? :* (ostatni obrazek nie istnieje - przeglądarka wyświetla opis).</p>
+    <p>W źródle strony nie ma żadnych obrazków, jednak jeśli masz włączone js - zobaczysz graficzne odpowiedniki emotikon.</p>
+    <p>Obrazków użyczył Racek.</p>
+    <p>W razie problemów (jakieś błędy w podmianie, spowodowane problemami ze znakami specjalnymi) proszę pisać <a href="/me">na mój adres</a>.</p>
+  </body>
+</html>

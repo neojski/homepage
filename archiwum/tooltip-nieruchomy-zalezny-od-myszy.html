@@ -1,0 +1,59 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+  <title>Tooltip zależny od myszy z możliwością dodania opóźnienia.</title>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+  <style type="text/css">
+  #tooltip{
+    position:absolute;
+    display:none;
+    background:yellowgreen;
+    border:2px solid black;
+    padding:10px;
+  }
+  </style>
+  <script type="text/javascript">
+onl=window.onload||Function;
+onload=function(){
+    onl();
+    for(var i=0,d,D=document,E=D.documentElement,B=D.body,span,v;d=D.getElementsByTagName('*')[i++];){
+        if(d.getAttribute('title')){
+            d.old=d.title;
+            d.removeAttribute('title');
+            d.onmouseover=function(e){
+              t=this;
+              this.o=setTimeout(
+                function(){
+                  with(span.style){
+                      display='inline';
+                      left=t.l;
+                      top=t.t;
+                  }
+                  span.firstChild.nodeValue=t.old;
+                }, 300)//definicja opóźnienia - czas w milisekundach
+            };
+            d.onmouseout=function(){
+                clearTimeout(this.o);
+                span.style.display='none';
+            }
+            d.onmousemove=function(e){
+              this.l=(e=e||event).clientX+(E.scrollLeft||B.scrollLeft)+20+'px';
+              this.t=e.clientY+(E.scrollTop||B.scrollTop)+20+'px';
+            }
+        }
+    }
+    span=D.createElement('span');
+    span.id='tooltip';
+    span.appendChild(D.createTextNode('test'));
+    D.body.appendChild(span);
+  }
+  </script>
+  </head>
+  <body>
+  <h1>Kolejny z serii tooltipów, powiązanie <a href="tooltip.html">dynamicznego</a> i <a href="static-tooltip.html">statycznego</a>.</h1>
+  <p>Jego pozycja jest zależna od pozycji myszki, dodatkowo możemy ustawić opóźnienie w jego wyświetlaniu.</p>
+  <p>Przykłady:</p>
+  <div title="Witam, jestem sobie chmurką!">test</div>
+  <p title="Działa!">Najedź na mnie!</p>
+  </body>
+</html>

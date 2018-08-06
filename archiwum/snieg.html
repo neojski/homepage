@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="pl">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+  <title></title>
+  <style type="text/css">
+  .d{width:200px;height:200px;position:absolute;left:20px;top:20px;border:1px solid black;overflow:hidden}
+  </style>
+  <script type="text/javascript">
+  /*<![CDATA[*/
+  onload=function(){ma=2;mb=2;setInterval('mn()',5e3);init(10)}
+	function init(ccc){
+	  ccc>100?confirm('It is very much')?ile=ccc:ile=10:ile=ccc
+	  s='snow.gif';
+	  (e=document.getElementById('d')).className='d'
+	  h=e.offsetHeight
+	  w=e.offsetWidth
+	  txt=''
+    for(i=0;i<ile;i++){
+	    txt+='<img src="'+s+'" id="i'+i+'" style="position:absolute;top:'+(Math.random()*h-h)+'px;left:'+(Math.random()*w-w)+'px" />'
+	  }
+	  e.innerHTML=txt
+	  for(i=0;i<ile;i++){
+	    a[i]=[]
+	    a[i][0]=document.getElementById('i'+i)
+	    a[i][1]=a[i][0].offsetLeft
+	    a[i][2]=a[i][0].offsetTop
+	  }
+	  padaj()
+	}
+	function mn(){
+	  ma=Math.random()*3+1
+	  mb=Math.random()*3+1
+	}
+	function padaj(){
+	  for(i=0;i<ile;i++){
+		  if(a[i][2]>h){a[i][2]=(Math.random()*h-h)}else{a[i][2]+=(Math.random()*ma)}
+		  if(a[i][1]>w){a[i][1]=(Math.random()*w-w)}else{a[i][1]+=(Math.random()*mb)}
+		  a[i][0].style.top=a[i][2]+'px'
+      a[i][0].style.left=a[i][1]+'px'
+	  }
+	  setTimeout('padaj()',1)
+	}
+	/*]]>*/
+  </script>
+  <style type="text/css">
+  body,html{margin:0;padding:0}
+  </style>
+  </head>
+  <body>
+<div> 
+<div id="d"></div>
+	
+<h1>no flash here</h1>
+<h5>powered by neo</h5>
+
+<input type="text" id="a" style="margin-top: 220px" title="how much snow" value="numbers_only" onfocus="value=value==defaultValue?'':value" onblur="value=value==''?defaultValue:value" />
+<input type="button" onclick="init(document.getElementById('a').value)" value="ok" />
+</div>
+    
+  </body>
+</html>

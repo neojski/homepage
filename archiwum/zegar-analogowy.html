@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="pl">
+    <head>
+        <title>Zegar analogowy (javascript)</title>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <script type="text/javascript">
+        var onl=window.onload||Function;
+        onload=function(){
+            var d=10;
+            var w=400;
+            var h=300;
+            var z=document.getElementById('zegar');
+            z.style.position='relative';
+            var t=[];
+            for(var i=1;i<4;i++){
+                t[i]=[];
+                for(var j=1;j<=d;j++){
+                    var el=document.createElement('span');
+                    el.style.position='absolute';
+                    el.style.fontSize='40px';
+                    el.appendChild(document.createTextNode('.'));
+                    z.appendChild(el);
+                    t[i][j]=el;
+                }
+            }
+            
+            (function(){
+                var a=[];
+                with(new Date()){
+                    a[3]=getSeconds()*6;
+                    a[2]=getMinutes()*6;
+                    a[1]=getHours()*30;
+                }
+                for(var i=1; i<4; i++){
+                    for(var x=1; x<=d; x++){
+                        with(t[i][x].style){
+                            top=Math.sin((a[i]-90)*Math.PI/180)*i*x*h/d/6+h/2-36+'px';
+                            left=Math.cos((a[i]-90)*Math.PI/180)*i*x*w/d/6+w/2+'px';
+                        }
+                    }
+                }   
+                setTimeout(arguments.callee, 1000);
+            })();
+        }
+        </script>
+        <style type="text/css">
+        *{margin: 0; padding: 0}
+        code{white-space: pre; display: block; border-left: 10px solid}
+        </style>
+    </head>
+    <body>
+       
+        <h1>Zegar analogowy javascript</h1>
+        <p>Napisanie skryptu zegara cyfrowego jest niesamowicie proste: (skrypt napisany przez kuku)</p>
+        <code id="rafael">
+            &lt;span id="zegar"&gt;&lt;/span&gt;
+            &lt;script type="text/javascript"&gt;
+            o=document.getElementById('zegar')
+            setInterval('o.innerHTML=/[\\d:]{8}/.exec(Date())',1e3)
+            &lt;/script&gt;
+        </code>
+        <p>Jednak skrypt zegara analogowego wymaga trochę więcej pracy.
+        Poniżej ten skrypt w działaniu:</p>
+        <div id="zegar" style="width:400px; height:300px; border:2px solid"></div>
+        <p>Kod można zobaczyć patrząc w źródło strony.</p>
+        <p>Skrypt jest bardzo niepraktyczny, zaprezentowany, by pokazać umiejętności js.</p>
+    </body>
+</html>

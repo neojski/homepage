@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="pl">
+    <head>
+    <title>Odpowiednik funkcji number_format (php) w języku javascript.</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <style type="text/css">
+            code{white-space: pre; margin-left: 30px; }
+            samp{border: 1px solid; display:block; margin-left:30px}
+            samp span{white-space: pre;display:block}
+            ins:before{content:'Update: '}
+            ins{text-decoration:none}
+    </style>
+    <script type="text/javascript"> 
+        // number_format by neo 
+        // neo.mlodzi.pl
+        // http://creativecommons.org/licenses/by-sa/2.5/pl/ 
+        function number_format(number, decimals, dec_point, thousand_sep, p){    
+            var n=(''+(Math.round(number*(p=Math.pow(10,decimals||0)))/p)).split('.');
+            for(var i=(n[0]=n[0].split('')).length-3; i>0; i-=3){
+                n[0].splice(i,0,thousand_sep||',');
+            } 
+            return n[0].join('')+(n[1]?(dec_point||'.')+n[1]:'');
+        }
+	
+        onload=function(){
+            var samp=document.getElementsByTagName('samp')[0];
+            samp.removeChild(samp.firstChild)
+            var span=document.createElement('span');
+            span.appendChild(document.createTextNode(number_format(34323.234)+"\t"+' number_format(34323.234) '));
+            samp.appendChild(span);     
+            var span=document.createElement('span');
+            span.appendChild(document.createTextNode(number_format(34323.2323456,3,',','`')+"\t"+' number_format(34323.2323456,3,\',\',\'`\')'));
+            samp.appendChild(span);     
+            var span=document.createElement('span');
+            span.appendChild(document.createTextNode(number_format(34123323.234,-3,';','^')+"\t"+' number_format(34123323.234,-3,\';\',\'^\')'));
+            samp.appendChild(span);     
+        }
+</script>
+  </head>
+
+  <body>
+    <h1>Javascriptowy odpowiednik number_format (php)</h1>
+    <p>Składnia: <code>number_format(liczba[, ilość miejsc po przecinku (również ujemna)[, separator części dziesiętnych[, separator tysięcy]]])</code>
+    <p>Dzięki tej funkcji możesz zamienić liczbę na jej bardziej czytelny odpowiednik.
+    Możesz zmienić znak odseparowujący części dziesiętne, zaokrąglić liczbę i wstawić
+    separator tysięcy. Oto kod:</p>
+    <p><code>
+        function number_format(number, decimals, dec_point, thousand_sep, p){    
+            var n=(''+(Math.round(number*(p=Math.pow(10,decimals||0)))/p)).split('.');
+            for(var i=(n[0]=n[0].split('')).length-3; i>0; i-=3){
+                n[0].splice(i,0,thousand_sep);
+            } 
+            return n[0].join('')+(n[1]?(dec_point||',')+n[1]:'');
+        }
+    </code></p>
+    <p><ins datetime="20060722">Udało mi się skrócić kod i pozbyć się tablic.</ins></p>
+    <p><ins datetime="20060812">Powrót do tablicowej wersji ze względu na błędy. Zamiana String(liczba) na (''+liczba) (oszczędność 3 znaków). Całkowita zgodność działania z <a href="http://pl2.php.net/number_format">odpowiednikiem php</a>.</ins></p>
+    <p>I przykładowe działanie skryptu:</p>
+    <samp>Skrypt jest oparty o skrypty javascript. Prawdopodobnie wyłączyłeś interpretacje kodu js w ustawieniach przeglądarki, więc nie mogę wyświetlić przykładu.</samp>
+  </body>
+</html>

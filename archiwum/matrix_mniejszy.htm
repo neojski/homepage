@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="ISO-8859-2"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml" xml:lang="pl" lang="pl">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-2" /><title>neo - homepage</title>
+<script type="text/javascript">
+var text='Czesc Janek!'
+var temp=new Array()
+for(i=0; i<text.length; i++){
+    temp[i]=String.fromCharCode(Math.floor(Math.random()*94)+32)
+}
+
+
+
+window.onload=f
+
+function f(){
+    var temps=''
+    
+    i=Math.floor(Math.random()*(text.length))
+    
+    while(temp[i]==text.charAt(i)){
+        i=Math.floor(Math.random()*(text.length))
+    }
+    
+    if(temp[i]!=text.charAt(i)){
+        temp[i]=String.fromCharCode(Math.floor(Math.random()*94)+32)
+    }
+    
+    for(x=0; x<temp.length; x++){
+        temps+=temp[x]
+    }
+    document.getElementById('div').innerHTML=temps
+    if(temps!=text)setTimeout('f()', 1)
+
+}
+</script>
+</head>
+<body>
+
+<pre id="div" style="font-size: 30px"></pre>
+
+</body>
+</html>

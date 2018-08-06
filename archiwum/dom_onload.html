@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="pl">
+  <head>
+  <title>Zdarzenie javascript dom_onload (czyli po wczytaniu tekstowej części strony).</title>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <script type="text/javascript">
+    /*<![CDATA[*/
+    // event dom_onload written by neo
+    // www.neo.mlodzi.pl
+    // license http://creativecommons.org/licenses/by-sa/2.5/
+    ;(function(l){
+        if(document.body){
+            if(l==(l=document.body.innerHTML.length)){          
+                try{
+                    dom_onload();
+                }catch(e){
+                    //nastąpił błąd przy wywoływaniu funkcji dom_onload, być może z winy samej funkcji
+                    var f=(window.onload||Function);
+                    onload=function(){
+                        f();
+                        dom_onload();
+                    }
+                    //jeśli tutaj nastąpił błąd, to dom_onload przypisano błędną funkcję
+                };
+                return;
+            }
+        }
+        var s=arguments.callee;
+        setTimeout(function(){s(l)}, 100);
+    })(0);
+    
+    
+    var T=0;
+    var g=setInterval('T++',1);
+    
+    dom_onload=function(){
+        document.getElementById('test').style.color='green';
+        document.getElementById('test').innerHTML+=' czas wykonywania: '+T;
+    }
+    
+    onload=function(){
+        document.getElementById('test2').style.color='green';
+        document.getElementById('test2').innerHTML+=' czas wykonywania: '+T;
+    }
+    /*]]>*/
+  </script>
+  <style type="text/css">
+  code{border-left:20px solid black; margin-left: 20px; white-space:pre; display:block}
+  </style>
+  </head>
+  <body>
+    <h1>Zdarzenie po załadowaniu tekstowej części strony (<strong>dom_onload</strong>).</h1>
+    <p>Zwróć uwagę, że nie trzeba czekać na załadowanie bardzo dużego obrazka! Funkcja ta
+    jest szczególnie przydatna przy załadowywaniu skryptów na starcie - często używa się
+    do tego celu onload. Jednak funkcja onload zostanie wykonana dopiero po wczytaniu wszystkiego, 
+    łącznie z obrazkami, więc na efekt, powiedzmy płynnego przesuwania menu trzeba czasem
+    dość długo czekać. Problem rozwiązuje mój skrypt i pseudo-zdarzenie dom_onload.</p>
+    <p>Jeśli masz problemy z połączeniem internetowym i przez 100ms nie zostanie załadowany
+    żaden znak - funkcja może spowodować problem. Jednak dzięki interwencji <a href="http://www.forumweb.e-vip.pl">forumweb</a>
+    rozwiązałem problem - funkcja zostanie odpalona przez zwykłe onload</p>
+    <p>Jak zwykle przykład:</p>
+    <p id="test">Po załadowaniu strony (części tekstowej) nastąpi zmiana koloru tego akapitu na zielony.</p>
+    <p>W powyższym przykładzie zastosowano kod:</p>
+    <code>
+    dom_onload=function(){
+        document.getElementById('test').style.color='green';
+    }
+    </code>
+    <p id="test2">Ten akapit zmieni kolor po załadowaniu strony używając tradycyjnego <em>windows.onload</em></p>
+    <p>Tym razem skorzystano ze standardowego onload:</p>
+    <code>
+    onload=function(){
+        document.getElementById('test2').style.color='green';
+    }
+    </code>
+    <p>Jak pewnie zauważyłeś funkcja pierwsza zostaje wykonana praktycznie od razu, natomiast
+    na drugą trzeba czekać aż do załadowania obrazka. Przypisanie funkcji pseudo-zdarzeniu
+    dom_onload jest identyczne jak przy standardowym onload.</p>
+    <p>Przy akapitach pojawi się pomiar czasu. Jednostki są jednak względne.</p>
+    <p>Ładuję obrazek<img src="http://www.brothercake.com/scripts/iotbs/iotbs.bmp" /></p>
+  </body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-2" /><title>Testowanie skryptow javascript</title>
+</head>
+<body>
+
+<script type="text/javascript">
+z=0
+function roz(x){
+    for(i=2;;i++){
+        if(x!=1){
+
+            if(x%i==0){
+                document.write(x+'|'+i+'<br />')
+                roz(x/i)
+                break
+
+
+            }
+
+        }else{
+            document.write(1)
+            return
+        }
+    }
+}
+roz(parseInt(prompt('Podaj liczbę do której szukać liczb pierwszych')))
+</script>
+
+
+</body>
+</html>
+

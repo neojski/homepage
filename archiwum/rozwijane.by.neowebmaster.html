@@ -1,0 +1,132 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+   <head>
+     <style>
+       body { background-color:#f2f3ee; }
+       .cb { background-color:#e2e3de; margin-top:5px; padding:2px 0px 2px 4px; font:11px verdana; width:200px; cursor: pointer;}
+       .cw { padding:0px 0px 0px 10px; width:200px; overflowe:auto;}
+       a { padding:2px 0px 2px 5px; color:#92938e; display:block; font:bold 11px verdana; text-decoration:none; margin:0px; border-left:solid 3px #f2f3ee;}
+       a:hover{ color:#72736e; background-color:#e2e3de; border-color:#d2d3ce; }
+     </style>
+     <script>
+       var tMenus=new Array('','10','10','10','10','10');
+       var vTime = 20;
+       var tBaseData;
+       var vOpenMenu="";
+       var vTempMenu="";
+       var vCan=true;
+       
+       function f(i){
+         if(vCan==true){
+            vCan=false;
+            vTempMenu=i;
+            if (vOpenMenu=="")fShowMenu();
+            else if (vOpenMenu!="")fHideMenu()
+         }
+       }
+       function fShowMenu(){
+         if (tBaseData[vTempMenu][1]<tBaseData[vTempMenu][0]){
+            tBaseData[vTempMenu][1]++;
+            document.getElementById('i'+vTempMenu+'_'+tBaseData[vTempMenu][1]).style.display="block"
+            vTimer=setTimeout("fShowMenu()",vTime);
+         }
+         else {
+            vOpenMenu=vTempMenu;
+            vTempMenu="";
+            vCan=true;
+         }
+       }
+       function fHideMenu(){
+         if (tBaseData[vOpenMenu][1]>0){
+            document.getElementById('i'+vOpenMenu+'_'+tBaseData[vOpenMenu][1]).style.display="none";
+            tBaseData[vOpenMenu][1]--;
+            vTimer=setTimeout("fHideMenu()",vTime);
+         }
+         else {
+            if (vTempMenu == vOpenMenu){
+              vCan=true;
+              vOpenMenu="";
+            }
+            else if (vTempMenu!="")fShowMenu()
+            else vCan=true;
+         }
+       }
+       function fInIt(){
+         tBaseData = new Array;
+         for (i=0;i<tMenus.length;i++)tBaseData[i]=new Array();
+         for (i=1;i<tMenus.length;i++)tBaseData[i][0]=tMenus[i];
+         for (i=1;i<tMenus.length;i++)tBaseData[i][1]=0;
+         for(i=1;i<=tMenus.length;i++)for(j=1;j<=tMenus[i];j++)document.getElementById('i'+i+'_'+j).style.display="none"
+       }
+
+     </script>
+   </head>
+   <body onload="fInIt()">
+     <div class="cb" onclick="f('1')">Sample Menu Group 1</div>
+     <div class="cw">
+       <a id="i1_1" href="javascript:void(null)">Group 1 Link 1</a>
+       <a id="i1_2" href="javascript:void(null)">Group 1 Link 2</a>
+       <a id="i1_3" href="javascript:void(null)">Group 1 Link 3</a>
+       <a id="i1_4" href="javascript:void(null)">Group 1 Link 4</a>
+       <a id="i1_5" href="javascript:void(null)">Group 1 Link 5</a>
+       <a id="i1_6" href="javascript:void(null)">Group 1 Link 6</a>
+       <a id="i1_7" href="javascript:void(null)">Group 1 Link 7</a>
+       <a id="i1_8" href="javascript:void(null)">Group 1 Link 8</a>
+       <a id="i1_9" href="javascript:void(null)">Group 1 Link 9</a>
+       <a id="i1_10" href="javascript:void(null)">Group 1 Link 10</a>
+           </div>
+     <div class="cb" onclick="f('2')">Sample Menu Group 2</div>
+     <div class="cw">
+       <a id="i2_1" href="javascript:void(null)">Group 2 Link 1</a>
+       <a id="i2_2" href="javascript:void(null)">Group 2 Link 2</a>
+       <a id="i2_3" href="javascript:void(null)">Group 2 Link 3</a>
+       <a id="i2_4" href="javascript:void(null)">Group 2 Link 4</a>
+       <a id="i2_5" href="javascript:void(null)">Group 2 Link 5</a>
+       <a id="i2_6" href="javascript:void(null)">Group 2 Link 6</a>
+       <a id="i2_7" href="javascript:void(null)">Group 2 Link 7</a>
+       <a id="i2_8" href="javascript:void(null)">Group 2 Link 8</a>
+       <a id="i2_9" href="javascript:void(null)">Group 2 Link 9</a>
+       <a id="i2_10" href="javascript:void(null)">Group 2 Link 10</a>
+     </div>
+     <div class="cb" onclick="f('3')">Sample Menu Group 3</div>
+     <div class="cw">
+       <a id="i3_1" href="javascript:void(null)">Group 3 Link 1</a>
+       <a id="i3_2" href="javascript:void(null)">Group 3 Link 2</a>
+       <a id="i3_3" href="javascript:void(null)">Group 3 Link 3</a>
+       <a id="i3_4" href="javascript:void(null)">Group 3 Link 4</a>
+       <a id="i3_5" href="javascript:void(null)">Group 3 Link 5</a>
+       <a id="i3_6" href="javascript:void(null)">Group 3 Link 6</a>
+       <a id="i3_7" href="javascript:void(null)">Group 3 Link 7</a>
+       <a id="i3_8" href="javascript:void(null)">Group 3 Link 8</a>
+       <a id="i3_9" href="javascript:void(null)">Group 3 Link 9</a>
+       <a id="i3_10" href="javascript:void(null)">Group 3 Link 10</a>
+     </div>
+     <div class="cb" onclick="f('4')">Sample Menu Group 4</div>
+     <div class="cw">
+       <a id="i4_1" href="javascript:void(null)">Group 4 Link 1</a>
+       <a id="i4_2" href="javascript:void(null)">Group 4 Link 2</a>
+       <a id="i4_3" href="javascript:void(null)">Group 4 Link 3</a>
+       <a id="i4_4" href="javascript:void(null)">Group 4 Link 4</a>
+       <a id="i4_5" href="javascript:void(null)">Group 4 Link 5</a>
+       <a id="i4_6" href="javascript:void(null)">Group 4 Link 6</a>
+       <a id="i4_7" href="javascript:void(null)">Group 4 Link 7</a>
+       <a id="i4_8" href="javascript:void(null)">Group 4 Link 8</a>
+       <a id="i4_9" href="javascript:void(null)">Group 4 Link 9</a>
+       <a id="i4_10" href="javascript:void(null)">Group 4 Link 10</a>
+     </div>
+     <div class="cb" onclick="f('5')">Sample Menu Group 5</div>
+     <div class="cw">
+       <a id="i5_1" href="javascript:void(null)">Group 5 Link 1</a>
+       <a id="i5_2" href="javascript:void(null)">Group 5 Link 2</a>
+       <a id="i5_3" href="javascript:void(null)">Group 5 Link 3</a>
+       <a id="i5_4" href="javascript:void(null)">Group 5 Link 4</a>
+       <a id="i5_5" href="javascript:void(null)">Group 5 Link 5</a>
+       <a id="i5_6" href="javascript:void(null)">Group 5 Link 6</a>
+       <a id="i5_7" href="javascript:void(null)">Group 5 Link 7</a>
+       <a id="i5_8" href="javascript:void(null)">Group 5 Link 8</a>
+       <a id="i5_9" href="javascript:void(null)">Group 5 Link 9</a>
+       <a id="i5_10" href="javascript:void(null)">Group 5 Link 10</a>
+     </div>
+   </body>
+</html>
+

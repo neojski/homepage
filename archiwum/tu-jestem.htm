@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>
+            Skrypt podkreślający link prowadzący do bieżącej strony.
+        </title>
+        <style type="text/css">
+        code{white-space:pre}
+        samp{border-left:20px solid black; display:block; padding-left:20px}
+        </style>
+        <script type="text/javascript">
+        var onl=(window.onload||new Function);
+        onload=function(){
+            onl();
+            for(i=0;d=document.getElementsByTagName('a')[i++];){
+                if(d.href==document.location){
+                    d.style.color="red"
+                }
+            }
+        }
+        </script>
+    </head>
+    <body>
+        <h1>Wyróżnianie linków prowadzących do bieżącej strony</h1>
+        <p>Prościutki skrypt, który zmieni klasę linków prowadzących do właśnie wybranej
+        strony na inną</p>
+        <code>
+        var onl=(window.onload||new Function);
+        onload=function(){
+            onl();
+            for(i=0;d=document.getElementsByTagName('a')[i++];){
+                if(d.href==document.location){
+                    d.style.color="red"
+                }
+            }
+        }
+        </code>
+        <p>Przykład działania:</p>
+        <samp>
+        <a href="tu-jestem.htm">tu jestem</a>
+        <a href="test.htm">tu nie jestem</a>
+        <div>
+            Lorem ipsum ble ble 
+            <a href="tu-jestem.htm">tu jestem</a>
+        </div>
+        </samp>
+    </body>
+</html>

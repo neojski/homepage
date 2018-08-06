@@ -1,0 +1,20 @@
+<html>
+    <head>
+        <meta http-equiv="Content-type" content="text/html; charset=ISO-8859-2" />
+        <meta name="Description" content="[ Opis dokumentu ]" />
+        <meta name="Author" content="[ Autor dokumentu ]" />
+        <meta name="Generator" content="EdHTML" />
+        <title>
+            [ Tytul dokumentu ]
+        </title>
+    </head>
+    <body>
+<script type="text/javascript">
+function CD(d,o,t,x){return[x=~~(t=(d-o)/864e5),x=~~(t=(t-x)*24), x=~~(t=(t-x)*60),~~((t-x)*60)]}
+function R(t){t=CD(new Date(2005,11,1),new Date());document.getElementById('costam').innerHTML='Do 1 grudnia pozostalo '+t[0]+" dni, "+t[1]+" godzin, "+t[2]+" minut, "+t[3]+"sekund";setTimeout('R()',1e3);}
+onload=function(){R();}
+</script>
+        <div id="costam">
+        </div>
+    </body>
+</html>

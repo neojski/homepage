@@ -1,0 +1,26 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="pl" lang="pl">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+  <title></title>
+  <style type="text/css">
+  .a{font-weight:900}
+  .b{display:block;margin-left:10px}
+  </style>
+  </head>
+  <body>
+  <div id="d"></div>
+  
+  
+    <script type="text/javascript">    
+    t="if(test=='oko'){if('ziom'){alert('a')}else{alert('b')}} for(i=0;i<20;i++){if(i<20){alert('tak')}else{if(cos){alert('nie')}}}"
+		i=0
+    t=t.replace(/((?:if|else|for|switch|elseif).*?)\{/gi,'<span class="a" onclick="check(this)">$1{</span><span class="b">').replace(/\}/gi,'</span><span style="display:none">...</span><span class="a">}</span>')
+    document.getElementById('d').innerHTML=t
+    function check(c){ 
+		 (s=c.nextSibling).style.display=s.style.display=='none'?'block':'none'
+		 s.nextSibling.style.display=s.style.display=='none'?'inline':'none'
+ 	  }
+    </script>
+	</body>
+</html>

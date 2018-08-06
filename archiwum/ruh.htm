@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Testowanie skryptow javascript</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-2" />
+<link rel="stylesheet" type="text/css" href="../home.css" />
+<script type="text/javascript">
+//skrypt jest wlasnoscia Tomasza Kołodziejskiego
+//korzystanie tylko z tym komentarzem
+var el,l=0
+document.onmousemove=function(e){
+   x=(e=e||event).clientX+document.documentElement.scrollLeft
+   y=e.clientY+document.documentElement.scrollTop
+   if(el)el.style.left=x-xs+'px',el.style.top=y-ys+'px'
+
+}
+document.onmouseup=function(){el=null}
+function d(c){
+  (el=c).style.zIndex=++l
+  xs=x-c.offsetLeft
+  ys=y-c.offsetTop
+}
+
+onload=function(){
+  for(i=0;f=document.getElementsByTagName('*')[i++];){
+    if(f.nodeName=='DIV'&&f.className=='r'){
+      f.onmousedown=function(){d(this);return false}
+      f.onselectstart=function(){return false}
+      f.style.position='absolute';
+    }
+  }
+}
+</script>
+</head>
+<body style="background:url(a.jpg) no-repeat fixed">
+<div id="logo" class="r" style="width:700px;height:150px;border:2px solid;background:url(test.png) fixed -60px 0px no-repeat;position:relative;top:400px;color:#ffeeee">
+<h1>neo homepage</h1>
+</div>
+
+<div class="r" style="background:url(test.png) fixed;width:80px;height:80px"><img src="zoomer.gif" style="width:100px;height:100px"></div>
+
+<div style="width:720px;margin:auto;position:relative;margin-top:200px">
+<div class="r" style="border: 2px solid; background: lightblue; width: 200px; left:0px">
+<p>Lorem ipsum dolor sit amet consectetuer ante Curabitur In aliquam non. Aenean mi vel pretium augue ultrices turpis lacinia porta tortor at. Integer Pellentesque nunc ligula vel accumsan vel dignissim Donec Vivamus tempor. Vitae Vivamus cursus augue non turpis massa Aliquam dui ornare Suspendisse. Nec amet Integer sapien Ut iaculis euismod et neque quis Quisque. Felis Nam Vestibulum consectetuer semper gravida aliquam condimentum Vestibulum ac lacus. </p>
+<p>Id convallis molestie nibh Integer Lorem quis vel Maecenas sit auctor. Libero ac eget id ultrices tempor a et pharetra eget tempor. Id tristique orci congue amet malesuada pellentesque nibh laoreet interdum volutpat. Phasellus eu pellentesque sapien Curabitur laoreet leo Curabitur at In metus. Nibh amet enim facilisis nisl Suspendisse vel amet In mollis velit. Adipiscing eros sodales neque.</p>
+<p>Sed tincidunt elit pulvinar justo adipiscing condimentum semper neque eget Vivamus. At sapien tincidunt lobortis Morbi Curabitur metus sapien urna enim Praesent. Lorem elit lorem sollicitudin id ac auctor volutpat habitant nonummy fringilla. Laoreet Sed pede Aenean amet vel cursus feugiat semper consequat elit. Felis venenatis semper neque justo id Pellentesque dis et Nullam sagittis. Ligula et ipsum pede.</p>
+<p>Ut justo urna elit sit elit est hendrerit ligula magna non. Quis Proin Vivamus dolor justo hendrerit semper mauris Curabitur Phasellus est. Curabitur ipsum velit porta libero nulla laoreet Quisque nascetur adipiscing eget. Mus euismod id eget eget et Nunc dis tempor accumsan Morbi. Orci ac eget velit elit parturient dignissim Nullam tellus Aenean volutpat. Tincidunt gravida tortor.</p>
+</div>
+<div class="r" style="border: 2px solid; background: yellowgreen; width: 500px; left: 220px">
+<p>Lorem ipsum dolor sit amet consectetuer consequat diam turpis Phasellus Nulla. Nullam nibh orci purus Vestibulum Aliquam nec convallis sit congue consequat. Lacus Aenean hendrerit sem convallis at consequat tempor justo Phasellus nibh. Convallis a Sed id Vestibulum neque Proin nunc consectetuer sed interdum. Accumsan Morbi vel orci nisl Phasellus Phasellus In penatibus et mauris. A Nunc adipiscing Integer non tempus cursus dui nunc Nullam venenatis. Facilisis vitae neque.</p>
+<p>Tempor Phasellus et tellus libero nulla pellentesque tellus tortor velit lacinia. Nec vitae Phasellus metus Maecenas velit eu lacinia sed Donec cursus. Aenean augue sit faucibus id odio faucibus euismod Vestibulum volutpat non. Vestibulum velit consequat lacinia tempus Pellentesque tincidunt Phasellus ipsum elit Vestibulum. Curabitur et dictum a platea vitae fringilla porttitor ullamcorper.</p>
+<p>Justo eu elit Donec lorem faucibus Curabitur elit dui augue laoreet. Cum consequat orci tincidunt tempor Phasellus elit adipiscing Nunc Vivamus sed. Semper Phasellus neque vel mauris dignissim eget ligula et facilisi elit. Velit magna malesuada Fusce lorem convallis ipsum pretium semper id nunc. Sed wisi et netus quis mauris porttitor elit Vestibulum pretium congue. Sit accumsan rhoncus nibh Donec.</p>
+<p>Suscipit mus et dolor convallis enim urna amet cursus auctor et. Et Pellentesque euismod leo semper accumsan dui eros consequat velit congue. Sapien libero justo risus nibh malesuada eget at elit justo sociis. Dui Quisque ligula Aliquam cursus accumsan sollicitudin ut nunc nulla wisi. A vestibulum convallis Nam sociis lacus eros tempus In eros Vivamus. Et ante urna fringilla adipiscing sit urna ut.</p>
+<p>Cras risus lacus dui id vitae dignissim dolor augue a sed. Nisl auctor dignissim fringilla tincidunt Vestibulum commodo adipiscing Quisque Donec Quisque. Sit euismod id turpis aliquam eu eleifend risus sem Duis felis. Suscipit nibh ipsum Fusce dictumst et convallis semper montes sit Curabitur. Sed Donec Curabitur semper fermentum ac sed aliquet sit ridiculus scelerisque. In Quisque wisi Sed auctor justo Sed commodo non Cum ipsum. Platea et.</p>
+<p>Venenatis odio wisi id justo neque gravida Nunc lacus pede laoreet. Laoreet at Curabitur ullamcorper orci ut ac porta ac Quisque Maecenas. Et urna netus tempor congue Vestibulum Mauris Curabitur dui malesuada quis. Egestas Cras porttitor nibh at nibh Phasellus Suspendisse risus sagittis et. Turpis Maecenas ac sed Morbi semper Sed justo interdum adipiscing laoreet. </p>
+<p>Et scelerisque orci fames Phasellus dolor est id neque at Nulla. Ac et Nam et Aliquam Curabitur nibh rhoncus Suspendisse et nulla. Cum dui eget commodo Cum sed Donec dui quam est consequat. Suspendisse sagittis pretium enim In eget et Duis leo dictumst auctor. Vestibulum nulla libero Curabitur quis Curabitur id sed nibh dolor vel. Aliquet nibh consectetuer porttitor porta tempus neque dui eu.</p>
+<p>Ullamcorper urna Curabitur cursus non risus gravida eu mauris metus et. Lorem fames nisl gravida habitasse convallis tempor tincidunt lobortis semper Maecenas. Et quis ligula metus Cras Morbi malesuada consectetuer urna tristique In. Mi Lorem tincidunt pede Phasellus nunc egestas amet id mi enim. Risus enim magna vitae enim Integer odio a et penatibus id. Pellentesque dis pretium vestibulum et.</p>
+</div>
+</div>
+</body>
+</html>

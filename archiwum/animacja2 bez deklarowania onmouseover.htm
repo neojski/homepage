@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="ISO-8859-2"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="pl" lang="pl">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-2" />
+        <title>
+            Testowanie skryptow javascript
+        </title>
+<script type="text/javascript">
+/*<![CDATA[*/
+var i=new Array()
+var czas;
+p=2;
+k=40;
+if(p>k){
+alert('liczba poczatkowa musi być mniejsza, skrypt nie zadziala!')
+}
+window.onload=f
+function f(){
+x=0;
+while(document.getElementById('nr'+x)){
+i[x]=p
+document.getElementById('nr'+x).onmouseover=function(){
+a=this.id
+pokaz(a.substring(2,a.length))
+}
+x++
+}
+}
+function pokaz(nr){
+clearTimeout(czas);
+if(i[nr]>=p && i[nr]<k){
+i[nr]+=5;
+document.getElementById('nr'+nr).style.borderLeftWidth=i[nr]+"px";
+document.getElementById('nr'+nr).style.borderRightWidth=i[nr]+"px";
+}
+for(var x=0; x<i.length; x++){
+if(i[x]>p && x!=nr){
+i[x]-=1;
+document.getElementById('nr'+x).style.borderLeftWidth=i[x]+"px";
+document.getElementById('nr'+x).style.borderRightWidth=i[x]+"px";
+}
+}
+czas=setTimeout("pokaz('"+nr+"')", 3);
+}
+function wylacz(){
+clearTimeout(czas);
+for(var x=0; x<i.length; x++){
+if(i[x]>p){
+i[x]-=1;
+document.getElementById('nr'+x).style.borderLeftWidth=i[x]+"px";
+document.getElementById('nr'+x).style.borderRightWidth=i[x]+"px";
+}
+}
+czas=setTimeout("wylacz()", 3)
+}
+/*]]>*/
+</script>
+    </head>
+    <body>
+        <div onmouseout="wylacz()">
+            <div style="width: 200px; text-align: center">
+                <div id="nr0" style="border: 2px solid yellowgreen">
+                    jeden
+                </div>
+                <div id="nr1" style="border: 2px solid">
+                    jeden
+                </div>
+                <div id="nr2" style="border: 2px solid">
+                    jeden
+                </div>
+                <div id="nr3" style="border: 2px solid">
+                    jeden
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

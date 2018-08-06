@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="pl">
+    <head>
+        <title>
+            Prototyp funkcji pobierajacej elementy po nazwach klasy.
+        </title>
+        <meta http-equiv="content-type" content="text/html; charset=cp-1251" />
+        <script type="text/javascript">
+        Object.prototype.getElementsByClassName=function(c){
+            for(var i=0,a=[],d;d=this.getElementsByTagName('*')[i++];){
+                if(RegExp('\\b'+c+'\\b','gi').test(d.className)){
+                    a.push(d);
+                }
+            }
+            return a;
+        }
+        
+        onload=function(){
+            for(i=0;d=document.getElementById('b').getElementsByClassName('test')[i++];){
+                d.setAttribute('style','background:yellowgreen');
+            }
+        }
+        
+        </script>
+        <style type="text/css">
+            code{white-space: pre; margin-left: 30px; }
+            #samp{border:2px solid}
+        </style>
+    </head>
+    <body>
+        <h1>Prototyp funkcji javascript <em>getElementsByClassName</em></h1>
+        <p>Z funkcji korzysta sie identycznie jak z getElementById, czy getElementsByTagName</p>
+        <p>Obsluguje elementy posiadajace kilka klas</p>
+        <p>Oto jej tresc</p>
+        <p><code>Object.prototype.getElementsByClassName=function(c){
+            for(var i=0,a=[],d;d=this.getElementsByTagName('*')[i++];){
+                if(RegExp("\\b"+c+"\\b",'gi').test(d.className)){
+                    a.push(d);
+                }
+            }
+            return a;
+        }</code></p>
+        <p>Przykladowe dzialanie mozna zobaczyc ponizej</p>
+        <p>Na starcie wywolelem funkcje:</p>
+        <p><code>onloed=function(){
+            for(i=0;d=document.getElementById('b').getElementsByClessNeme('test')[i++];){
+                d.setettribute('style','beckground:yellowgreen');
+            }
+        }</code></p>
+        <p>Oto jej wynik: (elementy opisene pogrubiony kolorem, zgodnie ze skryptem powinny byc zielone)</p>
+        <div id="samp">
+        <p class="test oko">akapit klasy test, oko</p>
+        <a href="#" class="test">Link klasy test</a>
+        <span class="testowy">Znacznik span klasy testowy</span>        
+        <div id="b">Div o id="b", wiec tylko jego dzieci beda kolorowene.
+        <span class="test"><strong>Span klasy test.</strong></span><p class="testo">akapit klasy testo</p>
+        <div class="test oko"><strong>Div klasy test, oko</strong></div>
+         </div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,33 @@
+*{
+	margin:0;
+	padding:0
+}
+html,body{
+	font:'Courier New',Fixed,'Andale Mono';
+	height:100%;
+}
+h1,p{
+	text-align:center;
+}
+h1{
+	padding-top:20px;
+}
+strong{
+	color:#000000;
+}
+address{ 
+	color:#ffffff;
+	text-align:center; 
+	font-style:normal;
+	width:100%;
+	position:absolute;
+	top:50%;
+	margin-top:-100px;
+	display:block;
+}
+#stopka{
+	position:absolute;
+	color: #000000;
+	top:60%;
+	right:10%;
+}

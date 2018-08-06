@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="pl">
+  <head>
+  <title></title>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <style type="text/css">
+    *{margin:0;padding:0}
+    .menu_js{overflow:hidden; border: 1px solid black; position:relative}
+    </style>
+    <script type="text/javascript">
+  /* element, o ile chowac */
+  function open(c,o,f){
+    clearTimeout(c.time); 
+    if((f=c.offsetHeight)>c.ne.offsetHeight&&o<0||f<c.sh&&o>0){
+        c.style.height=f+o+'px';
+    }
+    c.time=setTimeout(function(){open(c,o)},1)
+  }
+  
+  /* sterowanie */
+  function oc(){
+    this.opened=!this.opened;
+    open(this,this.opened?3:-5);
+    /* element, this.opened?n:-n-2 */
+  }
+  
+  
+  /*uruchamiaj na starcie */
+  var onl=(window.onload||new Function);
+  onload=function(){
+    onl();
+    for(var i=0,d;d=document.getElementsByTagName('*')[i++];){
+        if(d.className=='menu'){
+            d.opened=1;
+            d.className='menu_js';
+            d.sh=d.offsetHeight;
+            d.ne=d.firstChild;
+            do{if(d.ne.nodeName!='#text')break;}while(d.ne=d.ne.nextSibling);
+            d.onclick=oc;
+        }
+    }
+  }
+  </script>
+  </head>
+  <body>
+    <dl class="menu">
+        <dt>tytuł menu</dt>
+        <dd><a href="#">test1</a></dd>
+        <dd><a href="#">test2</a></dd>
+        <dd><a href="#">test3</a></dd>
+        <dd><a href="#">test4</a></dd>
+        <dd><a href="#">test5</a></dd>
+        <dd><a href="#">test1</a></dd>
+        <dd><a href="#">test2</a></dd>
+        <dd><a href="#">test3</a></dd>
+        <dd><a href="#">test4</a></dd>
+        <dd><a href="#">test5</a></dd>
+        <dd><a href="#">test1</a></dd>
+        <dd><a href="#">test2</a></dd>
+        <dd><a href="#">test3</a></dd>
+        <dd><a href="#">test4</a></dd>
+        <dd><a href="#">test5</a></dd>
+        <img src="zaba.jpg" style="width:100px;height:100px" />
+    </dl>
+    <dl class="menu"><dt>tytuł menu</dt>
+        <dd><a href="#">test</a></dd>
+        <dd><a href="#">test</a></dd>
+        <dd><a href="#">test</a></dd>
+        <dd><a href="#">test</a></dd>
+        <dd><a href="#">test</a></dd>
+    </dl>
+    
+    <ul class="menu">
+        <h1>opis</h1>
+        <li><a href="#">test</a></li>
+        <li><a href="#">test</a></li>
+        <li><a href="#">test</a></li>
+        <li><a href="#">test</a></li>
+        <li><a href="#">test</a></li>
+        <li><a href="#">test</a></li>
+    </ul>
+  </body>
+</html>

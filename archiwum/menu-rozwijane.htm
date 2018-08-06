@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="ISO-8859-2"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml" xml:lang="pl" lang="pl">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-2" /><title>Testowanie skryptow javascript</title>
+<script type="text/javascript">
+// Autorem skryptu jest Tomasz Kołodziejski
+// neo007 <neo007@poczta.onet.pl>
+// Jeśli chcesz wykorzystać ten skrypt na swojej stronie, nie usuwaj tego komentarza!
+
+czy=true;//Czy może być rozwiniete tylko jedno menu (true/false) - Can be open only one menu
+
+/********************************************************
+//////////no need to edit below this line////////////////
+*******************************************************/
+
+var czas; var rozwiniete; var temp;
+window.onload=function(){
+  var i=0
+  while(el=document.getElementById('menu'+i++)){
+    el.className='menu'
+    el.onclick=klik
+    with(el.childNodes){
+      for(var x=0; x<length; x++){
+        if(item(x).nodeName.toLowerCase()!='#text'){
+          item(x).className='podmenu'
+        }
+      }
+    }
+  }
+}
+function klik(){
+  x=0
+  if(czy){
+    if(rozwiniete){
+      temp=this.id;zwin(rozwiniete)
+    }else{
+      rozwin(this.id)
+    }
+  }else{
+    with(this.childNodes){
+      for(i=0, el; i<length; i++){
+        if(item(i).nodeName.toLowerCase()!='#text'){
+          if(item(i).style.display=='block'){
+            zwin(this.id);break
+          }else{
+            rozwin(this.id);break
+          }
+        }
+      }
+    }
+  }
+}
+
+function zwin(c){
+  co=document.getElementById(c);
+  clearTimeout(czas)
+  if(el=co.childNodes[x++]){
+    if(el.nodeName.toLowerCase()!='#text'){
+       el.style.display='none'
+    }
+    czas=setTimeout('zwin("'+c+'")',1)
+  }else{
+    if(czy){
+      x=0
+      if(rozwiniete != temp)rozwin(temp)
+      rozwiniete=null;
+    }
+  }
+}
+
+function rozwin(c){
+  co=document.getElementById(c);
+  clearTimeout(czas)
+  if(el=co.childNodes[x++]){
+    if(el.nodeName.toLowerCase()!='#text'){
+       el.style.display='block'
+    }
+    czas=setTimeout('rozwin("'+c+'")',1)
+  }else{
+    rozwiniete=co.id;
+  }
+}
+</script>
+<style type="text/css">
+.menu {background: yellowgreen; width: 200px; border: 1px solid; margin: 0; padding: 0}
+.podmenu{display: none; background: none}
+</style>
+</head>
+
+<ul id="menu0">klik
+<li>cos</li>
+<li>cos</li>
+<li>cos</li>
+<li>cos</li>
+<li>cos</li>
+<li>cos</li>
+<li>cos</li>
+<li>cos</li>
+<li>cos</li>
+<li>cos</li>
+<li>cos</li>
+<li>cos</li>
+<li>cos</li>
+</ul>
+<ul id="menu1">klik
+<li>cos</li>
+<li>cos</li>
+<li>cos</li>
+<li>cos</li>
+<li>cos</li>
+<li>cos</li>
+<li>cos</li>
+<li>cos</li>
+<li>cos</li>
+<li>cos</li>
+<li>cos</li>
+<li>cos</li>
+</ul>
+<ul id="menu2">klik
+<li>cos</li>
+<li>cos</li>
+<li>cos</li>
+<li>cos</li>
+<li>cos</li>
+<li>cos</li>
+<li>cos</li>
+<li>cos</li>
+<li>cos</li>
+<li>cos</li>
+<li>cos</li>
+<li>cos</li>
+</ul>
+<ul id="menu3">klik
+<li>cos</li>
+<li>cos</li>
+<li>cos</li>
+<li>cos</li>
+<li>cos</li>
+<li>cos</li>
+<li>cos</li>
+<li>cos</li>
+<li>cos</li>
+<li>cos</li>
+<li>cos</li>
+<li>cos</li>
+</ul>
+
+
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-3" />
+    <title>
+        Testowanie skryptow javascript
+    </title>
+<script type="text/javascript">
+var t, x2=0, y2=0
+function f(e){
+clearTimeout(t)
+if(e){x=e.clientX;y=e.clientY}
+x2+=(x-x2)/12
+y2+=(y-y2)/45
+document.getElementById('div').style.left=x2+'px'
+document.getElementById('div').style.top=y2+'px'
+t=setTimeout('f()',1)
+}
+</script>
+</head>
+<body>
+    <div id="div" style="width: 5px; height: 5px; background: blue; font-size: 0; position: absolute">
+    </div>
+    <table>
+        <tr>
+            <td>
+                <div onmousemove="f(event)" style="background: yellowgreen; width: 40px; height: 40px; margin: 40px">
+                </div>
+            </td>
+            <td>
+                <div onmousemove="f(event)" style="background: yellowgreen; width: 40px; height: 40px; margin: 40px">
+                </div>
+            </td>
+            <td>
+                <div onmousemove="f(event)" style="background: yellowgreen; width: 40px; height: 40px; margin: 40px">
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div onmousemove="f(event)" style="background: yellowgreen; width: 40px; height: 40px; margin: 40px">
+                </div>
+            </td>
+            <td>
+                <div onmousemove="f(event)" style="background: yellowgreen; width: 40px; height: 40px; margin: 40px">
+                </div>
+            </td>
+            <td>
+                <div onmousemove="f(event)" style="background: yellowgreen; width: 40px; height: 40px; margin: 40px">
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div onmousemove="f(event)" style="background: yellowgreen; width: 40px; height: 40px; margin: 40px">
+                </div>
+            </td>
+            <td>
+                <div onmousemove="f(event)" style="background: yellowgreen; width: 40px; height: 40px; margin: 40px">
+                </div>
+            </td>
+            <td>
+                <div onmousemove="f(event)" style="background: yellowgreen; width: 40px; height: 40px; margin: 40px">
+                </div>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

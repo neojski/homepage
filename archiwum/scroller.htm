@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-3" />
+        <title>
+            Testowanie skryptow javascript
+        </title>
+        <style type="text/css">.scroller{overflow:hidden; width: 200px; height: 100px; border: 1px solid; position: relative}.podscroller{position:absolute;border-top:1px solid;background:white;width:100%}
+        </style>
+<script type="text/javascript">
+var t,l=y=0
+els=[]
+function f(){
+clearTimeout(t)
+x>-2?(els[y].style.top=x-- +'px',t=setTimeout('f()',10)):((y>els.length-2)?y=0:y++,x=s,setTimeout('els[y].style.zIndex=l++;f()',2000))
+}
+onload=function(){
+d=document.getElementById('tt')
+d.className='scroller'
+for(i=0;x=d.childNodes[i++];){
+if(x.nodeName.toLowerCase()=='div'){
+x.onmouseover=function(){clearTimeout(t)}
+x.onmouseout=function(){f()}
+x.className='podscroller'
+with(x.style){
+top=d.offsetHeight+'px'
+height=d.offsetHeight+'px'
+}
+els[l++]=x
+}
+}
+s=d.offsetHeight
+x=s;l=0;f()
+}
+</script>
+    </head>
+    <body>
+        <div id="tt">
+            <div>
+                tomek
+            </div>
+            <div>
+                ola
+            </div>
+        </div>
+    </body>
+</html>

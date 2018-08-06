@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+  <script type="text/javascript">
+  onload=function(){d=document.getElementById('d')}
+
+  l=t=0;
+  
+  k=[];
+  
+  document.onkeydown=function(e){ 
+    e=e||event;
+    k[e.keyCode]=1;
+  }
+  
+  document.onkeyup=function(e){  
+    e=e||event;
+    k[e.keyCode]=0;
+  }
+  
+  function f(){
+
+    if(k[37]==1){d.style.left=(l-=5)+'px'};
+    if(k[39]==1){d.style.left=(l+=5)+'px'};
+    if(k[38]==1){d.style.top=(t-=5)+'px'};
+    if(k[40]==1){d.style.top=(t+=5)+'px'};
+    setTimeout('f()',1);
+  }  
+  
+  f();
+  /*  
+  < 37
+  ^ 38
+  > 39
+  v 40
+  */
+  </script>
+  <title></title>
+  </head>
+  <body>
+
+  <div id="d" style="background:black;width:5px;height:5px;position:absolute;left:0;top:0;color:white"></div>
+
+  </body>
+</html>

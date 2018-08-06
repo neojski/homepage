@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="ISO-8859-2"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><HTML XMLNS="http://www.w3.org/1999/xhtml" XML:LANG="pl" LANG="pl">
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-2" /><TITLE>Testowanie skryptow javascript</TITLE>
+<STYLE TYPE="text/css">
+ul.menu {list-style-type: none}
+ul.menu li {float: left; border: 2px solid; width: 50px; height: 50px; position: relative; top: -50px}
+</STYLE>
+<SCRIPT TYPE="text/javascript">
+p=-50; //poczatkowa liczba schowania
+k=-20; //koncowa liczba schowania
+var i=[]; var czas;
+window.onload=function(){
+  c=0;
+  z=0
+  while(el=document.getElementById('menu'+z++)){
+    el.onmouseout=wylacz
+    el.className='menu'
+    for(x=0; x<el.childNodes.length; x++){
+      if(el.childNodes[x].nodeName.toLowerCase()!='#text'){
+        i[c]=p
+        el.childNodes[x].id='podmenu'+c++
+        el.childNodes[x].onmouseover=function(){
+          pokaz(this.id)
+        }
+      }
+    }
+  }
+}
+
+
+function pokaz(co){
+  nr=co.substring(7,co.length)
+  clearTimeout(czas);
+  if(i[nr]>=p && i[nr]<k){
+    i[nr]+=1;
+    document.getElementById('podmenu'+nr).style.top=i[nr]+"px";
+  }
+  for(var x=0; x<i.length; x++){
+    if(i[x]>p && x!=nr){
+      i[x]-=1;
+      document.getElementById('podmenu'+x).style.top=i[x]+"px";
+    }
+  }
+  czas=setTimeout('pokaz("'+co+'")', 1);
+}
+
+
+function wylacz(){
+  clearTimeout(czas);
+  for(var x=0; x<i.length; x++){
+    if(i[x]>p){
+      i[x]-=1;
+      document.getElementById('podmenu'+x).style.top=i[x]+"px";
+    }
+  }
+  czas=setTimeout("wylacz()", 1)
+}
+</SCRIPT>
+</HEAD>
+<BODY>
+
+<UL ID="menu0">
+<LI>jeden</LI>
+<LI>jeden</LI>
+<LI>jeden</LI>
+<LI>jeden</LI>
+<LI>jeden</LI>
+<LI>jeden</LI>
+</UL>
+
+</BODY>
+</HTML>

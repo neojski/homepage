@@ -1,0 +1,144 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="pl">
+  <head>
+  <title>Skrypt wyświetlający napis "Trwa ładowanie strony"</title>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <style type="text/css">
+    .blok{
+      width:100%;
+      height:100%;
+      background:yellowgreen;
+      margin:0;
+      padding:0;
+      position:absolute;
+      top:0;
+      left:0;
+    }
+    .on{
+     overflow:hidden;
+     width:100%;
+     height:100%;
+     padding:0;
+     margin:0;
+    }
+    code{
+      white-space:pre
+    }
+  </style>
+  <script type="text/javascript">
+   ;(function(d,c,p){
+    if(d=document.body){
+      p=document.createElement('p'),d;
+      p.appendChild(document.createTextNode('Testujemy ładownie strony. Poczekaj na załadowanie obrazków.'));
+      c=document.createElement('span');
+      c.appendChild(document.createTextNode('Zamknij.'));
+      c.onclick=function(){onload()}
+      p.appendChild(c);
+      p.className='blok';
+      d.insertBefore(p,d.firstChild);
+      d.className='on';
+      d.parentNode.className='on';
+      var onl=window.onload||Function;
+      onload=function(){
+        try{
+          onl();
+          d.className='';
+          d.parentNode.className='';
+          d.removeChild(p);
+        }catch(e){}
+      }
+    }else{
+      setTimeout(arguments.callee,10);
+    }
+  })();
+  </script>
+  </head>
+
+  <body>
+  <h1>Skrypt podczas ładowania strony</h1>
+  <p>Wyświetli napis "Ładowanie", podczas ładowania strony. Nie musisz się martwić o użytkowników z wyłączonym javascriptem - oni również zobaczą Twoją stronę. W razie jakichś problemów "przesłonę" można wyłączyć korzystając z przycisku "zamknij". Skrypt korzysta z DOM, ale dla Internet Explorera, <del>trzeba użyć dodatkowego skryptu</del> (ponieważ nie radzi sobie w pełni z DOM). To tyle. Wystarczy wrzucić poniższe kody w odpowiednie miejsca na stronie lub podejrzeć źródło tej strony</p> 
+  <h3>Wystarczy wrzucić poniższy kod <ins>w sekcji head</ins> <del>zaraz za rozpoczęciem tagu body</del> (jestem zwolennikiem całkowitego oddzielenia kodu js od html)</h3>
+
+  <p><code>
+  &lt;script type="text/javascript"&gt;
+   ;(function(d,c,p){
+    if(d=document.body){
+      p=document.createElement('p'),d;
+      p.appendChild(document.createTextNode('Testujemy ładownie strony. Poczekaj na załadowanie obrazków.'));
+      c=document.createElement('span');
+      c.appendChild(document.createTextNode('Zamknij.'));
+      c.onclick=function(){onload()}
+      p.appendChild(c);
+      p.className='blok';
+      d.insertBefore(p,d.firstChild);
+      d.className='on';
+      d.parentNode.className='on';
+      var onl=window.onload||Function;
+      onload=function(){
+        try{
+          onl();
+          d.className='';
+          d.parentNode.className='';
+          d.removeChild(p);
+        }catch(e){}
+      }
+    }else{
+      setTimeout(arguments.callee,10);
+    }
+  })();
+  &lt;/script&gt;
+  </code></p>
+  <h3>W arkusz stylów wrzuć</h3>
+  <p><code>
+  &lt;style type="text/css"&gt;
+    .blok{
+      width:100%;
+      height:100%;
+      background:yellowgreen;
+      margin:0;
+      padding:0;
+      position:absolute;
+      top:0;
+      left:0;
+    }
+    .on{
+     overflow:hidden;
+     width:100%;
+     height:100%;
+     padding:0;
+     margin:0;
+    }
+  &lt;/style&gt;
+  </code></p>
+  
+  <h3>Treść, która została załadowana podczas wyświetlania napisu</h3>
+  <div>
+    <img src="http://www.free-nature-photos.org/fotodb/55_poppies_0.jpg" alt="polne maki" />
+    <img src="http://www.free-nature-photos.org/fotodb/63_poppies_7.jpg" alt="polne maki" />
+    <img src="http://www.morphzone.org/modules/newbb_plus/cache/attachments/817_1124918275.png" alt="Obrazek testowy" style="width:50px;height:50px" />
+
+ <p>Lorem ipsum dolor sit amet consectetuer Suspendisse Nam eros ut laoreet. Vitae fames vitae Nam netus et felis senectus sed vel a. Quisque eget nec vel at cursus at Vestibulum fringilla cursus accumsan. Vestibulum aliquet tincidunt scelerisque lacinia velit nunc sapien lorem Donec Curabitur. Nunc rutrum non turpis sapien interdum cursus orci ipsum semper purus. Lacinia sit nibh tincidunt volutpat nec rutrum dui sem neque nibh. Suscipit porta Nulla.</p>
+<p>Id Donec aliquet Phasellus montes lobortis dapibus congue sit lacus Sed. Curabitur id eget dui massa molestie In porttitor tristique amet lobortis. Non pellentesque Aenean porttitor Nulla tellus tincidunt Vestibulum mauris tristique nisl. Pellentesque ipsum vitae Integer sagittis lorem sem id laoreet faucibus ridiculus. Enim convallis quis Nulla Vestibulum Vestibulum est Vivamus sagittis laoreet vel. Nunc nisl tellus Nullam mi pretium pretium.</p>
+<p>Ac et dui vitae penatibus non platea eleifend natoque tellus sed. Ante sed consectetuer tincidunt hendrerit congue et ligula Curabitur euismod risus. Sed tempor ut wisi laoreet Nam Integer adipiscing enim platea pretium. Wisi nulla hac tincidunt amet est laoreet adipiscing Morbi eros tincidunt. Auctor orci et mauris dui est laoreet.</p>
+<p>Orci magnis vitae Nam quis sed In felis nisl sed est. Interdum ante Pellentesque nibh orci velit sociis tincidunt mattis faucibus Aenean. Orci vel sociis nec natoque fringilla justo odio dui non adipiscing. Ante nunc congue fringilla nunc Duis sed leo Cum fames Vivamus. Vel est vel Cras ipsum eget Vestibulum et leo morbi ullamcorper. Sed ante vitae Sed consectetuer et Curabitur vel enim.</p>
+<p>Nulla tellus ullamcorper lacus consequat elit Vivamus pulvinar tincidunt id augue. Aenean lobortis feugiat eget pretium nunc ut Morbi Aenean massa neque. Phasellus at nec Vivamus Duis non pede laoreet ipsum Donec parturient. Pretium ut est consequat leo mattis vitae vitae nunc tortor volutpat. Pretium netus pellentesque pede netus Sed orci massa Phasellus eget.</p>
+<p>Enim malesuada augue lorem parturient elit neque eget accumsan ac convallis. Ipsum commodo laoreet Integer cursus a id nunc auctor non Phasellus. Sapien pellentesque adipiscing et urna at ut ut tempus consequat consequat. Risus pellentesque laoreet eget Vestibulum Donec nunc eu neque at Ut. Pede Nunc lacus elit gravida adipiscing Mauris Nam In mollis.</p>
+<p>Porta Nulla Nam orci vestibulum mauris Aenean condimentum sem Phasellus urna. Ipsum et egestas mattis condimentum tellus felis a adipiscing pede tortor. Metus tellus pretium pellentesque senectus et nulla pulvinar laoreet tempus Pellentesque. Ut Vestibulum leo lobortis tristique mauris leo Ut facilisi dis eleifend. Consectetuer Donec Vestibulum a egestas odio.</p>
+<p>Ipsum augue vitae at porttitor feugiat Curabitur non Donec Cras accumsan. Nulla urna diam cursus Quisque Sed parturient Vivamus Phasellus semper Nulla. Malesuada urna tincidunt nibh laoreet Nunc ante consequat quis Donec adipiscing. Justo vel dui porttitor turpis wisi Curabitur penatibus Vestibulum consectetuer Lorem. Maecenas in Mauris massa accumsan ligula fames Cum eu libero Curabitur. Vestibulum ac consectetuer Nullam volutpat vitae velit arcu Nullam interdum.</p>
+
+<p>Amet sed diam nisl elit leo Proin Quisque Curabitur dictum Vestibulum. Rhoncus Curabitur amet pede Aliquam ut urna nec montes et id. Id pellentesque Curabitur est Integer montes id vel nisl convallis Lorem. Praesent tellus pellentesque Sed sit quam sapien pellentesque laoreet at aliquam. Leo semper id rhoncus enim leo.</p>
+<p>Et Aliquam Nulla est tellus urna convallis wisi Nulla libero sodales. Auctor felis egestas elit adipiscing interdum ac montes faucibus id vitae. Feugiat fames orci quam tincidunt tempus urna felis Nam id semper. Aenean Duis pretium lacus consequat leo laoreet Cras semper enim pharetra. Ridiculus metus dignissim malesuada elit auctor consequat Maecenas semper et in. Curabitur turpis magna et tristique.</p>
+<p>Condimentum tempus Sed rhoncus wisi wisi In id a dictumst pretium. Pretium non id Donec Morbi faucibus hendrerit elit eu ac eget. Vitae eu et consequat consectetuer ridiculus Phasellus ac nunc Morbi sollicitudin. Metus Sed sociis natoque vel adipiscing consectetuer Nullam penatibus orci semper. Id venenatis tincidunt Curabitur est arcu porta nonummy ornare nibh tempor. </p>
+<p>Vel laoreet nibh in Duis egestas leo cursus urna natoque dui. Ut lorem libero libero Proin nibh id convallis pretium Morbi aliquam. Leo leo Cum eleifend semper et dictumst tellus orci sem nibh. Ligula velit elit dolor et orci libero parturient nunc justo dapibus. Mauris tincidunt sed ligula elit Cras ut justo.</p>
+<p>Tempus nec in Nam hendrerit eget amet convallis ut ipsum tincidunt. Volutpat urna interdum Cum velit convallis enim commodo et Nulla nisl. Interdum Curabitur tellus habitasse vel Donec ipsum in tincidunt convallis laoreet. Ante tortor enim fringilla ligula elit quis netus molestie habitasse Integer. Quisque elit eu sollicitudin malesuada Pellentesque neque ante tristique faucibus at. Eros consequat porta Maecenas Lorem pretium commodo nibh urna Nam facilisis. </p>
+<p>Fringilla Sed congue dolor justo at nunc quam nec convallis Quisque. Lorem vestibulum commodo ut in at parturient Vestibulum Vestibulum elit Curabitur. Adipiscing congue vitae risus tellus magna et fringilla malesuada semper gravida. Urna elit elit lacinia eget nunc Nam quis tristique tortor lobortis. Ut nascetur Curabitur Quisque libero tellus tristique sit nibh et accumsan. Mollis consequat Phasellus elit enim sociis.</p>
+<p>Egestas volutpat consequat elit amet lacinia id consequat a magna platea. Ac vitae ligula ut ut in Cras et felis sed non. Semper libero pellentesque et adipiscing est orci Aliquam ut euismod Donec. Nullam magna ullamcorper risus elit tristique Ut Aliquam vitae volutpat Curabitur. Suspendisse metus nibh tempus Quisque netus lorem eget neque eros eleifend. Vestibulum enim lacus Vivamus dis eget mauris.</p>
+<p>Sed ut faucibus sapien interdum Praesent Aenean mauris ac dolor hendrerit. Malesuada mollis eros sem Nam laoreet nibh lobortis ac Aenean pretium. Maecenas cursus nibh non id et risus tellus wisi justo felis. Vestibulum Curabitur congue auctor quis libero semper sagittis sapien Vivamus Donec. Urna non Morbi facilisi risus dui.</p>
+<p>Ornare sapien tincidunt amet Vestibulum laoreet Morbi eu fringilla pede nulla. Lacinia aliquet nibh libero tempus Morbi eget orci nascetur malesuada odio. Habitant wisi sociis massa ligula pede sagittis eget est id Suspendisse. Est consequat porttitor justo nec Phasellus Vestibulum risus eu enim non. Et et mattis consectetuer tortor congue quis congue In consequat mauris. Lacus vitae sociis non enim ante justo magna id.</p>
+
+<p>Elit mus at aliquet sagittis orci Aenean sagittis ipsum ut Curabitur. Ac id eget orci lorem ac id Morbi Nam quis adipiscing. Facilisi sem Sed consequat sagittis in libero et Lorem consectetuer quis. Pede et semper turpis et Pellentesque eros id libero Phasellus suscipit. Ipsum eros lorem Curabitur ut pharetra nibh ac justo a scelerisque. Eu Quisque nec pellentesque rhoncus condimentum est sit Vestibulum.</p>
+<p>Ut adipiscing Donec odio at et lobortis amet massa ipsum ut. Tortor rhoncus metus Nullam cursus dapibus a Morbi vitae tellus vitae. Tincidunt Integer urna interdum semper ut id urna semper diam odio. In condimentum Nam condimentum rutrum Morbi id laoreet eu tellus ante. At mattis hendrerit In Aenean Curabitur urna sed interdum vitae in. Proin nonummy sodales augue nisl pede.</p>
+<p>Duis sapien faucibus turpis eros a mattis Fusce eros eros augue. Mauris ut Cum Curabitur faucibus penatibus aliquam et ac pulvinar Fusce. Parturient tellus ipsum dis ligula pharetra hendrerit tristique Vestibulum velit eget. Ut quis felis dolor nisl urna Quisque tincidunt neque risus fringilla. Congue congue sem semper Vestibulum pede elit urna ac massa congue. Iaculis Phasellus tortor Aliquam Quisque dictum.</p>
+  </div>
+  </body>
+</html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<title>Wysokość okna</title>
+<meta name="keywords" content="Tomasz Kołodziejski, neo, neo007, javascript, window, screen, width" />
+<meta name="description" content="Sprawdzenie za pomocą javascriptu informacji o kliencie: rozdzielczość, długość i wysokość okna i całego dokumentu." />
+<script type="text/javascript">
+/*<![CDATA[*/
+onload=function(){
+  document.getElementsByTagName('div')[0].innerHTML=
+  'Rozdzielczość: '+screen.width+'x'+screen.height+'<br />'+
+  'Rozmiary okna: '+(window.innerWidth||document.body.clientWidth)+'x'+(window.innerHeight||document.body.clientHeight)+'<br />'+
+  'Długość dokumentu: '+document.documentElement.scrollHeight+'x'+document.documentElement.scrollWidth; 
+}
+/*]]>*/
+</script>
+</head>
+<body>
+<div></div>
+<div style="height:2000px">test</div>
+<div>koniec</div>
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-3" />
+    <title>
+        Testowanie skryptow javascript
+    </title>
+<script type="text/javascript">
+function F(x,y){
+for(i=l=0;t=x.elements[i++];)
+if(t.type.toLowerCase()=='checkbox'&&t.checked)l++
+return l>=y||!~alert('Zaznaczyles '+l+' checkboxow, a powinienes zaznaczyc przynajmniej '+y)
+}
+</script>
+</head>
+<body>
+    <form onsubmit="return F(this,3)" action="test.html">
+        <input type="checkbox" />
+        <input type="checkbox" />
+        <input type="checkbox" />
+        <input type="checkbox" />
+        <input type="checkbox" />
+        <input type="submit" />
+    </form>
+</body>
+</html>

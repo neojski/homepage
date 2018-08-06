@@ -1,0 +1,41 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="pl" lang="pl">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-2" />
+<title>Wygaszacz ekranu :)</title>
+<style type="text/css">
+*{padding: 0; margin: 0}
+html,body{height:100%}
+</style>
+<script type="text/javascript">
+onload=function(){
+    var d=document.getElementById('div');
+    var x=1;
+    var ax=1;
+    var y=1;
+    var ay=1;
+    (function(){
+        if(ax==0 || d.offsetLeft+d.offsetWidth==document.body.offsetWidth){
+            x=x==1?-1:1;
+        }
+        if(ay==0 || d.offsetTop+d.offsetHeight==document.body.offsetHeight){
+            y=y==1?-1:1;
+        }   
+        ax+=x;
+        ay+=y;  
+        d.style.left=ax+'px';
+        d.style.top=ay+'px';  
+        setTimeout(arguments.callee,1);
+    })();
+}
+</script>
+</head>
+
+<body>
+
+<h1>Wygaczasz ekranu w javascript, bo <em>nothing is impossible</em></h1>
+<p>Idea przyszła dawno, teraz skrypt przepisałem na nowo. Mam nadzieję, że nikt go nie użyje na swojej stronie :)</p>
+
+<div id="div" style="position: absolute; width: 200px; left: 60px; border: 2px solid">Wygaszacz ;]</div>
+</body>
+</html>

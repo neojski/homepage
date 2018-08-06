@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML
+1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+<script type="text/javascript">
+/*<![CDATA[*/
+var el,l=0;
+document.onmousemove=function(e,d){
+	x=(e=e||event).clientX+(d=document.documentElement).scrollLeft;
+	y=e.clientY+d.scrollTop;
+	if(el)el.style.left=x-xs+'px',el.style.top=y-ys+'px'
+}
+document.onmouseup=function(){
+	el=0;
+}
+function de(c){
+	if(w[c.h][w[c.h].length-1]==c.c || !w[c.h][w[c.h].length-1]){
+		(el=c).style.zIndex=++l;
+		xs=x-c.offsetLeft;
+		ys=y-c.offsetTop;
+	}
+}
+function move(el, x){
+	clearTimeout(el.t);
+	el.style.left=(x>el.offsetLeft?1:-1)+el.offsetLeft+'px';
+	if(x!=el.offsetLeft)
+	el.t=setTimeout(function(){move(el,x)},1);
+}
+onload=function(){
+	w=[];
+	w[0]=[];
+	w[1]=[];
+	w[2]=[];
+	var l=3;
+	for(var i=1; i<l+1; i++){
+		var d=document.createElement('div');
+		with(d.style){
+			width=i*200/l+'px';
+			height='20px';
+			background='red';
+			position='absolute';
+			left=200-(i*200/l/2)+'px';
+			top=(i-1)*20+'px';
+		}
+		d.c=i;
+		d.h=0;
+		document.getElementById('hanoi').appendChild(d);
+		w[0].unshift(i);
+		d.onmousedown=function(){de(this);return false}
+		d.onselectstart=function(){return false}
+		d.onmouseup=function(){
+			var x=1e9;
+			var y=0;
+			w[this.h].pop();
+			for(var i=1; i<4; i++){
+				if(Math.abs(-this.offsetLeft+(i*200))<x &&
+				(w[i-1][w[i-1].length-1]>this.c || !w[i-1][0])){
+					x=Math.abs(-this.offsetLeft+(i*200));
+					y=i;
+				}
+				//alert(Math.abs(-this.offsetLeft+(i*200))<x)
+			}
+			w[y-1].push(this.c);
+			
+			move(this,y*200);this.h=y-1;
+		}	
+	}
+	for(var i=1; i<4; i++){
+		var d=document.createElement('div');
+		with(d.style){
+			width='4px';
+			height=l*20+'px';
+			background='green';
+			position='absolute';
+			left=i*200+'px';
+			top=0;
+		}
+		document.body.appendChild(d);
+	}
+	setInterval(f,100);
+}
+function f(){
+	document.getElementById('t').innerHTML=w[0]+' '+w[1]+' '+w[2];
+}
+/*]]>*/
+	</script>
+  </head>
+  <body>
+	<div id="hanoi"></div>
+	<div id="t"></div>
+  </body>
+</html>

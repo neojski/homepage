@@ -1,0 +1,102 @@
+<h2>Krótka instrukcje użytkowania</h2>
+
+<h3>Wiki</h3>
+<p>Dokumentacja zostanie docelowo przeniesiona na <a href="http://infeo.pl/sites/neo/xt/docs">wiki</a>. Jeśli możesz - pomóż ją uzupełnić.</p>
+
+<h3>Szybki start</h3>
+<h4>Szablon</h4>
+<p>Przykładowy szablon używany w całym dokumencie:</p>
+<pre><code id="szablon" /></pre>
+<p>Jak łatwo zauważyć - szablon jest zwykłym dokumentem html. Nie zawiera <em>żadnych</em> dodatkowych znaczników czy pseudo-języka.</p>
+
+<h4>Pierwsza strona z użyciem xt</h4>
+<p>Poniżej kod php odpowiedzialny za wyświetlenie strony. To najkrótszy kod, jakiego potrzebuje xt, aby wyświetlić stronę.</p>
+<code class="php">
+	include('xt.class.php');
+	$t=new xt('szablon.html');
+	$t->display();
+</code>
+
+<p>Kod wynikowy jest wyświetlany automatycznie pod kodem php, zgodnie z najnowszą wersją szablonów.</p>
+<p>W linii 1 includujemy plik <code>xt.class.php</code>. W powyższym przykładzie znajduje się on w tym samym folderze, co plik php. Następnie tworzymy nowy obiekt xt i podajemy jako parametr nazwę szablonu (szablon jest poprawnym, zwykłym plikiem html, stąd jego rozszerzenie <code>.html</code>). Na koniec wyświetlamy całość strony metodą <code>display()</code>.</p>
+	
+<p><del>Na razie, póki nie uporam się z kodowaniem szablon prawdopodobnie <em>musi</em> mieć kodowanie <code>utf-8</code>. Wszelkie testy wskazane.</del></p>
+<p>System obsługuje już wszystkie inne kodowania. Jedynym wymaganiem jest umieszczenie go w sekcji <code>meta</code> lub nagłówku <code>xml</code>.</p>
+	
+<p>Oczywiście powyższy szablon nie ukazuje nic ciekawego, poza tym, że wyświetli kod jako <code>application/xhtml+xml</code> przeglądarkom, które potrafią go obsłużyć.</p>
+	
+<h3>Funkcja add</h3>
+<p>Podstawową funkcją systemu szablonów jest funkcja add o następującej składni: <code>add( obiekt, wartosc )</code>.</p>
+
+<p>Odwoływanie się do obiektów jest identyczne z <code>css</code>. W razie jakichś problemów proszę korzystać z <a href="http://forumweb.e-vip.pl/viewtopic.php?t=22944" title="forumweb o xt">tematu o xt na forum</a>.</p>
+<p>Obsługiwane selektory:</p>
+<ul>
+	<li>*</li>
+	<li>E</li>
+	<li>E[foo]</li>
+	<li>E[foo="bar"]</li>
+	<li>E[foo~="bar"]</li>
+	<li>E[foo^="bar"]</li>
+	<li>E[foo$="bar"]</li>
+	<li>E[foo*="bar"]</li>
+	<li>E[hreflang|="en"]</li>
+	<li>E.warning</li>
+	<li>E#myid</li>
+	<li>E F</li>
+	<li>E > F</li>
+	<li>E + F</li>
+	<li>E ~ F</li>
+</ul>
+
+<p>Znaczenie selektorów wyjaśnione na stronach <a href="http://www.w3.org/TR/2005/WD-css3-selectors-20051215/#selectors" title="selektory css3">w3c</a></p>
+
+<p>Wprowadziłem też jedną nowość - jeśli obiektów jest więcej - możemy wybrać n-ty element w następujący sposób: <del>[n-1], (w php i wielu językach programowania numeruje się od 0)</del> <ins><code>[n]</code> (kompatybilność z <code>xpath</code>)</ins> np.:</p>
+<ul>
+	<li><code>div[1]</code> - pierwszy obiekt o nazwie div
+	<li><code>div > p[atrybut="wartosc"][2]</code> - drugi obiekt pasujący do wzorca <code>div > p[atrybut="wartosc"]</code></li>
+</ul>
+
+<p>Poniżej przykłady:</p>
+<code class="php">
+	include('xt.class.php');
+	$t=new xt('szablon.html');
+	$t->add('#akapit', ' Do akapitu dodajemy dodatkową treść, testując funkcję <code>add()</code>');
+	$t->display();
+</code>
+
+<code class="php">
+	include('xt.class.php');
+	$t=new xt('szablon.html');
+	$t->add('p.akapit[1]', ' Do akapitu dodajemy dodatkową treść, testując funkcję <code>add()</code>');
+	$t->display();
+</code>
+
+<code class="php">
+	include('xt.class.php');
+	$t=new xt('szablon.html');
+	$t->add('a[href^="http"][1]', ' (link zewnętrzny)');
+	$t->display();
+</code>
+
+<h2>Funkcja set</h2>
+<p>Funkcja ta pozwala na zmianę atrybutów danego obiektu. Jej składnia jest następująca: <code>set( obiekt, array( 'atrybut'=>'wartosc', 'atrybut'=>'wartosc',...))</code></p>
+<p>Obiekt pobiera się tak jak w przypadku <code>add()</code>. Oczywiście krótki przykład:</p>
+<code class="php">
+	include('xt.class.php');
+	$t=new xt('szablon.html');
+	$t->set('akapit[1]', array('title'=>'To jest testowy akapit', 'style'=>'background:blue'));
+	$t->display();
+</code>
+	
+<p>W przypadku funkcji <code>set()</code> mamy jeden magiczny atrybut - <code>data</code>, który oznacza zawartość tekstową danego obiektu, np:</p>
+<code class="php">
+	include('xt.class.php');
+	$t=new xt('szablon.html');
+	$t->set('akapit[1]', array('title'=>'To jest testowy akapit', 'style'=>'background:blue', 'data'=>' A to dodatkowa treść'));
+	$t->display();
+</code>
+	
+<h3>Dalsze funkcje</h3>
+<p>Innymi ciekawymi funkcjami jest <code>insertBefore</code>, <code>insertAfter</code>, <code>css</code>, <code>js</code>, <code>setStyle</code>. Funkcja <code>add</code> obsługuje również <a href="examples/petla.php">pętle</a>.</p>
+<p>Opis podanych funkcji będzie stopniowo dodawany, zatem proszę o wyrozumiałość.</p>
+<p>Mam nadzieję na szybkie przejście na dokumentację opartą o <code>wiki</code>. Muszę tylko wymyślić jakiś silnik weryfikacji szablonów, aby złośliwy kod nie zniszczył plików serwera.</p>

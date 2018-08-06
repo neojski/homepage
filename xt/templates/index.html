@@ -1,0 +1,74 @@
+<h2>Nowe metody obsługi pętli</h2>
+<p>18.02.2007</p>
+<p>Niedawno została dodana metoda <code>loop</code> pozwalająca na dość proste wprowadzenie pętli. Jej krótki opis znajduje się w dokumentacji. Mam zamiar wprowadzić również interfejs pozwalający na prostą współpracę z bazą danych - propozycje proszę przedstawiać na <a href="http://forumweb.e-vip.pl/viewtopic.php?t=22944" title="forumweb o xt">forum</a>.</p>
+<p>W dziale download, który został całkowicie przeniesiony na sourceforge można znaleźć paczki zawierające przykładowe skrypty - póki dokumentacja nie zostanie uzupełniona takowe przykłady powinny pomóc w zrozumieniu idei xt.</p>
+
+<h2>Najnowsze poprawki</h2>
+<p>10.02.2007</p>
+<p>Wczoraj informowałem o problemach z działaniem pseudo-klas <code>css3</code> zawierających słowo <code>child</code>. <a href="http://neo.mlodzi.pl/xt/download/xt.zip_20070210">Dzisiejsza paczka</a> zdaje się rozwiązywać te problemy. Zostały również dodane dwie ostatnie pseudo-klasy: <code>:nth-last-child</code> oraz <code>:nth-last-of-type</code>. Zatem <code>xt</code> zyskuje sobie pełną obsługę dopiero nadchodzącego standardu <code>css3</code>.</p>
+
+<h2>Błędy w obsłudze css3</h2>
+<p>9.02.2007</p>
+<p>Okazuje się, że pseudo-klasy zawierające słowo <code>child</code> nie działają poprawnie. Poza tym pominąłem jakoś <code>:nth-last-child</code> oraz <code>:nth-last-of-type</code>. Postaram się o jak najszybszą poprawkę tych błędów.</p>
+
+<h2>Pełna integracja z <code>css3</code></h2>
+<p>8.02.2007</p>
+<p>Mam zaszczyt przedstawić po ponad tygodniu <a href="download/xt.zip_20070208">najnowszą wersję</a> xt, która, przynajmniej w założeniu, obsługuje wszystkie &#8222;bajery&#8221; <code>css3</code>. Po raz kolejny zapraszam do testów.</p>
+<p>Z zauważonych problemów nasuwa się głównie jeden - nie wolno nadawać atrybutu <code>xmlns</code>, który negatywnie wpływa na pojmowanie dokumentu przez <code>xpath</code>.</p>
+
+<h2>Serwer svn</h2>
+<p>7.01.2007</p>
+<p>Dziś otrzymałem hosting na stronie <a href="http://sf.net">sourceforge</a>. Stonę projektu można znaleźć pod nazwą <a href="http://sourceforge.net/projects/xhtml-templates" title="xt na sourceforge">xhtml-templates</a>. Zatem najnowsze wersję xt będzie można <a href="http://xhtml-templates.svn.sourceforge.net/viewvc/xhtml-templates/" title="podgląd zawartości svn">znaleźć</a> korzystając z zalet svn :-)</p>
+
+<h2>Xt w konkursie art.php.pl</h2>
+<p>1.02.2007</p>
+<p>Od dziś można głosować na najlepsze bilbioteki w konkursie <a href="http://art.php.pl">portalu php.pl</a>. Zapraszam wszystkich do głosowania na <a href="http://art.php.pl/Projekt/52">bilbiotekę xt</a>. Mam nadzieję, że dzięki konkursowi uda się zwerbować jakiegoś developera, który pomoże w dalszym rozwoju.</p>
+
+<h2>Wiki dla xt</h2>
+<p>27.01.2007</p>
+<p>Dokumentacja projektu xt od dziś powinna rosnąć na stronie <a href="http://infeo.pl/sites/neo/xt/docs">wiki</a>! Na razie należałoby zaplanować układ dokumentacji. Pewna jego część znajduje się na stronie głównej, ale wszelkie modyfikacje, pomysły, usprawnienia jak najbardziej wskazane. Myślę, że takim wzorem dokumentacji może być <a href="http://www.php.net/manual/pl/">manual php</a>. Zapraszam wszystkich do jej uzupełniania.</p> <p>Niestety nie mam na razie pomysłu na automatyczny podgląd (jak to funkcjonuje w obecnej dokumentacji) - nie mogę pozwolić na wprowadzanie kodu php osobom postronnym. Z drugiej strony na serwerach nazwa.pl ze względu na segfault przestarzałej wersji biblioteki <code>libxml</code> skrypt nie działa.</p>
+<p>Serwera pod wiki użycza nam firma <a href="http://infeo.pl">infeo</a>. Dziękujemy.</p>
+
+<h2>Nowy silnik pobierania elementów</h2>
+<p>26.01.2007</p>
+<p><a href="/xt/download/xt.class.php_20070126" title="wersja na dzień 26.01.2007">Najnowsza wersja</a> xt wreszcie korzysta z nowego silnika pobierania elementów. Powinien on obsługiwać <code>css2</code> oraz niektóre nowości <code>css3</code>. Do dyspozycji aktualnie mamy następujące selektory:</p>
+<ul>
+	<li>*</li>
+	<li>E</li>
+	<li>E[foo]</li>
+	<li>E[foo="bar"]</li>
+	<li>E[foo~="bar"]</li>
+	<li>E[foo^="bar"]</li>
+	<li>E[foo$="bar"]</li>
+	<li>E[foo*="bar"]</li>
+	<li>E[hreflang|="en"]</li>
+	<li>E.warning</li>
+	<li>E#myid</li>
+	<li>E F</li>
+	<li>E > F</li>
+	<li>E + F</li>
+	<li>E ~ F</li>
+</ul>
+<p>Nowy silnik został nieco oddzielony od kodu, bo wyeksportowany do nowej klasy. Dzięki temu będzie łatwiejszy w modyfikacji.</p>
+<p>Co prawda silnik pozostawia jeszcze nieco do życzenia - ta sama struktura kodu powtarza się aż trzykrotnie - ale na dzień dzisiejszy nie mam pomysłu na idealne rozwiązanie.</p>
+<p>Nowy silnik powinien działać nieco szybciej, ze względu na maksymalne wykorzystanie <code>xpath</code>. W stosunku do starego zyskuje również nowe selektory (<code>E + F</code> oraz <code>E ~ F</code>).</p>
+<p>Zapraszam do testów i zgłaszania na <a href="http://forumweb.e-vip.pl/viewtopic.php?t=22944" title="forumweb, temat o xt">forum</a> ewentualne błędy. Aby zgłosić błąd nie zapomnij podać szablonu oraz kodu <code>php</code>.</p>
+
+<h2>Przygotowania do nowego silnika pobierającego elementy</h2>
+<p>24.01.2007</p>
+<p>Trwają prace nad nowym silnikiem pobierania elementów (nowa funkcja <code>getNode</code>). Nowy silnik powinien być gotowy najpóźniej w weekend, dlatego błędy w wersjach starszych nie będą poprawione. Do najnowszej wersji zostanie dodana nowa funkcja obsługująca pętle, <code>loop</code>. Jej nazwa może jednak ulec zmianie, jeśli tak zadecyduje forum. Nowa funkcja umożliwi wygodne tworzenie pętli, nie wymagające zagnieżdżania tablic, co do najprzyjemniejszych zjawisk programistycznych nie należy.</p>
+
+<h2>Przeprowadzka na nowy serwer</h2>
+<p>16.01.2007</p>
+<p>Jestem blisko przeprowadzki na nowy, mocny serwer sponsorowany przez kolegę. Jeszcze tylko parę problemów z niedziałaniem xt na nim i skończą się problemy z niedostępną stroną xt czy <a href="/archiwum" title="archiwum skryptów">archiwum</a>.</p>
+
+<h2>(nowa) szata graficzna</h2>
+<p>15.01.2007</p>
+<p>Na stronie pojawiła się szata graficzna. Twórcą loga jest kolega <a href="http://forumweb.e-vip.pl/profile.php?mode=viewprofile&amp;u=3025" title="profil Wigroma">Wigrom</a>. Autorem całej reszty <a href="http://minchal.jogger.pl" title="jogger Minchala">Minchal</a>. Serdeczne podziękowania za wkład w xt chłopaki! Mam nadzieję, że odwdzięczę się dalszym rozwojem projektu.</p>
+<p>Nastąpiły również drastyczne zmiany w sposobie odwoływania się do obiektów, które naśladuje składnię <code>css</code>. Więcej na ten temat w <a href="docs">dokumentacji</a>. Nowa wersja przestała być kompatybilna z poprzednimi na rzecz kompatybilności ze standardami w3.</p>
+
+<h2>Uroczyste otwarcie</h2>
+<p>7.01.2006</p>
+<p>Mam zaszczyt poinformować, że dziś została oddana do użytku pierwsza wersja xt.</p>
+<p>Skrypt można pobrać ze strony <a href="download">download</a>.</p>
+<p>Zapraszam wszystkich do testowania oraz <a href="http://forumweb.e-vip.pl/viewtopic.php?t=22944">dyskusji</a>.</p>

@@ -1,0 +1,24 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-3" />
+    <title>
+        Testowanie skryptow javascript
+    </title>
+<script type="text/javascript">
+temp=''
+onload=function(){el=document.getElementById('div')}
+document.onkeydown=function(e){
+temp+=String.fromCharCode((e||event).keyCode)
+el.innerHTML=temp
+}
+document.onkeyup=function(e){
+temp=temp.split(String.fromCharCode((e||event).keyCode)).join('')
+el.innerHTML=temp
+}
+</script>
+</head>
+<body>
+    <div id="div">
+    </div>
+</body>
+</html>

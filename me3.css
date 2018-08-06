@@ -1,0 +1,41 @@
+*{
+	margin:0;
+	padding:0
+}
+html,body{
+	font-family:'Courier New', monospace;
+	height:100%;
+}
+strong{
+	color:#666666;
+}
+h1,p{
+	text-align:center;
+}
+h1{
+	padding-top:20px;
+}
+address{ 
+	color:#dddddd;
+	text-align:center; 
+	font-style:normal;
+	width:100%;
+	position:absolute;
+	top:50%;
+	margin-top:-100px;
+	display:block;
+}
+#stopka{
+	position:absolute;
+	color: #777777;
+	top:60%;
+	right:10%;
+}
+#stopka:hover:after{
+	position:absolute;
+	top:30px;
+	left:20px;
+	content:'@powered by neo';
+	font-size: small;
+	color: #000000;
+}

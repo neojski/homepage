@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="ISO-8859-2"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml" xml:lang="pl" lang="pl">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-2" /><title>Testowanie skryptow javascript</title>
+<script type="text/javascript">
+ile=0
+promien=40
+function f(){
+    x=Math.cos(ile*Math.PI/180)*promien;
+    y=Math.sin(ile*Math.PI/180)*promien;
+    document.getElementById('obrazek').style.top=y+"px"
+    document.getElementById('obrazek').style.left=x+"px"
+    if(ile<360){
+        ile+=2
+    }
+    else{
+        ile=0
+    }
+    setTimeout("f()",1)
+}
+</script>
+</head>
+<body>
+  <img src="kolo2.gif" style="position: absolute; top: 33px; left: 418px" />
+  <div style="text-align: center"><br /><br /><br /><br /><img src="kolo.gif" id="obrazek" style="position: relative" /></div>
+  <div onclick="f()">uruchom</div>
+
+</body>
+</html>

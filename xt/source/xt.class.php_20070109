@@ -1,0 +1,750 @@
+<?php
+/**
+ * xt - xhtml templates
+ * author: neo
+ * @link http://neo.mlodzi.pl/xt
+ * @copyright 2007 Tomasz 'neo' Kołodziejski
+ * @author Tomasz 'neo' Kołodziejski <tkolodziejski at gmail dot com>
+ * @package xt
+ * @version alpha
+ * @changes
+ *  dodano magiczne klasy: remove_id (usuwa atrybut id znacznika), remove_class (usuwa atrybut class), remove_parent - usuwa rodzica (z remove_parent występują jeszcze problemy)
+ */
+
+define('XHTML','<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+	<head>
+		<title></title>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	</head>
+	<body>
+	</body>
+</html>');
+
+
+class xt{
+	public function __construct($file=0){
+		$this->start_time=$this->microtime_float();
+		if($file){
+			$this->load($file);
+		}
+	}
+	
+	/* uniknąć literówek */
+	public function __call($name, $arguments){
+		if(!method_exists($this, $name)){
+			$this->error('Metoda '.$name.' nie istnieje!');
+		}
+	}
+	
+	/**
+	 * check parsing time
+	 */
+	private function microtime_float(){
+		list($usec, $sec) = explode(" ", microtime());
+		return ((float)$usec + (float)$sec);
+	}
+
+	
+	/**
+	 * it's not real tidy
+	 * only clean dirty html - unclosed tags, and so on
+	 * powinno zostać wydzielone do osobnej klasy
+	 * ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+	 */
+	private function is_open($str){
+		return preg_match('#<(?!(?:/|\?|!))[^>]+(?<!/)>#', $str);
+	}
+	
+	private function is_close($str){
+		return preg_match('#</[^>]+(?<!/)>#', $str);
+	}
+	private function get_node($str){
+		preg_match('#[^</> ]+#', $str, $test);
+		return $test[0];
+	}
+	
+	public function tidy($str){
+		preg_match_all('#(?:<[^>]+>)|(?:[^<]+)#', $str, $all);
+		$open=array();
+	
+		$end='';
+			
+		$nie_zagniezdzane=array('li', 'html', 'head', 'body', 'p');
+		
+		$jednotagowe=array('meta');
+		
+		foreach($all[0] as $node){
+			if($this->is_open($node)){
+				if(in_array($this->get_node($node), $jednotagowe)){
+					$end.='<'.substr($node, 1, -1).' />';
+				}else{
+					if(in_array($this->get_node($node), $nie_zagniezdzane) && $open[count($open)-1]==$this->get_node($node)){
+						$end.= '</'.$this->get_node($node).'>';
+						array_pop($open);
+					}
+					
+					
+					$open[]=str_replace(array('<','>'), array('',''),$node);
+					
+					$end.=$node;
+				}
+				
+			}elseif($this->is_close($node)){
+			
+				if($this->get_node($node)==$open[count($open)-1]){
+					$end.= $node;
+					array_pop($open);
+				}elseif(count($open)>0){
+					$end.= '</'.$this->get_node(array_pop($open)).'>';
+				}
+			}else{
+				$end.= $node;
+			}
+		}
+		
+		for($i=count($open)-1; $i>=0; $i--){
+			$end.='</'.$this->get_node($open[$i]).'>';
+		}
+		
+		return $end;
+	}
+	
+	/* end of small tidy */
+	
+	/**
+	 * @param str filename/template
+	 */
+	public function load($file){
+		if(is_file($file)){
+			if(file_exists($file)){
+				$this->template=file_get_contents($file);
+			}else{
+				$this->error('Template file '.$file.' not found.');
+			}
+		}elseif(is_string($file)){
+			$this->template=$file;
+		}else{
+			$this->error('Incompatible template type');
+		}
+		
+		$this->template = $this->tidy($this->template);
+		
+		$this->template=str_replace(array('<![CDATA[', ']]>'), '', $this->template); //remove
+		$this->template=preg_replace('#^(.*?)//\s*$#m', '\1', $this->template);  //delete empty inline comments
+		$this->template=preg_replace('#/\*\s*\*/#s', '', $this->template); //delete empty multiline comments
+		
+		$this->xml=new DOMDocument();
+		
+		/* workaround - change encoding into utf-8 */
+			preg_match('#<meta[^>]+content="[^=]+=(.*?)"[^>]*>#s', $this->template, $encoding);
+			
+			$this->template=preg_replace('#<meta[^>]+content="[^=]+=(.*?)"[^>]*>#s', '<meta http-equiv="content-type" content="text/html;charset=utf-8" />', $this->template);
+			
+			$encoding=$encoding[1];
+			
+			if($encoding!='utf-8'){
+				$this->template=iconv($encoding,'utf-8',$this->template);
+			}
+		
+		/*
+			powinno być loadhtml, jeśli chce się używać
+			getElementById
+		*/
+		$this->xml->loadxml($this->template);
+		
+		$this->xml->encoding='utf-8';//$this->encoding;
+		
+		$this->body=$this->xml->getElementsByTagName('body')->item(0);
+		$this->head=$this->xml->getElementsByTagName('head')->item(0);
+		$this->html=$this->xml->documentElement;
+		
+		$this->xml->formatOutput=true;
+		$this->xml->standalone=false;
+
+		$this->useXML=$this->xml();
+	}
+	
+	/**
+	 * rozpoznawanie czy przeglądarka obsługuje xhtml
+	 * autorem jest dr-no http://www.doktorno.boo.pl/index.php?q=art008
+	 */
+	private function xml(){
+		$xhtml = false;
+		if(preg_match('/application\/xhtml\+xml(?![+a-z])(;q=(0\.\d{1,3}|[01]))?/i', $_SERVER['HTTP_ACCEPT'], $matches)){
+			$xhtmlQ = isset($matches[2])?($matches[2]+0.2):1;
+			if(preg_match('/text\/html(;q=(0\d{1,3}|[01]))s?/i', $_SERVER['HTTP_ACCEPT'], $matches)){
+				$htmlQ = isset($matches[2]) ? $matches[2] : 1;
+				$xhtml = ($xhtmlQ >= $htmlQ);
+			}else{
+				$xhtml=true;
+			}
+		}
+		return $xhtml;
+	}
+	
+	
+	
+	/**
+	 * couple of functions:
+	 * magic classes: remove_id, remove_class, remove_parent
+	 * display xhtml or html
+	 */	
+	public function display($debug=0){
+	
+		/**
+		 * nie korzystam z getelementsbyclassname, bo nie obsługuje klas wielokrotnych - bug
+		 */
+		$xpath = new DOMXPath($this->xml);
+		$query = '//*[@class]';
+		$result=$xpath->query($query);
+		
+		
+		foreach($result as $child){
+			
+			
+			if(preg_match('#\bremove_id\b#', $child->getAttribute('class'))){
+				$child->removeAttribute('id');
+			}
+			
+			if(preg_match('#\bremove_parent\b#', $child->getAttribute('class'))){
+				foreach($child->childNodes as $child2){
+					
+					/**
+					 * jakieś niezrozumiałe działanie
+					 * w liście childNodes nie powinno być samego obiektu
+					 * ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+					 */
+					if($child2!==$child){
+						$this->insertBefore($child2, $child);
+					}
+				}
+				$this->remove($child);
+			}
+			
+			if(preg_match('#\bremove_class\b#', $child->getAttribute('class'))){
+				$child->removeAttribute('class');
+			}
+		}
+		
+	
+	
+		$this->add($this->body, '<p id="stopka">Ta strona została wygenerowana właśnie dzięki xt. Czas wykonywania skryptu to '.($this->microtime_float()-$this->start_time).'s</p>');
+		if(!$debug){
+			if($this->useXML){
+				header('Content-Type: application/xhtml+xml; charset=utf-8');
+				echo $this->xml->savexml();
+			}else{
+				header('Content-Type: text/html; charset=utf-8');
+				echo preg_replace(array('#<!DOCTYPE[^>]+>#', '#xml:lang#', '#xmlns="[^"]+"#'), array('<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">', 'lang', ''), $this->xml->saveHTML());
+			}
+		}else{
+			echo '<pre><code>'.htmlspecialchars($this->useXML?$this->xml->savexml():preg_replace(array('#<!DOCTYPE[^>]+>#', '#xml:lang#', '#xmlns="[^"]+"#'), array('<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">', 'lang', ''), $this->xml->saveHTML())).'</code></pre>';
+		}
+	}
+	
+	/**
+	 * check if object $node is domelement or domdocumentfragment
+	 */
+	protected function is_node($node){
+		ob_start();
+		var_dump($node);
+		$content=ob_get_clean();
+		return (substr($content, 0, 10)=='object(DOM')?true:false;
+	}
+	
+	public function __toString(){
+		return $this->useXML?$this->xml->savexml():$this->xml->savehtml();
+	}
+	
+	public function error($str){
+		die('<strong>'.$str.'</strong>');
+	}
+	
+	/**
+	 * @param object domelement
+	 * @param str append-text
+	 */
+	public function appendText($node, $str){
+		if($this->is_node($node)){
+			$node->appendChild($this->text2html($str));
+		}
+	}
+	
+	/**
+	 * @param object domelement
+	 * @param str replace-text
+	 */
+	public function replaceText($node, $str){
+		if($this->is_node($node)){
+			$this->appendText($node, $str);
+			$this->xml->removeChild($node);
+		}
+	}
+	
+	/**
+	 * @param str text
+	 * @return object domelement
+	 */
+	public function text2html($str){
+		$str=$this->tidy($str);
+		$child=$this->xml->createDocumentFragment();
+		$child->appendXML($str);
+		return $child;
+	}
+	
+	/**
+	 * sprawdza, czy node jest dzieckiem głównego dokumentu
+	 * @param object domelement
+	 * @return bool
+	 */
+	public function checkNode($node){
+		if(!$this->is_node($node)){
+			return false;
+		}else{
+			return $node->ownerDocument==$this->xml;
+		}
+	}
+	
+	/**
+	 * @param object domnode / str id / str class
+	 * @return null / object domnode
+	 */ 
+	public function getNode($name, $parent=0){
+		if(!$parent){
+		//	$parent=$this->html;
+		}
+		
+		if($this->is_node($name)){
+			return $name;
+		}elseif(preg_match('#([^:]+):(\d+)#', $name, $d)){
+			if($this->getElementsByClassName($d[1], $parent)->item($d[2])){
+				return $this->getElementsByClassName($d[1], $parent)->item($d[2]);
+			}else{
+				$this->error('obiekt '.$name.' nie istnieje');
+			}
+		}elseif($node=$this->getElementById($name, $parent)){
+			return $node;
+		}else{
+			$this->error(is_string($name)?'Obiekt o nazwie "'.$name.'" nie istnieje':'Obiekt domnode nie istnieje');
+			return null;
+		}
+	}
+	
+	/**
+	 * zwraca pierwszy tag element o podanej nazwie
+	 */
+	public function getElementByTagName($tag, $parent=0){
+		if(!$parent){
+			$parent=$this->html;
+		}
+		return $parent->getElementsByTagName($tag)->item(0);
+	}
+	
+	/**
+	 * zwraca listę obiektów wg nazwy i rodzica
+	 */
+	public function getElementsByTagName($tag, $parent=0){
+		if(!$parent){
+			$parent=$this->html;
+		}
+		return $parent->getElementsByTagName($tag);
+	}
+
+	/**
+	 * uwaga, błędna obsługa kilku klas dla jednego dokumentu
+	  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+	 * zwraca listę obiektów
+	 * @param domnode
+	 * @param string className
+	 */
+	public function getElementsByClassName($class, $parent=0){
+		if(!$parent){
+			$parent=$this->html;
+		}
+		
+		$xpath = new DOMXPath($this->xml);
+		$query = './/*[@class="'.$class.'"]';
+		
+		return $xpath->query($query, $parent);
+	}
+	
+	/**
+	 * zwraca obiekt mając za parametr jego id
+	 * @param str object
+	 * @param object domnode 
+	 * @return object domnode
+	 */
+	public function getElementById($id, $parent=0){
+		/*
+			rozwiązać problem z loadhtml
+		*/
+		/*
+		if(!$parent){
+			return $this->xml->getElementById($id);
+		}else{
+			$xpath = new DOMXPath($this->xml);
+			$query = './/*[@id="'.$id.'"]';
+			$entries = $xpath->query($query, $parent);
+			return $entries->item(0);
+		}*/
+		
+		if(!$parent){
+			$parent=$this->html;
+		}
+		$xpath = new DOMXPath($this->xml);
+		$query = './/*[@id="'.$id.'"]';
+		$entries = $xpath->query($query, $parent);
+		return $entries->item(0);
+	}
+	
+	/**
+	 * usuwa id wszystkich dzieci i danego obiektu
+	 */
+	public function remove_id($name){
+		if($node=$this->getNode($name)){
+			$xpath = new DOMXPath($this->xml);
+			$query = '*[@id]|*//*[@id]';
+			$entries = $xpath->query($query, $node);
+			
+			foreach($entries as $node){
+				$node->removeAttribute('id');
+			}
+		}
+	}
+	
+	/**
+	 * głowna funkcja dodająca wartości/parametry, obsługująca pętle
+	 */
+	public function add($name, $value){
+		if($node=$this->getNode($name)){
+			if(is_array($value) && is_array($value[0])){//czyli pętelka
+				$node->removeAttribute('id');
+				$this->r($node, $value);
+			}elseif(is_array($value)){//nalezy skorzystać z set, bo mamy tablicę
+				$this->set($node, $value);
+			}elseif(is_string($value)){//zwykły ciąg, czyli najprostsza możliwość
+				$this->appendText($node, $value);
+			}elseif($this->is_node($value)){//albo obiekt - czyli domnode lub domdocumentfragment
+				$node->appendChild($value);
+			}elseif($value instanceof fragment){
+				$this->appendText($node, $this->xml->savexml($value->s));
+			}
+		}
+	}
+	
+	/**
+	 * smarty compatible
+	 */
+	public function assign($name, $value){
+		$this->add($name, $value);
+	}
+	/**********
+	 * TODO
+	 * - poprawić nazwy zmiennych
+	 */
+	/**
+	 * pomocnicza funkcja główej
+	 */
+	private function r($node, $all){
+		foreach($all as $row){
+			// dont remove parent
+			$clone=$node->cloneNode(true);
+			
+			
+			
+			
+			// http://pl.php.net/manual/pl/function.dom-domdocument-createdocumentfragment.php#66042
+			
+			// rm parent
+			//$clone=$this->xml->createDocumentFragment();
+			//foreach($node->childNodes as $child){
+			//	$clone->appendChild($child->cloneNode(true));
+			//}
+			
+			foreach($row as $key => $value){
+				if($tt=$this->getNode($key, $clone)){
+					$this->add($tt, $value);
+				}
+			}
+			
+			$this->remove_id($clone);
+			
+			$node->parentNode->insertBefore($clone, $node);
+		}
+		$node->parentNode->removeChild($node);
+	}
+	
+	/**
+	 * nadawanie atrybutów obiektowi
+	 * arguemtny w tablicy lub jako kolejene parametry funkcji
+	 */
+	public function set($node){
+		if($node=$this->getNode($node)){
+			$arguments=func_get_args();
+			if(is_array($arguments[1])){
+				foreach($arguments[1] as $attribute => $value){
+					if($value!==false){
+						if($attribute!='data'){
+							$node->setAttribute($attribute, $value);
+						}else{
+							$this->appendText($node, $value);
+						}
+					}
+				}
+			}else{
+				for($i=1; $i<count($arguments)-1; $i+=2){
+					if($arguments[$i+1]!==false){
+						if($attribute!='data'){
+							$node->setAttribute($arguments[$i], $arguments[$i+1]);
+						}else{
+							$this->appendText($node, $value);
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	/**
+	 * tworzenie elementow dom
+	 */
+	public function create($name, $str=0, $arguments=0){
+		$node=$this->xml->createElement($name);
+		if($str){
+			$this->appendText($node, $str);
+		}
+		if($arguments){
+			if(func_num_args()>3){
+				$arguments=func_get_args();
+				$arguments=array_slice($arguments, 2);
+				for($i=0; $i<count($arguments); $i+=2){
+					$this->set($node, $arguments[$i], $arguments[$i+1]);
+				}
+			}else{
+				$this->set($node, $arguments);
+			}
+		}
+		return $node;
+	}
+	
+	/**
+	 * usuwanie obiektów
+	 */
+	public function remove($name){
+		if($node=$this->getNode($name)){
+			$node->parentNode->removeChild($node);
+		}
+	}
+	
+	/**
+	 * alias funkcji remove
+	 */
+	public function delete($name){
+		$this->remove($name);
+	}
+	
+	/**
+	 * tak jak domowa, nie obsługuje pętli, oczywiście
+	 */
+	public function insertBefore($new, $old){
+		if($old=$this->getNode($old)){
+			if($this->is_node($new) && $this->is_node($old)){
+				$old->parentNode->insertBefore($new, $old);
+			}elseif(is_string($new)){
+				$old->parentNode->insertBefore($this->text2html($new), $old);
+			}
+		}
+	}
+	
+	/**
+	 * jw, tylko dodwawanie po,
+	 * dodać sprawdzanie
+	 * && $this->is_node($old->nextSibling)
+	 */
+	public function insertAfter($new,  $old){
+		if($old=$this->getNode($old) ){
+			$old->parentNode->insertBefore($this->text2html($new), $old->nextSibling);
+		}
+	}
+	
+	public function link($url, $rel, $title=false, $type=false, $media=false){
+		$link=$this->create('link', null, array('rel'=>$rel, 'href'=>$url, 'title'=>$title, 'type'=>$type, 'media'=>$media));
+		$this->head->appendChild($link);
+	}
+	
+	
+	public function cssFile($url, $title=false, $media=false){
+		$this->link($url, 'stylesheet', $title, 'text/css', $media);
+	}
+	
+	public function jsFile($url, $alternate_code=null){
+		$this->head->appendChild($this->create('script', $alternate_code, array('type'=>'text/javascript','src'=>$url)));
+	}
+
+	/**
+	 * @param str css-input
+	 * @param bool dodać-nowy-tag-style
+	 */
+	public function css($str, $new=0){
+		if($new){
+			$this->head->appendChild($this->create('style', '<![CDATA['. trim($str) .']]>', array('type'=>'text/css')));
+		}else{
+			if($style=$this->getElementByTagName('style', $this->head)){
+				$style->firstChild->data.=trim($str);
+			}else{
+				$this->css($str, 1);
+			}
+		}
+	}
+	
+	/**
+	 * @param str kod_javascript
+	 * @param bool add_new_tag
+	 */
+	public function js($str, $new=0){
+		if($new){
+			$this->head->appendChild($this->create('script', '<![CDATA['. trim($str) .']]>', array('type'=>'text/javascript')));
+		}else{
+			if($script=$this->getElementByTagName('script', $this->head)){
+				$script->firstChild->data.=trim($str);
+			}else{
+				$this->js($str, 1);
+			}
+		}
+	}
+
+	/**
+	 * set style to the object
+	 * @param object node
+	 * @param str style
+	 */
+	public function setStyle($name, $style){
+		if($node=$this->getNode($name)){
+			$node->setAttribute('style', $style);
+		}
+	}
+	
+	/**
+	 * create document-fragment
+	 * @param str template_fragment
+	 */
+	public function fragment($str=0){
+		return new fragment($str, $this->xml);
+	}
+}
+
+/*
+	fragment dokumentu
+	powinien działać tak jak dokument główny
+*/
+
+class fragment extends xt{
+	public function __construct($file=0, $xml){
+		$this->parent=$xml;
+		if($file){
+			$this->load($file);
+		}
+	}
+	public function load($file){
+		if(is_file($file)){
+			if(file_exists($file)){
+				$this->template=file_get_contents($file);
+			}else{
+				$this->error('Template file '.$file.' not found.');
+			}
+		}elseif(is_string($file)){
+			$this->template=$file;
+		}else{
+			$this->error('Incompatible template type');
+		}
+		
+		$this->template=$this->tidy($this->template);
+		
+		$this->s=$this->parent->createDocumentFragment(); //tej durnej nazwy używa add() ;-)
+		$this->s->appendXML($this->template);
+		
+		
+		$xpath = new DOMXPath($this->parent);
+		$query = '.';
+		$entries = $xpath->query($query, $this->s);
+		$this->html=$entries->item(0);
+		
+		$this->xml=$this->parent;
+	}
+	
+	public function getElementByTagName($tag, $parent=0){
+		if(!$parent){
+			$parent=$this->html;
+		}
+		return $parent->getElementsByTagName($tag)->item(0);
+	}
+	
+	/**
+	 * zwraca listę obiektów wg nazwy i rodzica
+	 */
+	public function getElementsByTagName($tag, $parent=0){
+		if(!$parent){
+			$parent=$this->html;
+		}
+		$xpath = new DOMXPath($this->xml);
+		$query = './/'.$tag;
+		
+		return $xpath->query($query, $parent);
+	}
+
+	/**
+	 * zwraca listę obiektów
+	 * @param domnode
+	 * @param string className
+	 */
+	public function getElementsByClassName($class, $parent=0){
+		if(!$parent){
+			$parent=$this->html;
+		}
+		/*
+			jakiś głupi workaround
+			tak jak przy getelementbyid
+			^^^^^^^^^^^^^^^^^^^^^^^^^^^
+		*/
+		$xpath = new DOMXPath($this->xml);
+		$query = '*[@class="'.$class.'"]|*//*[@class="'.$class.'"]';
+		
+		return $xpath->query($query, $parent);
+	}
+	
+	/**
+	 * zwraca obiekt mając za parametr jego id
+	 * @param str object
+	 * @param object domnode 
+	 * @return object domnode
+	 */
+	public function getElementById($id, $parent=0){
+		if(!$parent){
+			$parent=$this->html;
+		}
+		
+		/*
+			jakiś głupi workaround
+			<p id="a"> <span id="a" /> </p>
+			xpath z niewiadomych przyczyn olewa p
+			przy zapytaniu typu .//*[@id="'.$id.'"]
+			^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+		*/
+		
+		$xpath = new DOMXPath($this->xml);
+		$query = '*[@id="'.$id.'"]|*//*[@id="'.$id.'"]';
+		$entries = $xpath->query($query, $parent);
+		return $entries->item(0);
+	}
+	
+	public function display($debug=0){
+		if($debug){
+			echo '<code><pre>'.htmlspecialchars($this->xml->savexml($this->s)).'</pre></code>';
+		}else{
+			echo $this->xml->savexml($this->s);
+		}
+	}
+}
+
+?>

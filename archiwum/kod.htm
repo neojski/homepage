@@ -1,0 +1,76 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-2" /><title>Testowanie skryptow javascript</title>
+
+<script type="text/javascript">
+c=23
+d=354
+m=31
+
+var il
+
+function f(){
+    str='tomek to gość'
+    newstr=''
+    il=(127*m).toString().length
+    for(i=0;i<str.length;i++){
+        tmp=''
+        tmp=(str.charCodeAt(i)*m).toString()
+        alert(str.charCodeAt(i))
+        while(tmp.length<il){
+          tmp=0+tmp
+        }
+        newstr+=tmp+rana(c)
+    }
+    document.getElementById('1').innerHTML=newstr
+    newstr=rana(c/d)+newstr+rana(d)
+    document.getElementById('szyfr').innerHTML=newstr
+}
+
+function rana(x){
+    stri=''
+    for(var i=0;i<x;i++){
+        stri+=(Math.floor(Math.random()*9)+1)
+    }
+    return stri
+}
+
+onload=f
+        //   c=23        //dlugosc losowych liczb
+        //   d=354        //ilosc losowych na koncu
+        //   m=31       //mnoznik
+        //   il=4        //dlugosc lancuchow
+function unszyfr(){
+    newstr=''
+    co=document.getElementById('szyfr').innerHTML
+    co=co.toString().slice(Math.ceil(c/d),co.length-d)
+    document.getElementById('2').innerHTML=co
+
+
+
+
+    while(co.length>=il+c){
+        newstr+=String.fromCharCode(co.substr(0,il)/m)
+
+               alert((co.substr(0,il)/m))
+
+        co=co.toString().substr(c+il,co.length)
+    }
+
+    document.getElementById('unszyfr').innerHTML=newstr
+}
+
+</script>
+</head>
+<body>
+
+<div>cały kod szyfrowy: <span id="szyfr"></span></div>
+<div>obcięty kod szyfrowy: <span id="1"></span></div>
+<hr />
+<div>na nowo przycięty: <span id="2"></span></div>
+
+<div id="unszyfr" onclick="unszyfr()">cos</div>
+
+
+</body>
+</html>
