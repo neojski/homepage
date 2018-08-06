@@ -1,4 +1,5 @@
-Options +Multiviews
-
-AddType application/x-httpd-php5 .php
-AddType application/x-httpd-php5 .phtml
+RewriteEngine on
+RewriteCond %{HTTP_HOST} ^neo.infeo.pl [NC,OR]
+RewriteCond %{HTTP_HOST} ^www.neo.infeo.pl [NC]
+RewriteRule ^(.*)$ http://kolodziejski.me/$1 [L,R=301,NC]
+RewriteRule ^$ http://kolodziejski.me/ [L,R=301,NC]

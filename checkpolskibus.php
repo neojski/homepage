@@ -52,7 +52,7 @@ if(preg_match('#^\s*\[new Date\(\d{4}, \d{1,2}, \d{1,2}\)(,new Date\(\d{4}, \d{1
 
 	// get last date and compare with "current date"
 	$newDate = $dates[count($dates) - 1];
-	$lastDate = '2014, 0, 8';
+	$lastDate = '2014, 8, 4';
 
 	echo '<p>Uwaga, miesiące są od 0, dni od 1!</p>';
 	echo '<p>Sprawdzamy datę końcową '.$lastDate.'</p>';
