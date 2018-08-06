@@ -1,0 +1,73 @@
+body {
+	margin: 0;
+	padding: 0;
+	background: #000;
+	overflow: hidden;
+}
+
+.box{
+	border: 2px solid #000;
+	border-radius: 10px;
+	position: absolute;
+	font-family: Georgia,"Nimbus Roman No9 L",serif;
+	bottom: 0;
+	right: 0;
+	background: #fff;
+	opacity: 1;
+	padding: 30px;
+	margin: 0 50px 50px 0;
+}
+
+#message{
+	color: #4C4C4C;
+	font-size: 40px;
+	
+	font-style: italic;
+	letter-spacing: -1px;
+	font-weight: normal;
+	padding-bottom: 20px;
+}
+
+#messageBox{
+	opacity: 0;
+	max-width: 50%;
+}
+
+#dist{
+	font-size: 12px;
+	text-align: right;
+}
+
+#message:before {
+	float: left;
+	font-size: 100px;
+	content: '“';
+	margin: -30px 10px 10px 0;
+	height: 40px;
+	display: block;
+}
+
+#shareSwitcher, #likeIt{
+	text-decoration: underline;
+	text-align: right;
+	cursor: pointer;
+}
+
+a{
+	color: #000;
+}
+
+#shareBox{
+	display:none;
+}
+#shareBox h1{
+	margin-top: 0;
+}
+#messageArea{
+	height: 150px;
+	width: 300px;
+}
+#submitShare{
+	display: block;
+	clear: both;
+}

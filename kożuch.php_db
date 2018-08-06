@@ -19,7 +19,7 @@ if(xml()){
 	header('Content-Type: text/html; charset=utf-8');
 }
 
-$sql = new mysqli('sql.infeo.nazwa.pl', 'infeo_5', '8012neo', 'infeo_5', 3305);
+
 
 /*if($_POST['submit']){
 	if($_POST['pytanie'] == 'lubie' || $_POST['pytanie'] == 'nie' || $_POST['pytanie'] == 'obojetnie'){

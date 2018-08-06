@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+<style>
+#box div{
+	background: #ddd;
+	border-radius: 20px;
+	font-size: 20px;
+	height: 40px;
+	line-height: 40px;
+	margin: 20px;
+	text-align: center;
+	width: 200px;
+}
+#dropbox{
+	background: #ddd;
+	border: 2px solid #000;
+	font-size: 30px;
+	height: 300px;
+	text-align: right;
+	width: 600px;
+}
+
+#dropbox.over{
+	background: hsl(240, 60%, 60%);
+}
+</style>
+
+<script type="text/javascript">
+onload = function(){
+	var drop = document.getElementById('dropbox');
+	drop.ondragenter = function(){
+		this.classList.add('over');
+	}
+	drop.ondragleave = function(){
+		this.classList.remove('over');
+	}
+	drop.ondragover = function(e){
+		// prevent default. Otherwise you can't drop!
+		if(e.preventDefault){
+			e.preventDefault(); 
+		}
+		return false;
+	}
+	drop.ondrop = function(e){
+		e.preventDefault();
+		e.stopPropagation();
+		this.classList.remove('over');
+		this.innerHTML = "dropped=" + e.dataTransfer.getData('text');
+		return false;
+	}
+
+	// activate all elements we want to be draggable
+	var draggables = document.querySelectorAll('#box > div');
+	var draggable;
+	var i;
+	for(i = 0; i < draggables.length; i++){
+		draggable = draggables[i];
+
+		// draggable need to have draggable="true" attribute
+		draggable.setAttribute('draggable', true);
+		draggable.i = i; // remember index
+
+		draggable.ondragstart = function(e){
+			e.dataTransfer.setData('text', this.firstChild.data); // firefox needs some data added
+		}
+	}
+}
+</script>
+
+
+<body>
+
+<h1>Native HTML5 drag&drop</h1>
+
+<div id="box">
+<div>Drag me 1</div>
+<div>Drag me 2</div>
+<div>Drag me 3</div>
+</div>
+
+<div id="dropbox">
+drop here
+</div>
+
+<p>Note: don't know why firefox keeps firering dragleave when you hoover "drop here" text.</p>
+
+</body>
+</html>
