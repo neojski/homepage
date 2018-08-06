@@ -1,0 +1,183 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+	<title>geogame</title>
+	<script type="text/javascript" src="jquery.js"></script>
+	<script type="text/javascript" src="http://www.google-analytics.com/ga.js"></script>
+	<script type="text/javascript">
+		//<![CDATA[
+		var pageTracker = _gat._getTracker("UA-441633-3");
+		pageTracker._initData();
+		pageTracker._trackPageview();
+		//]]>
+	</script>
+	<script type="text/javascript">
+	//<![CDATA[
+	/*
+		never, ever use this code
+		it's quick'n'dirt. very dirt. global variables!
+		fixes welcome
+	*/
+	window.onload = function(){
+		poland = document.getElementById('poland');
+		left = poland.offsetLeft;
+		top = poland.offsetTop;
+		
+		// fixme - pobieraj lepiej
+		width = poland.firstChild.offsetWidth;
+		height = poland.firstChild.offsetHeight;
+		
+		name = document.getElementById('name');
+		
+		what = document.getElementById('what');
+		
+		poland.onmousemove = function(e){
+			x = e.pageX - left;
+			y = e.pageY - top;
+		}
+		
+		poland.onclick = function(e){
+			var real = real2client(show.longitude, show.latitude);
+			$('#real').css('left', real[0] + 'px').css('top', real[1] + 'px').show();
+			
+			$('#your').css('left', x + 'px').css('top', y + 'px').show();
+			
+			tmp_points -= px2km(Math.sqrt( Math.pow(x - real[0], 2) + Math.pow(y - real[1], 2)))
+			
+			cnt_lvl();
+		}
+		
+		show = false;
+	}
+	
+	// http://pl.wikipedia.org/wiki/Geografia_Polski
+	var N = 54.83
+	var S = 49
+	var W = 14.12
+	var E = 24.13
+	
+	var x, y;
+	
+	
+	function client2real(x, y){
+		return[
+			(x / width * (E - W) + W).toFixed(2),
+			((height - y) / height * (N - S) + S).toFixed(2)
+		]
+	}
+	
+	function real2client(x, y){
+		return[
+			((x - W) * width / (E - W)).toFixed(2),
+			(height - (y - S) * height / (N - S)).toFixed(2) // ok
+		];
+	}
+	
+	function px2km(val){
+		return (val * (N-S) / height * 111.32).toFixed(2);
+	}
+	
+	
+	
+	function set(str, x, y){
+		name.firstChild.nodeValue = str;
+		var pos = real2client(x, y);
+		name.style.left = pos[0] + 'px';
+		name.style.top = pos[1] + 'px';
+	}
+	
+	function get_quest(lvl){
+		$.get('/geogame/get.php', {'lvl': lvl},  function(data){
+			show_me(data);
+		});
+	}
+	
+	function show_me(data){
+		data = JSON.parse(data);
+		what.firstChild.data = data.name;
+		
+		$('#real').html(data.name).hide();
+		$('#your').html(data.name).hide();
+		
+		show = data;
+	}
+	
+	function start(){
+		points = 0;
+		lvl = 1;
+		tmp_points = 0;
+		
+		next_lvl();
+	}
+	
+	function next_lvl(){		
+		points += tmp_points * lvl; // dorzuć punkty
+		
+		info('masz punktów: ' +points);
+	
+		quest_to_go = 5;
+		tmp_points = 200;
+		lvl += 10;
+		get_quest(lvl);
+	}
+	
+	function info(str){
+		$('#info').html(str);
+	}
+	
+	function cnt_lvl(){
+		quest_to_go--;
+		
+		if(tmp_points < 0){
+			info('przegrałeś z radosną liczbą punktów: '+points);
+			alert('przegrałeś z radosną liczbą punktów: '+points);
+		}else{
+			$('#tmp_points').html(tmp_points);
+			info('jeszcze '+quest_to_go);
+		
+			if(quest_to_go > 0){
+				setTimeout(function(){get_quest(++lvl)}, 1000);
+			}else{
+				if(tmp_points >= 0){
+					next_lvl();
+				}
+			}
+		}
+	}
+	//]]>
+</script>
+<style type="text/css">
+*{margin: 0; padding: 0}
+#poland{
+	position: relative;
+}
+#name{
+	position: absolute;
+	left: 0;
+	top: 0;
+	background: #fff;
+}
+#real, #your{
+	position: absolute;
+}
+#real{
+	color: green;
+	background: white;
+}
+#your{
+	color: black;
+	background: white;
+}
+</style>
+</head>
+<body>
+	<h1>Geogame</h1>
+	<h2>Wskaż na mapie</h2>
+	<button onclick="start()">start</button>
+	<p id="info">info</p>
+	<p id="tmp_points">masz limit 200km do wykorzystania</p>
+	<p id="what">a tę miescowość wskaż na mapie :-)</p>
+	<div id="poland"><img src="poland.jpg" alt="poland" /><p id="real">warszawa</p><p id="your">warszawa</p></div>
+</body>
+</html>

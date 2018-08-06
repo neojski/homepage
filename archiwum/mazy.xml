@@ -1,0 +1,109 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+	<title>mazy</title>
+	<script type="text/javascript" src="http://www.google-analytics.com/ga.js"></script>
+	<script type="text/javascript">
+		//<![CDATA[
+		var pageTracker = _gat._getTracker("UA-441633-3");
+		pageTracker._initData();
+		pageTracker._trackPageview();
+		//]]>
+	</script>
+	<script type="text/javascript">
+	<![CDATA[
+window.onload = function(){
+	var g = document.getElementsByTagName('g')[0];
+	var all = '';
+		
+	function create(name){
+		return document.createElementNS('http://www.w3.org/2000/svg', name);
+	}
+	
+	var box = create('g');
+	
+	// kółeczka małe j - małe kółko - duże rozmycie
+	for(var j = 1; j < 6; j++){
+		var l = create('g')
+		box.appendChild(l)
+		if(j < 5){
+			l.setAttribute('style', 'filter: url(#Gaussian_Blur'+j+')')
+		}
+		for(var i = 0; i < 10; i++){
+			var circle = create('circle');
+			var r = 20 + Math.random() * j * 25
+			circle.setAttribute('r', r);
+			circle.setAttribute('cx', Math.random() * 1000);
+			circle.setAttribute('cy', Math.random() * 1000);
+			circle.setAttribute('stroke-width', (r / 15) + 'px');
+			circle.setAttribute('stroke', 'white')
+			circle.setAttribute('fill', 'white');
+			circle.setAttribute('fill-opacity', .5);
+			circle.setAttribute('opacity', Math.random() * .5 + .5)
+		
+			l.appendChild(circle);
+		}
+	}
+	
+	g.appendChild(box);
+};
+
+]]>
+</script>
+<style type="text/css">
+div.code{
+	font-size: 50%;
+	border: 2px solid black;
+}
+
+#svg{
+	border: 10px solid black;
+	margin: 60px;
+	width: 500px;
+	height: 500px;
+}
+</style>
+</head>
+<body>
+	<h1>Mazy w svg</h1>
+	<p>Jeśli nic nie zobaczysz poniżej - spróbuj z firefoksem 3.5.</p>
+	<p>Aby narysować nowe mazy - odśwież stronę.</p>
+	<div id="svg">
+	<svg xmlns="http://www.w3.org/2000/svg" width="500" height="500" viewBox="0 0 1000 1000">
+	<defs>
+		<filter id="Gaussian_Blur1">
+			<feGaussianBlur in="SourceGraphic" stdDeviation="10"/>
+		</filter>
+		<filter id="Gaussian_Blur2">
+			<feGaussianBlur in="SourceGraphic" stdDeviation="7"/>
+		</filter>
+		<filter id="Gaussian_Blur3">
+			<feGaussianBlur in="SourceGraphic" stdDeviation="4"/>
+		</filter>
+		<filter id="Gaussian_Blur4">
+			<feGaussianBlur in="SourceGraphic" stdDeviation="2"/>
+		</filter>
+		<linearGradient id="gradient" x1="0" y1="0" x2="1200" y2="500" gradientUnits="userSpaceOnUse">
+			<stop style="stop-color:#ff0101" offset="0" />
+      			<stop style="stop-color:#67f600" offset="0.21" />
+			<stop style="stop-color:#34f07f" offset="0.37" />
+			<stop style="stop-color:#1aedbf" offset="0.42" />
+			<stop style="stop-color:#01ebff" offset="0.5" />
+			<stop style="stop-color:#9400ff" offset="0.75" />
+			<stop style="stop-color:#ff0101" offset="1" />
+		</linearGradient>
+	</defs>
+
+		<g id="v">
+		<rect fill="url(#gradient)" x="0" y="0" width="1000" height="1000" />
+		
+		
+		</g>
+	</svg>
+	</div>
+
+	<p>Wygląd wzorowałem na <a href="http://puteraaladin.blogspot.com/2008/10/gimp-tutorial-awesome-bokeh-effect-in.html">Awesome Bokeh Effect in Gimp</a>.</p>
+	
+</body>
+</html>

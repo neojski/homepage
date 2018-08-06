@@ -1,7 +1,4 @@
-Ze względu na wandalizm i brak opieki - zamknięto.
-
 <?php
-exit();
 
 # Initialise common code
 require_once( './includes/WebStart.php' );

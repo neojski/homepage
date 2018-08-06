@@ -13,7 +13,7 @@
 		pageTracker._trackPageview();
 		//]]>
 	</script>
-	<link href="/main.css" title="standardowy" rel="stylesheet" type="text/css">
+	<link href="/main.css" title="standardowy" rel="stylesheet" type="text/css" />
 	<link rel="alternate" type="application/atom+xml" title="Nowości z archiwum." href="http://neo.infeo.pl/atom.php" />
     </head>
     <body>
@@ -29,10 +29,10 @@
 	<tbody>
 <?php
 $files=array();
-foreach (glob("*.{html,htm,php,phps,xml,svg}",GLOB_BRACE ) as $filename) {
+foreach (glob("*.{html,htm,php,phps,xml,svg,txt}",GLOB_BRACE ) as $filename) {
 	$files[str_pad(filemtime($filename).mt_rand(0,200), 20,  '0', STR_PAD_RIGHT)]=$filename;
 }
-foreach(glob("../projekty/*.{html,htm,php,phps,xml,svg}",GLOB_BRACE ) as $filename){
+foreach(glob("../projekty/*.{html,htm,php,phps,xml,svg,txt}",GLOB_BRACE ) as $filename){
 	$files[str_pad(filemtime($filename).mt_rand(0,200), 20,  '0', STR_PAD_RIGHT)]=$filename;
 }
 

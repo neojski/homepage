@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<head>
+<meta charset="utf-8">
+<title>szybkośćnik</title>
+<script type="text/javascript">
+
+function $(id){
+	return document.getElementById(id);
+}
+
+onload = function(){
+	text = $('text');
+	odp = $('odp');
+	ok = $('ok');
+
+	options.loadUI();
+}
+
+function gen(len){
+	for(var i = 0, str = ''; i < len; i++) {
+		str += options.chars[Math.floor(Math.random() * options.chars.length)];
+	}
+	return str;
+}
+
+var options = {
+	len: 4,
+	time: 500,
+	chars: '0123456789abcdefghiklmnopqrstuvwxyz'//ABCDEFGHIJKLMNOPQRSTUVWXTZ
+}
+options.loadUI = function(i){
+	var optionsDiv = $('options');
+	for(i in options){
+		if(typeof options[i] == 'string' || typeof options[i] == 'number'){
+			var input = document.createElement('input');
+			input.setAttribute('type', 'text');
+			input.setAttribute('name', i);
+			input.setAttribute('value', options[i]);
+
+			input.addEventListener('change', function(){options[this.getAttribute('name')] = this.value}, true);
+			
+			optionsDiv.appendChild(input);
+		}
+	}
+}
+
+
+function show(){
+	show.text = gen(options.len);
+
+	text.firstChild.nodeValue = show.text;
+
+	setTimeout(hide, options.time);
+}
+
+function hide(){
+	text.firstChild.nodeValue = '_';
+}
+
+function check(){
+	var correct = show.text == odp.value;
+	ok.firstChild.nodeValue = correct ? 'ok' : show.text + ' ' + odp.value;
+
+	if(correct){
+		odp.value = '';
+		if(options.time > 30){
+			options.time-=10;
+		}
+		setTimeout(show, 500);
+	}else{
+		options.time+=10;
+	}
+}
+
+</script>
+<style type="text/css">
+div#box, div#box input{
+	font-size: 42px;
+}
+
+div#text{
+	background: #6699ff;
+	text-align: center;
+	
+}
+
+div#box{
+	width: 400px;
+	margin: auto;
+	background: #EFEFEF;
+	font-family: arial
+}
+
+body{
+	background: #efefef;
+}
+
+input{
+	font-family: arial
+}
+
+div#options{
+	position: absolute;
+	left: 0;
+	bottom: 0;
+}
+</style>
+</head>
+<body>
+<h1>Szybkośćnik</h1>
+<p>prywatny „projekt”, prywatne potrzeby, brzydki kod</p>
+
+<div id="box">
+	<div id="text">tutaj wyświetlę tekst</div>
+	<form onsubmit="check(); return false;"><input id="odp" type="text" value="tutaj odp" /><input type="submit" value="spr" /><input type="button" onclick="show()" value="nowy" /></form>
+	<div id="ok">tutaj poprawność</div>
+</div>
+
+<div id="options">
+	
+</div>
+
+</body>

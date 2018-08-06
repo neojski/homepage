@@ -37,7 +37,7 @@ $wgSitename         = "Xt";
 
 ## The URL base path to the directory containing the wiki;
 ## defaults for all runtime URL paths are based off of this.
-$wgScriptPath       = "/xt/docs";
+$wgScriptPath       = "/xt/docs-wiki";
 
 ## For more information on customizing the URLs please see:
 ## http://www.mediawiki.org/wiki/Manual:Short_URL
@@ -122,4 +122,7 @@ $wgCacheEpoch = max( $wgCacheEpoch, $configdate );
 	
 	
 $wgLogo='http://img408.imageshack.us/img408/4999/smallxthq6.png';
+
+# only registered users can post
+$wgGroupPermissions['*']['edit'] = false;
 ?>
