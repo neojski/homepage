@@ -1,0 +1,17 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<title>Sortowanie wg odległości od liczby 12</title>
+	</head>
+<body>
+	<div><code><pre>
+	function s(a, b){
+		return(Math.abs(a-12) < Math.abs(b-12))?-1:1;
+	}
+	alert([0, 4, 9, 14, 19, 24].sort(s))
+	</pre></code>
+	
+	</div>
+</body>
+</html>

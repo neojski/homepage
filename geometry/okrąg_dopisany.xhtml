@@ -1,0 +1,79 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+	<link rel="stylesheet" href="design/style.css" type="text/css" />
+	
+	<script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/resigInheritance.js"></script>
+	<script type="text/javascript" src="js/dom.js"></script>
+	<script type="text/javascript" src="js/pointAndVector.js"></script>
+	<script type="text/javascript" src="js/mouser.js"></script>
+	<script type="text/javascript" src="js/svg_objects.js"></script>
+	<script type="text/javascript" src="js/objectsGUI.js"></script>
+	<script type="text/javascript" src="js/select.js"></script>
+	
+	<script type="text/javascript" src="js/objects/Handles.js"></script>
+	<script type="text/javascript" src="js/objects/Lines.js"></script>
+	<script type="text/javascript" src="js/objects/Circles.js"></script>
+	<script type="text/javascript" src="js/objects/Others.js"></script>
+	
+	<script type="text/javascript" src="js/geometry.js"></script>
+	
+	<title>GeomėTṛy - okrąg dopisany</title>
+</head>
+<body>
+	<div id="box">
+		<h1>okrąg dopisany</h1><div id="desc">
+	<p><em>Okrąg dopisany</em> do trójkąta to okrąg będący styczny do jednego z jego boków i przedłużeń dwóch pozostałych boków. Jego środek znajduje się w punkcie przecięcia dwusiecznych odpowiednich kątów zewnętrznych. Okrąg ten ma dokładnie jeden punkt wspólny z trójkątem.</p>
+	<p>Ciekawym jest fakt, że okręgi dopisane są styczne do okręgu dziewięciu punktów. Spróbuj wrysować jakieś trzy charakterystyczne punkty okręgu dziewięciu punktów i skorzystać z narzędzia "okrąg trzech punktów", aby przekonać się, że rzeczywiście podana własność zachodzi.</p>
+	<p>Przy poruszaniu ciemnoczerwonymi odcinkami należy uważać, aby cały czas się przecinały. Choć może warto się zastanowić dlaczego akurat w ten sposób układają się okręgi, gdy nasze odcinki przestaną się przecinać. (czyli w jaki sposób zostały zaprogramowane)</p>
+	</div>
+	</div>
+	
+	<div id="svgBox">
+		<div id="svg">
+			
+	<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500">
+	<desc>
+	<p><em>Okrąg dopisany</em> do trójkąta to okrąg będący styczny do jednego z jego boków i przedłużeń dwóch pozostałych boków. Jego środek znajduje się w punkcie przecięcia dwusiecznych odpowiednich kątów zewnętrznych. Okrąg ten ma dokładnie jeden punkt wspólny z trójkątem.</p>
+	<p>Ciekawym jest fakt, że okręgi dopisane są styczne do okręgu dziewięciu punktów. Spróbuj wrysować jakieś trzy charakterystyczne punkty okręgu dziewięciu punktów i skorzystać z narzędzia "okrąg trzech punktów", aby przekonać się, że rzeczywiście podana własność zachodzi.</p>
+	<p>Przy poruszaniu ciemnoczerwonymi odcinkami należy uważać, aby cały czas się przecinały. Choć może warto się zastanowić dlaczego akurat w ten sposób układają się okręgi, gdy nasze odcinki przestaną się przecinać. (czyli w jaki sposób zostały zaprogramowane)</p>
+	</desc>
+		<g id="objects"><circle cx="328.31739976042746" cy="235.58180138883725" r="65.6048285590572" style="fill: rgb(65, 105, 225);" type="CenterPointCircle" id="object29" parents="object22 object27"/><circle cx="548.7899395865346" cy="235.464985991309" r="95.03362010700307" style="fill: rgb(65, 105, 225);" type="CenterPointCircle" id="object28" parents="object23 object26"/><circle cx="418.49285523090344" cy="489.1044952043553" r="173.67778333054252" style="fill: rgb(65, 105, 225);" type="CenterPointCircle" id="object17" parents="object14 object16"/><line x1="201" y1="467" x2="617" y2="24" style="stroke: rgb(132, 24, 57);" id="object3" parents="object0 object2" children="object9 object11 object25 object27"/><line x1="84" y1="269" x2="740" y2="357" style="stroke: rgb(132, 24, 57);" id="object5" parents="object4 object1" children="object9 object10 object15 object16"/><line x1="224" y1="29" x2="655" y2="487" style="stroke: rgb(132, 24, 57);" id="object8" parents="object6 object7" children="object10 object11 object24 object26"/><line x1="502.70851744628976" y1="325.16821575499006" x2="-14.55072624498473" y2="1332.0777821093527" style="stroke: rgb(65, 105, 225);" type="ThreePointAngleBisector" id="object12" parents="object7 object10 object9" children="object14"/><line x1="353.0410737861229" y1="305.09087575179694" x2="732.3991949369029" y2="1371.6326779878605" style="stroke: rgb(65, 105, 225);" type="ThreePointAngleBisector" id="object13" parents="object0 object9 object10" children="object14"/><line x1="441.5842532135754" y1="316.9686193335284" x2="418.49285523090344" y2="489.1044952043553" style="stroke: rgb(240, 200, 50);" type="PerpendicularLine" id="object15" parents="object14 object5" children="object16"/><line x1="502.70851744628976" y1="325.16821575499006" x2="1019.9677611375644" y2="-681.7413505993727" style="stroke: rgb(65, 105, 225);" type="ThreePointAngleBisector" id="object18" parents="object1 object10 object11" children="object23"/><line x1="418.35850322837723" y1="235.53409391785794" x2="1550.358344334372" y2="234.93431395639408" style="stroke: rgb(65, 105, 225);" type="ThreePointAngleBisector" id="object19" parents="object2 object11 object10" children="object23"/><line x1="418.35850322837723" y1="235.53409391785794" x2="-713.6413378776176" y2="236.13387387932144" style="stroke: rgb(65, 105, 225);" type="ThreePointAngleBisector" id="object20" parents="object6 object11 object9" children="object22"/><line x1="353.0410737861229" y1="305.09087575179694" x2="-26.31704736465673" y2="-761.4509264842667" style="stroke: rgb(65, 105, 225);" type="ThreePointAngleBisector" id="object21" parents="object4 object9 object11" children="object22"/><line x1="479.58202205232703" y1="300.5929607887837" x2="548.7899395865346" y2="235.464985991309" style="stroke: rgb(240, 200, 50);" type="PerpendicularLine" id="object24" parents="object23 object8" children="object26"/><line x1="376.14151424593354" y1="280.49112785829675" x2="328.31739976042746" y2="235.58180138883725" style="stroke: rgb(240, 200, 50);" type="PerpendicularLine" id="object25" parents="object22 object3" children="object27"/></g>
+		<g id="handles"><circle r="5" cx="201" cy="467" id="object0" parents="" children="object3 object13"/><circle r="5" cx="740" cy="357" id="object1" parents="" children="object5 object18"/><circle r="5" cx="617" cy="24" id="object2" parents="" children="object3 object19"/><circle r="5" cx="84" cy="269" id="object4" parents="" children="object5 object21"/><circle r="5" cx="224" cy="29" id="object6" parents="" children="object8 object20"/><circle r="5" cx="655" cy="487" id="object7" parents="" children="object8 object12"/><circle r="5" cx="353.0410737861229" cy="305.09087575179694" type="LinesIntersection" id="object9" parents="object3 object5" children="object12 object13 object20 object21"/><circle r="5" cx="502.70851744628976" cy="325.16821575499006" type="LinesIntersection" id="object10" parents="object8 object5" children="object12 object13 object18 object19"/><circle r="5" cx="418.35850322837723" cy="235.53409391785794" type="LinesIntersection" id="object11" parents="object3 object8" children="object18 object19 object20 object21"/><circle r="5" cx="418.49285523090344" cy="489.1044952043553" type="LinesIntersection" id="object14" parents="object13 object12" children="object15 object17"/><circle r="5" cx="441.5842532135754" cy="316.9686193335284" type="LinesIntersection" id="object16" parents="object5 object15" children="object17"/><circle r="5" cx="328.31739976042746" cy="235.58180138883725" type="LinesIntersection" id="object22" parents="object21 object20" children="object25 object29"/><circle r="5" cx="548.7899395865346" cy="235.464985991309" type="LinesIntersection" id="object23" parents="object18 object19" children="object24 object28"/><circle r="5" cx="479.58202205232703" cy="300.5929607887837" type="LinesIntersection" id="object26" parents="object24 object8" children="object28"/><circle r="5" cx="376.14151424593354" cy="280.49112785829675" type="LinesIntersection" id="object27" parents="object25 object3" children="object29"/></g>
+	</svg>
+	
+		</div>
+	
+		<div id="controls">
+			<dl id="newObject">
+				
+			</dl>
+			<div id="color">
+				<label for="selectColor">kolor:</label>
+				<select id="selectColor" name="selectColor">
+					<option value="#841839">karminowy</option>
+					<option value="#CF2929">krwisty</option>
+					<option value="#FD751D">marchewkowy</option>
+					<option value="#F0C832">żółcień</option>
+					<option value="#9FFB88">pistacjowy</option>
+					<option value="#808000">oliwkowy</option>
+					<option value="#4169E1">modry</option>
+					<option value="#19247C">kobaltowy</option>
+					<option value="#800080">jagodowy</option>
+					<option value="#4B0082">indygo</option>
+				</select>
+			</div>
+			<div id="selected">
+				<div id="objectName"></div>
+				Zaznacz:
+				<ul id="selectObjects"></ul>
+				<input type="button" id="okSelect" disabled="true" value="ok" onclick="Select.fire()" />
+				<input type="button" id="cancelSelect" value="anuluj" onclick="ObjectsGUI.off()" />
+			</div>
+		</div>
+	</div>
+	
+</body>
+</html>

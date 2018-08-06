@@ -1,0 +1,81 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+	<link rel="stylesheet" href="design/style.css" type="text/css" />
+	
+	<script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/resigInheritance.js"></script>
+	<script type="text/javascript" src="js/dom.js"></script>
+	<script type="text/javascript" src="js/pointAndVector.js"></script>
+	<script type="text/javascript" src="js/mouser.js"></script>
+	<script type="text/javascript" src="js/svg_objects.js"></script>
+	<script type="text/javascript" src="js/objectsGUI.js"></script>
+	<script type="text/javascript" src="js/select.js"></script>
+	
+	<script type="text/javascript" src="js/objects/Handles.js"></script>
+	<script type="text/javascript" src="js/objects/Lines.js"></script>
+	<script type="text/javascript" src="js/objects/Circles.js"></script>
+	<script type="text/javascript" src="js/objects/Others.js"></script>
+	
+	<script type="text/javascript" src="js/geometry.js"></script>
+	
+	<title>GeomėTṛy - twierdzenie Napoleona</title>
+</head>
+<body>
+	<div id="box">
+		<h1>twierdzenie Napoleona</h1><div id="desc">
+	Twierdzenie tradycyjnie przypisywane <em>Napoleonowi Bonaparte</em>, głoszące:
+	<blockquote>ortocentra trójkątów równobocznych zbudowanych na bokach dowolnego trójkąta są wierzchołkami trójkąta równobocznego</blockquote>
+	<p>Na prezentacji dowolnym trójkątem jest trójkąt pomarańczowy. Konstrukcję ortocentrum wyznaczając linie niebieskie. Czerwony trójkąt jest więc równoboczny</p>
+	<p>Ze względu na konstrukcję programu po przerzuceniu jednego z wierzchołków trójkąta na drugą półpłaszczyznę wyznaczoną przez przeciwległy bok trójkąty równoboczne budowane są ze złej strony. Jednak - proszę zauważyć - trójkąt czerwony nadal ma napoleońską własność.</p>
+	</div>
+	</div>
+	
+	<div id="svgBox">
+		<div id="svg">
+			
+	<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500">
+	<desc>
+	Twierdzenie tradycyjnie przypisywane <em>Napoleonowi Bonaparte</em>, głoszące:
+	<blockquote>ortocentra trójkątów równobocznych zbudowanych na bokach dowolnego trójkąta są wierzchołkami trójkąta równobocznego</blockquote>
+	<p>Na prezentacji dowolnym trójkątem jest trójkąt pomarańczowy. Konstrukcję ortocentrum wyznaczając linie niebieskie. Czerwony trójkąt jest więc równoboczny</p>
+	<p>Ze względu na konstrukcję programu po przerzuceniu jednego z wierzchołków trójkąta na drugą półpłaszczyznę wyznaczoną przez przeciwległy bok trójkąty równoboczne budowane są ze złej strony. Jednak - proszę zauważyć - trójkąt czerwony nadal ma napoleońską własność.</p>
+	</desc>
+		<g id="objects"><line x1="295" y1="141" x2="227" y2="361" style="stroke: rgb(253, 117, 29);" id="object3" parents="object2 object0"/><line x1="227" y1="361" x2="690" y2="281" style="stroke: rgb(253, 117, 29);" id="object4" parents="object0 object1"/><line x1="690" y1="281" x2="295" y2="141" style="stroke: rgb(253, 117, 29);" id="object5" parents="object1 object2"/><line x1="484.01774677769896" y1="-832.1016626335008" x2="690" y2="281" style="stroke: rgb(240, 200, 50);" angle="60" type="AngleLine" id="object6" parents="object2 object1" children="object15"/><line x1="1155.9831902241572" y1="-593.936695336022" x2="295" y2="141" style="stroke: rgb(240, 200, 50);" angle="-60" type="AngleLine" id="object7" parents="object1 object2" children="object14"/><line x1="299.18039830753185" y1="1343.3954249397634" x2="690" y2="281" style="stroke: rgb(240, 200, 50);" angle="-60" type="AngleLine" id="object8" parents="object0 object1" children="object12"/><line x1="951.651626015965" y1="1230.6574158324747" x2="227" y2="361" style="stroke: rgb(240, 200, 50);" angle="60" type="AngleLine" id="object9" parents="object1 object0" children="object13"/><line x1="-808.7634976818974" y1="392.2571216603102" x2="295" y2="141" style="stroke: rgb(240, 200, 50);" angle="60" type="AngleLine" id="object10" parents="object0 object2" children="object17"/><line x1="-542.4767990805344" y1="-469.25866793233456" x2="227" y2="361" style="stroke: rgb(240, 200, 50);" angle="-60" type="AngleLine" id="object11" parents="object2 object0" children="object16"/><line x1="608.8910161513775" y1="501.48488097609754" x2="227" y2="361" style="stroke: rgb(65, 105, 225);" type="PerpendicularLine" id="object12" parents="object0 object8" children="object19"/><line x1="377.3910161513776" y1="541.4848809760975" x2="690" y2="281" style="stroke: rgb(65, 105, 225);" type="PerpendicularLine" id="object13" parents="object1 object9" children="object19"/><line x1="454.37177826491074" y1="4.959982752573296" x2="690" y2="281" style="stroke: rgb(65, 105, 225);" type="PerpendicularLine" id="object14" parents="object1 object7" children="object18"/><line x1="651.8717782649106" y1="74.9599827525733" x2="295" y2="141" style="stroke: rgb(65, 105, 225);" type="PerpendicularLine" id="object15" parents="object2 object6" children="object18"/><line x1="148.73720558371167" y1="276.55513627132905" x2="295" y2="141" style="stroke: rgb(65, 105, 225);" type="PerpendicularLine" id="object16" parents="object2 object11" children="object20"/><line x1="182.73720558371178" y1="166.5551362713291" x2="227" y2="361" style="stroke: rgb(65, 105, 225);" type="PerpendicularLine" id="object17" parents="object0 object10" children="object20"/><line x1="481.594010767585" y1="454.65658731739836" x2="532.9145188432738" y2="96.97332183504886" style="stroke: rgb(207, 41, 41);" id="object21" parents="object19 object18"/><line x1="532.9145188432738" y1="96.97332183504886" x2="197.49147038914117" y2="231.37009084755266" style="stroke: rgb(207, 41, 41);" id="object22" parents="object18 object20"/><line x1="197.49147038914117" y1="231.37009084755266" x2="481.594010767585" y2="454.65658731739836" style="stroke: rgb(207, 41, 41);" id="object23" parents="object20 object19"/></g>
+		<g id="handles"><circle r="5" cx="227" cy="361" id="object0" parents="" children="object3 object4 object8 object9 object10 object11 object12 object17"/><circle r="5" cx="690" cy="281" id="object1" parents="" children="object4 object5 object6 object7 object8 object9 object13 object14"/><circle r="5" cx="295" cy="141" id="object2" parents="" children="object3 object5 object6 object7 object10 object11 object15 object16"/><circle r="5" cx="532.9145188432738" cy="96.97332183504886" type="LinesIntersection" id="object18" parents="object15 object14" children="object21 object22"/><circle r="5" cx="481.594010767585" cy="454.65658731739836" type="LinesIntersection" id="object19" parents="object12 object13" children="object21 object23"/><circle r="5" cx="197.49147038914117" cy="231.37009084755266" type="LinesIntersection" id="object20" parents="object17 object16" children="object22 object23"/></g>
+	</svg>
+	
+		</div>
+	
+		<div id="controls">
+			<dl id="newObject">
+				
+			</dl>
+			<div id="color">
+				<label for="selectColor">kolor:</label>
+				<select id="selectColor" name="selectColor">
+					<option value="#841839">karminowy</option>
+					<option value="#CF2929">krwisty</option>
+					<option value="#FD751D">marchewkowy</option>
+					<option value="#F0C832">żółcień</option>
+					<option value="#9FFB88">pistacjowy</option>
+					<option value="#808000">oliwkowy</option>
+					<option value="#4169E1">modry</option>
+					<option value="#19247C">kobaltowy</option>
+					<option value="#800080">jagodowy</option>
+					<option value="#4B0082">indygo</option>
+				</select>
+			</div>
+			<div id="selected">
+				<div id="objectName"></div>
+				Zaznacz:
+				<ul id="selectObjects"></ul>
+				<input type="button" id="okSelect" disabled="true" value="ok" onclick="Select.fire()" />
+				<input type="button" id="cancelSelect" value="anuluj" onclick="ObjectsGUI.off()" />
+			</div>
+		</div>
+	</div>
+	
+</body>
+</html>

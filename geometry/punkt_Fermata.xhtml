@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+	<link rel="stylesheet" href="design/style.css" type="text/css" />
+	
+	<script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/resigInheritance.js"></script>
+	<script type="text/javascript" src="js/dom.js"></script>
+	<script type="text/javascript" src="js/pointAndVector.js"></script>
+	<script type="text/javascript" src="js/mouser.js"></script>
+	<script type="text/javascript" src="js/svg_objects.js"></script>
+	<script type="text/javascript" src="js/objectsGUI.js"></script>
+	<script type="text/javascript" src="js/select.js"></script>
+	
+	<script type="text/javascript" src="js/objects/Handles.js"></script>
+	<script type="text/javascript" src="js/objects/Lines.js"></script>
+	<script type="text/javascript" src="js/objects/Circles.js"></script>
+	<script type="text/javascript" src="js/objects/Others.js"></script>
+	
+	<script type="text/javascript" src="js/geometry.js"></script>
+	
+	<title>GeomėTṛy - punkt Fermata</title>
+</head>
+<body>
+	<div id="box">
+		<h1>punkt Fermata</h1><div id="desc">
+	<p><em>Punkt Fermata</em> (punkt Torricellego) to punkt w trójkącie, którego suma odległości od wierzchołków trójkąta jest najmniejsza z możliwych. Pierwszy raz problem konstrukcji takiego punktu został rozwiązany przez Fermata w prywatnym liście.</p>
+	<p>W przypadku, gdy wszystkie kąty trójkąta mają miary mniejsze niż 120°, punkt Fermata jest punktem przecięcia odcinków łączących wierzchołki trójkąta z tymi wierzchołkami trójkątów równobocznych zbudowanych na przeciwległych bokach, które nie są wierzchołkami wyjściowego trójkąta</p>
+	<p>Gdy jeden z kątów ma miarę co najmniej 120°, łatwo zauważyć, że wierzchołek przy kącie rozwartym ma mniejszą sumę odległości od wierzchołków, niż punkt otrzymany w powyższej konstrukcji. Wierzchołek ten ma wtedy najmniejszą możliwą z takich sum.</p>
+	<p>Własności:
+	<ul><li>punkt Fermata jest jednocześnie punktem przecięcia okręgów opisanych na trójkątach równobocznych</li>
+	<li>z punktu Fermata każdy bok widać pod tym samym kątem 120°</li>
+	<li>odcinki pomarańczowe mają równe długości</li></ul>
+	</p>
+	</div>
+	</div>
+	
+	<div id="svgBox">
+		<div id="svg">
+			
+	<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500">
+	<desc>
+	<p><em>Punkt Fermata</em> (punkt Torricellego) to punkt w trójkącie, którego suma odległości od wierzchołków trójkąta jest najmniejsza z możliwych. Pierwszy raz problem konstrukcji takiego punktu został rozwiązany przez Fermata w prywatnym liście.</p>
+	<p>W przypadku, gdy wszystkie kąty trójkąta mają miary mniejsze niż 120°, punkt Fermata jest punktem przecięcia odcinków łączących wierzchołki trójkąta z tymi wierzchołkami trójkątów równobocznych zbudowanych na przeciwległych bokach, które nie są wierzchołkami wyjściowego trójkąta</p>
+	<p>Gdy jeden z kątów ma miarę co najmniej 120°, łatwo zauważyć, że wierzchołek przy kącie rozwartym ma mniejszą sumę odległości od wierzchołków, niż punkt otrzymany w powyższej konstrukcji. Wierzchołek ten ma wtedy najmniejszą możliwą z takich sum.</p>
+	<p>Własności:
+	<ul><li>punkt Fermata jest jednocześnie punktem przecięcia okręgów opisanych na trójkątach równobocznych</li>
+	<li>z punktu Fermata każdy bok widać pod tym samym kątem 120°</li>
+	<li>odcinki pomarańczowe mają równe długości</li></ul>
+	</p>
+	</desc>
+		<g id="objects"><line x1="270" y1="308" x2="497" y2="283" style="stroke: rgb(132, 24, 57);" id="object3" parents="object0 object1"/><line x1="497" y1="283" x2="264" y2="160" style="stroke: rgb(132, 24, 57);" id="object4" parents="object1 object2"/><line x1="270" y1="308" x2="264" y2="160" style="stroke: rgb(132, 24, 57);" id="object5" parents="object0 object2"/><line x1="454.12620023075505" y1="-848.187799303611" x2="497" y2="283" style="stroke: rgb(240, 200, 50);" angle="60" type="AngleLine" id="object6" parents="object2 object1" children="object12"/><line x1="1222.200470763318" y1="-442.72369940873887" x2="264" y2="160" style="stroke: rgb(240, 200, 50);" angle="-60" type="AngleLine" id="object7" parents="object1 object2" children="object12"/><line x1="41.719789671965145" y1="1319.4091518718176" x2="497" y2="283" style="stroke: rgb(240, 200, 50);" angle="-60" type="AngleLine" id="object8" parents="object0 object1" children="object13"/><line x1="939.9165490716612" y1="1220.4888039203092" x2="270" y2="308" style="stroke: rgb(240, 200, 50);" angle="60" type="AngleLine" id="object9" parents="object1 object0" children="object13"/><line x1="-692.6090234628798" y1="765.246376469447" x2="264" y2="160" style="stroke: rgb(240, 200, 50);" angle="60" type="AngleLine" id="object10" parents="object0 object2" children="object14"/><line x1="-732.463249302461" y1="-217.82452757355475" x2="270" y2="308" style="stroke: rgb(240, 200, 50);" angle="-60" type="AngleLine" id="object11" parents="object2 object0" children="object14"/><line x1="270" y1="308" x2="487.021124665486" y2="19.71608091822577" style="stroke: rgb(253, 117, 29);" id="object15" parents="object0 object12"/><line x1="138.82824023990327" y1="239.19615242270652" x2="497" y2="283" style="stroke: rgb(253, 117, 29);" id="object16" parents="object14 object1"/><line x1="264" y1="160" x2="405.15063509461083" y2="492.08776665906737" style="stroke: rgb(253, 117, 29);" id="object17" parents="object2 object13"/></g>
+		<g id="handles"><circle r="5" cx="270" cy="308" id="object0" parents="" children="object3 object5 object8 object9 object10 object11 object15"/><circle r="5" cx="497" cy="283" id="object1" parents="" children="object3 object4 object6 object7 object8 object9 object16"/><circle r="5" cx="264" cy="160" id="object2" parents="" children="object4 object5 object6 object7 object10 object11 object17"/><circle r="5" cx="487.021124665486" cy="19.71608091822577" type="LinesIntersection" id="object12" parents="object7 object6" children="object15"/><circle r="5" cx="405.15063509461083" cy="492.08776665906737" type="LinesIntersection" id="object13" parents="object9 object8" children="object17"/><circle r="5" cx="138.82824023990327" cy="239.19615242270652" type="LinesIntersection" id="object14" parents="object10 object11" children="object16"/></g>
+	</svg>
+	
+		</div>
+	
+		<div id="controls">
+			<dl id="newObject">
+				
+			</dl>
+			<div id="color">
+				<label for="selectColor">kolor:</label>
+				<select id="selectColor" name="selectColor">
+					<option value="#841839">karminowy</option>
+					<option value="#CF2929">krwisty</option>
+					<option value="#FD751D">marchewkowy</option>
+					<option value="#F0C832">żółcień</option>
+					<option value="#9FFB88">pistacjowy</option>
+					<option value="#808000">oliwkowy</option>
+					<option value="#4169E1">modry</option>
+					<option value="#19247C">kobaltowy</option>
+					<option value="#800080">jagodowy</option>
+					<option value="#4B0082">indygo</option>
+				</select>
+			</div>
+			<div id="selected">
+				<div id="objectName"></div>
+				Zaznacz:
+				<ul id="selectObjects"></ul>
+				<input type="button" id="okSelect" disabled="true" value="ok" onclick="Select.fire()" />
+				<input type="button" id="cancelSelect" value="anuluj" onclick="ObjectsGUI.off()" />
+			</div>
+		</div>
+	</div>
+	
+</body>
+</html>

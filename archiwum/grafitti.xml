@@ -1,0 +1,91 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+	<title>Svg grafitti</title>
+	<script type="text/javascript">
+	<![CDATA[
+window.onload = function(){
+	var g = document.getElementsByTagName('g')[0];
+	var all = '';
+	
+	var box = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+	
+	function f(){
+		return 1000*Math.pow((Math.random()), 1);
+	}
+	
+	for(var i = 0; i < 12; i++){
+		var line = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+		
+		line.setAttribute('d', 'M'+f()+' '+f()+' C '+f()+' '+f()+' '+f()+' '+f()+' '+f()+' '+f()+' '+' C '+f()+' '+f()+' '+f()+' '+f()+' '+f()+' '+f()+' '+' C '+f()+' '+f()+' '+f()+' '+f()+' '+f()+' '+f()+' ');
+		
+		
+		
+		line.setAttribute('stroke', 'rgb('+Math.floor(Math.random()*255)+','+Math.floor(Math.random()*255)+','+Math.floor(Math.random()*255)+')');
+		line.setAttribute('stroke-width', Math.pow(Math.random(), 2)*10);
+		line.setAttribute('fill', 'none');
+		line.setAttribute('opacity', Math.random() * .5 + .5);
+		
+		box.appendChild(line);
+	}
+	
+	for(var i = 0; i < 40; i++){
+		var circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+		circle.setAttribute('fill', 'rgb('+Math.floor(Math.random()*255)+','+Math.floor(Math.random()*255)+','+Math.floor(Math.random()*255)+')');
+		circle.setAttribute('r', Math.random() * 50);
+		circle.setAttribute('cx', Math.random() * 1000);
+		circle.setAttribute('cy', Math.random() * 1000);
+		circle.setAttribute('opacity', Math.random());
+		
+		box.appendChild(circle);
+	}
+	
+	g.appendChild(box);
+	
+	document.getElementById('svg').onclick = function(){
+		var div = document.createElement('div');
+		div.className = 'code'
+		
+		div.appendChild(document.createTextNode(this.innerHTML));
+ 
+		
+		this.parentNode.insertBefore(div, this);
+		
+		this.parentNode.removeChild(this);
+	}
+};
+
+]]>
+</script>
+<style type="text/css">
+div.code{
+	font-size: 50%;
+	border: 2px solid black;
+}
+
+#svg{
+	border: 10px solid black;
+	margin: 60px;
+	width: 500px;
+	height: 500px;
+}
+</style>
+</head>
+<body>
+	<h1>Svg grafitti</h1>
+	<p>Taka, ot, zabaweczka svg.</p>
+	<p>Jeśli nic nie zobaczysz poniżej, to Twoja przeglądarka coś szwankuje lub skrypt jest kiepski. Spróbuj z firefoksem.</p>
+	<p>Aby narysować nowe mazy - odśwież stronę.</p>
+	<p>Aby zapisać (tzn. zobaczyć kod svg) kliknij obrazek</p>
+	<div id="svg">
+	<svg xmlns="http://www.w3.org/2000/svg" width="500" height="500" viewBox="0 0 1000 1000">
+		<g id="v">
+		
+		
+		</g>
+	</svg>
+	</div>
+	
+</body>
+</html>

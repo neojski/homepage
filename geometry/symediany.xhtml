@@ -1,0 +1,75 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+	<link rel="stylesheet" href="design/style.css" type="text/css" />
+	
+	<script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/resigInheritance.js"></script>
+	<script type="text/javascript" src="js/dom.js"></script>
+	<script type="text/javascript" src="js/pointAndVector.js"></script>
+	<script type="text/javascript" src="js/mouser.js"></script>
+	<script type="text/javascript" src="js/svg_objects.js"></script>
+	<script type="text/javascript" src="js/objectsGUI.js"></script>
+	<script type="text/javascript" src="js/select.js"></script>
+	
+	<script type="text/javascript" src="js/objects/Handles.js"></script>
+	<script type="text/javascript" src="js/objects/Lines.js"></script>
+	<script type="text/javascript" src="js/objects/Circles.js"></script>
+	<script type="text/javascript" src="js/objects/Others.js"></script>
+	
+	<script type="text/javascript" src="js/geometry.js"></script>
+	
+	<title>GeomėTṛy - symediany</title>
+</head>
+<body>
+	<div id="box">
+		<h1>symediany</h1><div id="desc">
+	<p><em>Symediana</em> to prosta Cevy (czyli prosta przechodząca przez wierzchołek trójkąta i przecinająca przeciwległy do tego wierzchołka bok trójkąta) będąca odbiciem symetrycznym środkowej trójkąta w dwusiecznej wychodzącej z tego samego wierzchołka. Symediany przecinają się w jednym punkcie, jak wiele innych charakterystycznych prostych Cevy.</p>
+	<p>Dla większej przejrzystości z rysunku usunięto jedną dwusieczną i jedną środkową</p>
+	</div>
+	</div>
+	
+	<div id="svgBox">
+		<div id="svg">
+			<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500">
+	<desc>
+	<p><em>Symediana</em> to prosta Cevy (czyli prosta przechodząca przez wierzchołek trójkąta i przecinająca przeciwległy do tego wierzchołka bok trójkąta) będąca odbiciem symetrycznym środkowej trójkąta w dwusiecznej wychodzącej z tego samego wierzchołka. Symediany przecinają się w jednym punkcie, jak wiele innych charakterystycznych prostych Cevy.</p>
+	<p>Dla większej przejrzystości z rysunku usunięto jedną dwusieczną i jedną środkową</p>
+	</desc>
+	<g id="objects"><line x1="162" y1="453" x2="729" y2="393" style="stroke: rgb(65, 105, 225);" id="object3" parents="object0 object1" children="object13 object14"/><line x1="162" y1="453" x2="313" y2="104" style="stroke: rgb(65, 105, 225);" id="object4" parents="object0 object2" children="object12 object14"/><line x1="313" y1="104" x2="729" y2="393" style="stroke: rgb(65, 105, 225);" id="object5" parents="object2 object1" children="object12 object13"/><line x1="313" y1="104" x2="445.5" y2="423" style="stroke: rgb(253, 117, 29); display: none;" id="object9" parents="object2 object7"/><line x1="162" y1="453" x2="521" y2="248.5" style="stroke: rgb(253, 117, 29);" id="object10" parents="object0 object6"/><line x1="729" y1="393" x2="237.5" y2="278.5" style="stroke: rgb(253, 117, 29);" id="object11" parents="object1 object8"/><line x1="313" y1="104" x2="623.2682493686079" y2="1192.649444694544" style="stroke: rgb(240, 200, 50); display: none;" type="AngleBisector" id="object12" parents="object4 object5" children="object15"/><line x1="729" y1="393" x2="-367.56478106349437" y2="111.98455392777663" style="stroke: rgb(240, 200, 50);" type="AngleBisector" id="object13" parents="object5 object3" children="object17"/><line x1="162" y1="453" x2="1074.0526596947282" y2="-217.51021315396247" style="stroke: rgb(240, 200, 50);" type="AngleBisector" id="object14" parents="object3 object4" children="object16"/><line x1="729" y1="393" x2="243.00986289001855" y2="256.9996815010286" style="stroke: rgb(207, 41, 41);" id="object18" parents="object1 object17"/><line x1="464.280945046704" y1="171.34865478455208" x2="162" y2="453" style="stroke: rgb(207, 41, 41);" id="object19" parents="object16 object0"/><line x1="313" y1="104" x2="368.5798193645862" y2="444.9224745882851" style="stroke: rgb(207, 41, 41);" id="object20" parents="object2 object15"/></g>
+	<g id="handles"><circle r="5" cx="162" cy="453" id="object0" parents="" children="object3 object4 object7 object8 object10 object19"/><circle r="5" cx="729" cy="393" id="object1" parents="" children="object3 object5 object6 object7 object11 object18"/><circle r="5" cx="313" cy="104" id="object2" parents="" children="object4 object5 object6 object8 object9 object20"/><circle r="5" cx="521" cy="248.5" type="Midpoint" id="object6" parents="object2 object1" children="object10 object16"/><circle r="5" cx="445.5" cy="423" type="Midpoint" id="object7" parents="object0 object1" children="object9 object15"/><circle r="5" cx="237.5" cy="278.5" type="Midpoint" id="object8" parents="object2 object0" children="object11 object17"/><circle r="5" cx="368.5798193645862" cy="444.9224745882851" type="ReflectionHandle" id="object15" parents="object7 object12" children="object20"/><circle r="5" cx="464.280945046704" cy="171.34865478455208" type="ReflectionHandle" id="object16" parents="object6 object14" children="object19"/><circle r="5" cx="243.00986289001855" cy="256.9996815010286" type="ReflectionHandle" id="object17" parents="object8 object13" children="object18"/></g>
+</svg>
+		</div>
+	
+		<div id="controls">
+			<dl id="newObject">
+				
+			</dl>
+			<div id="color">
+				<label for="selectColor">kolor:</label>
+				<select id="selectColor" name="selectColor">
+					<option value="#841839">karminowy</option>
+					<option value="#CF2929">krwisty</option>
+					<option value="#FD751D">marchewkowy</option>
+					<option value="#F0C832">żółcień</option>
+					<option value="#9FFB88">pistacjowy</option>
+					<option value="#808000">oliwkowy</option>
+					<option value="#4169E1">modry</option>
+					<option value="#19247C">kobaltowy</option>
+					<option value="#800080">jagodowy</option>
+					<option value="#4B0082">indygo</option>
+				</select>
+			</div>
+			<div id="selected">
+				<div id="objectName"></div>
+				Zaznacz:
+				<ul id="selectObjects"></ul>
+				<input type="button" id="okSelect" disabled="true" value="ok" onclick="Select.fire()" />
+				<input type="button" id="cancelSelect" value="anuluj" onclick="ObjectsGUI.off()" />
+			</div>
+		</div>
+	</div>
+	
+</body>
+</html>

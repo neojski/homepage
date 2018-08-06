@@ -10,31 +10,44 @@
             ins:before{content:'Update: '}
             ins{text-decoration:none}
     </style>
-    <script type="text/javascript"> 
-        // number_format by neo 
-        // neo.mlodzi.pl
-        // http://creativecommons.org/licenses/by-sa/2.5/pl/ 
-        function number_format(number, decimals, dec_point, thousand_sep, p){    
-            var n=(''+(Math.round(number*(p=Math.pow(10,decimals||0)))/p)).split('.');
-            for(var i=(n[0]=n[0].split('')).length-3; i>0; i-=3){
-                n[0].splice(i,0,thousand_sep||',');
-            } 
-            return n[0].join('')+(n[1]?(dec_point||'.')+n[1]:'');
-        }
+<script type="text/javascript">
+/*
+ * number_format 
+ * (c) 2008 Tomasz Kołodziejski
+ * www:  http://neo.mlodzi.pl
+ * http://creativecommons.org/licenses/LGPL/2.1/
+ * thanks for Eluś http://forum.webhelp.pl/viewtopic.php?p=353165#353165
+ */
+ 
+// number, decimals, dec_point, thousand_sep
+function number_format(n, q, r, s, p, i){
+	with(Math)return(''+round(~~n*(i=pow(10,q||1)))/i).replace(/(\d)(?=(.{3})+$)/g, "$1"+(s||' '))+(q>0?(r||',')+(i=''+round((n||1)*i)).slice(i.length-q):'')
+}
+</script>
+<script type="text/javascript">
+onload=function(){
+	var samp=document.getElementsByTagName('samp')[0];
+	samp.removeChild(samp.firstChild)
+	var span=document.createElement('span');
+	span.appendChild(document.createTextNode(number_format(1234567.8910, 2, ',', "'")+"\t"+' number_format(1234567.8910, 2, \',\', "\'") '));
+	samp.appendChild(span);     
+	var span=document.createElement('span');
+	span.appendChild(document.createTextNode(number_format(34323.2323456,3,',','`')+"\t"+' number_format(34323.2323456,3,\',\',\'`\')'));
+	samp.appendChild(span);
+	var span=document.createElement('span');
+	span.appendChild(document.createTextNode(number_format(34123323.234,-3,';','^')+"\t"+' number_format(34123323.234,-3,\';\',\'^\')'));
+	samp.appendChild(span);
 	
-        onload=function(){
-            var samp=document.getElementsByTagName('samp')[0];
-            samp.removeChild(samp.firstChild)
-            var span=document.createElement('span');
-            span.appendChild(document.createTextNode(number_format(34323.234)+"\t"+' number_format(34323.234) '));
-            samp.appendChild(span);     
-            var span=document.createElement('span');
-            span.appendChild(document.createTextNode(number_format(34323.2323456,3,',','`')+"\t"+' number_format(34323.2323456,3,\',\',\'`\')'));
-            samp.appendChild(span);     
-            var span=document.createElement('span');
-            span.appendChild(document.createTextNode(number_format(34123323.234,-3,';','^')+"\t"+' number_format(34123323.234,-3,\';\',\'^\')'));
-            samp.appendChild(span);     
-        }
+	var p = document.getElementById('code');
+	var js = document.getElementsByTagName('script')[0].firstChild.nodeValue;
+	
+	p.removeChild(p.firstChild);
+	
+	var code = document.createElement('code');
+	code.appendChild(document.createTextNode(js));
+	
+	p.appendChild(code);
+}
 </script>
   </head>
 
@@ -43,16 +56,9 @@
     <p>Składnia: <code>number_format(liczba[, ilość miejsc po przecinku (również ujemna)[, separator części dziesiętnych[, separator tysięcy]]])</code>
     <p>Dzięki tej funkcji możesz zamienić liczbę na jej bardziej czytelny odpowiednik.
     Możesz zmienić znak odseparowujący części dziesiętne, zaokrąglić liczbę i wstawić
-    separator tysięcy. Oto kod:</p>
-    <p><code>
-        function number_format(number, decimals, dec_point, thousand_sep, p){    
-            var n=(''+(Math.round(number*(p=Math.pow(10,decimals||0)))/p)).split('.');
-            for(var i=(n[0]=n[0].split('')).length-3; i>0; i-=3){
-                n[0].splice(i,0,thousand_sep);
-            } 
-            return n[0].join('')+(n[1]?(dec_point||',')+n[1]:'');
-        }
-    </code></p>
+    separator tysięcy.
+    <p id="code">Aby zobaczyć kod zernknij w źródło strony.</p>
+    <p><ins datetime="20080629">Skrócenie kodu do wersji jednolinijkowej, wykorzystałem funkcję <a href="http://forum.webhelp.pl/viewtopic.php?p=353165#353165">fixed</a> napisaną przez Elusia.</ins></p>
     <p><ins datetime="20060722">Udało mi się skrócić kod i pozbyć się tablic.</ins></p>
     <p><ins datetime="20060812">Powrót do tablicowej wersji ze względu na błędy. Zamiana String(liczba) na (''+liczba) (oszczędność 3 znaków). Całkowita zgodność działania z <a href="http://pl2.php.net/number_format">odpowiednikiem php</a>.</ins></p>
     <p>I przykładowe działanie skryptu:</p>

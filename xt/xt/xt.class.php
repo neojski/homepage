@@ -1,8 +1,9 @@
 <?php
 /*
- *	xt template system
- *	Copyright :(C) 2007 Tomasz Kołodziejski
+ *	xt templates system
+ *	Copyright :(C) 2007 Tomasz 'neo' Kołodziejski <tkolodziejski at gmail dot com>, <neo007 at jabber dot com>
  *	E-mail    :tkolodziejski@gmail.com
+ *	Website   :http://neo.mlodzi.pl/xt
  *
  *	This library is free software; you can redistribute it and/or
  *	modify it under the terms of the GNU Lesser General Public
@@ -19,11 +20,14 @@
  *	Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 // include main class
-require_once('xt.core.php');
+require_once('xt-core/xt.xtException.php');
+require_once('xt-core/xt.mydom.php');
+require_once('xt-core/node.class.php');
+require_once('xt-core/xt.core.php');
+require_once('xt-core/xt.xt-loop.php');
+require_once('xt-plugins/xt.xml.php');
 
-// include additional classes if necessary
-function __autoload($class){
-	require_once('xt.'.strtolower($class).'.php');
-}
+require_once('xt-core/css2xpath.php');
+
 
 ?>

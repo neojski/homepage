@@ -1,0 +1,77 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+	<link rel="stylesheet" href="design/style.css" type="text/css" />
+	
+	<script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/resigInheritance.js"></script>
+	<script type="text/javascript" src="js/dom.js"></script>
+	<script type="text/javascript" src="js/pointAndVector.js"></script>
+	<script type="text/javascript" src="js/mouser.js"></script>
+	<script type="text/javascript" src="js/svg_objects.js"></script>
+	<script type="text/javascript" src="js/objectsGUI.js"></script>
+	<script type="text/javascript" src="js/select.js"></script>
+	
+	<script type="text/javascript" src="js/objects/Handles.js"></script>
+	<script type="text/javascript" src="js/objects/Lines.js"></script>
+	<script type="text/javascript" src="js/objects/Circles.js"></script>
+	<script type="text/javascript" src="js/objects/Others.js"></script>
+	
+	<script type="text/javascript" src="js/geometry.js"></script>
+	
+	<title>GeomėTṛy - okrąg dziewięciu punktów</title>
+</head>
+<body>
+	<div id="box">
+		<h1>okrąg dziewięciu punktów</h1><div id="desc">
+	<em>Okrąg dziewięciu punktów</em> znany także jako <em>okrąg Feuerbacha</em> lub <em>okrąg Eulera</em> jest to okrąg, który przechodzi przez środki boków dowolnego trójkąta. Okrąg ten przechodzi ponadto przez spodki trzech wysokości oraz przez punkty dzielące na połowy trzy odcinki, które łączą wierzchołki tego trójkata z jego ortocentrum.
+	</div>
+	</div>
+	
+	<div id="svgBox">
+		<div id="svg">
+			
+	
+	<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500">
+	<desc>
+	<em>Okrąg dziewięciu punktów</em> znany także jako <em>okrąg Feuerbacha</em> lub <em>okrąg Eulera</em> jest to okrąg, który przechodzi przez środki boków dowolnego trójkąta. Okrąg ten przechodzi ponadto przez spodki trzech wysokości oraz przez punkty dzielące na połowy trzy odcinki, które łączą wierzchołki tego trójkata z jego ortocentrum.
+	</desc>
+		<g id="objects"><circle cx="389.62350859612314" cy="284.8442598565747" r="169.37498188776348" style="fill: rgb(240, 200, 50);" type="ThreePointCircle" id="object12" parents="object11 object9 object10"/><line x1="136" y1="431" x2="790" y2="444" style="stroke: rgb(253, 117, 29);" id="object3" parents="object0 object1" children="object6 object13"/><line x1="790" y1="444" x2="318" y2="44" style="stroke: rgb(253, 117, 29);" id="object4" parents="object1 object2" children="object7 object15"/><line x1="318" y1="44" x2="136" y2="431" style="stroke: rgb(253, 117, 29);" id="object5" parents="object2 object0" children="object8 object14"/><line x1="310.2384939878706" y1="434.4634563025112" x2="318" y2="44" style="stroke: rgb(65, 105, 225);" type="PerpendicularLine" id="object6" parents="object2 object3" children="object13 object16"/><line x1="402.95368667446917" y1="115.99464972412642" x2="136" y2="431" style="stroke: rgb(65, 105, 225);" type="PerpendicularLine" id="object7" parents="object0 object4" children="object15 object16"/><line x1="249.44039411021743" y1="189.78333779860355" x2="790" y2="444" style="stroke: rgb(65, 105, 225);" type="PerpendicularLine" id="object8" parents="object1 object5" children="object14"/></g>
+		<g id="handles"><circle r="5" cx="136" cy="431" id="object0" parents="" children="object3 object5 object7 object9 object11 object19"/><circle r="5" cx="790" cy="444" id="object1" parents="" children="object3 object4 object8 object9 object10 object17"/><circle r="5" cx="318" cy="44" id="object2" parents="" children="object4 object5 object6 object10 object11 object18"/><circle r="5" cx="463" cy="437.5" type="Midpoint" id="object9" parents="object0 object1" children="object12"/><circle r="5" cx="554" cy="244" type="Midpoint" id="object10" parents="object1 object2" children="object12"/><circle r="5" cx="227" cy="237.5" type="Midpoint" id="object11" parents="object0 object2" children="object12"/><circle r="5" cx="310.2384939878706" cy="434.4634563025112" type="LinesIntersection" id="object13" parents="object6 object3"/><circle r="5" cx="249.44039411021745" cy="189.78333779860355" type="LinesIntersection" id="object14" parents="object8 object5"/><circle r="5" cx="402.9536866744692" cy="115.99464972412638" type="LinesIntersection" id="object15" parents="object7 object4"/><circle r="5" cx="314.4940343844925" cy="220.37703942629884" type="LinesIntersection" id="object16" parents="object7 object6" children="object17 object18 object19"/><circle r="5" cx="552.2470171922463" cy="332.1885197131494" type="Midpoint" id="object17" parents="object16 object1"/><circle r="5" cx="316.2470171922463" cy="132.18851971314942" type="Midpoint" id="object18" parents="object16 object2"/><circle r="5" cx="225.24701719224626" cy="325.6885197131494" type="Midpoint" id="object19" parents="object16 object0"/></g>
+	</svg>
+	
+	
+		</div>
+	
+		<div id="controls">
+			<dl id="newObject">
+				
+			</dl>
+			<div id="color">
+				<label for="selectColor">kolor:</label>
+				<select id="selectColor" name="selectColor">
+					<option value="#841839">karminowy</option>
+					<option value="#CF2929">krwisty</option>
+					<option value="#FD751D">marchewkowy</option>
+					<option value="#F0C832">żółcień</option>
+					<option value="#9FFB88">pistacjowy</option>
+					<option value="#808000">oliwkowy</option>
+					<option value="#4169E1">modry</option>
+					<option value="#19247C">kobaltowy</option>
+					<option value="#800080">jagodowy</option>
+					<option value="#4B0082">indygo</option>
+				</select>
+			</div>
+			<div id="selected">
+				<div id="objectName"></div>
+				Zaznacz:
+				<ul id="selectObjects"></ul>
+				<input type="button" id="okSelect" disabled="true" value="ok" onclick="Select.fire()" />
+				<input type="button" id="cancelSelect" value="anuluj" onclick="ObjectsGUI.off()" />
+			</div>
+		</div>
+	</div>
+	
+</body>
+</html>

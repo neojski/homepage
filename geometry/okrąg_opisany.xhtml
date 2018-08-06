@@ -1,0 +1,79 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+	<link rel="stylesheet" href="design/style.css" type="text/css" />
+	
+	<script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/resigInheritance.js"></script>
+	<script type="text/javascript" src="js/dom.js"></script>
+	<script type="text/javascript" src="js/pointAndVector.js"></script>
+	<script type="text/javascript" src="js/mouser.js"></script>
+	<script type="text/javascript" src="js/svg_objects.js"></script>
+	<script type="text/javascript" src="js/objectsGUI.js"></script>
+	<script type="text/javascript" src="js/select.js"></script>
+	
+	<script type="text/javascript" src="js/objects/Handles.js"></script>
+	<script type="text/javascript" src="js/objects/Lines.js"></script>
+	<script type="text/javascript" src="js/objects/Circles.js"></script>
+	<script type="text/javascript" src="js/objects/Others.js"></script>
+	
+	<script type="text/javascript" src="js/geometry.js"></script>
+	
+	<title>GeomėTṛy - okrąg opisany</title>
+</head>
+<body>
+	<div id="box">
+		<h1>okrąg opisany</h1><div id="desc">
+		<p>Bardzo znany okrąg, którego środkiem jest punkt przecięcia symetralnych. Aby uświadomić sobie, że symetralne przecinają się w jednym punkcie - wybierz dwie i spójrz na nie jako na zbiór punktów równoodległych od końców odcinka.</p>
+		<p>Zaobserwuj też kiedy środek okręgu leży wewnątrz trójkąta, kiedy na zewnątrz, a kiedy na jednym z boków.</p>
+		<p>Interesująca jest również obserwacja tego okręgu przy prawie współliniowych wszystkich wierzchołkach trójkąta.</p>
+		</div>
+	</div>
+	
+	<div id="svgBox">
+		<div id="svg">
+			
+	<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500">
+		<desc>
+		<p>Bardzo znany okrąg, którego środkiem jest punkt przecięcia symetralnych. Aby uświadomić sobie, że symetralne przecinają się w jednym punkcie - wybierz dwie i spójrz na nie jako na zbiór punktów równoodległych od końców odcinka.</p>
+		<p>Zaobserwuj też kiedy środek okręgu leży wewnątrz trójkąta, kiedy na zewnątrz, a kiedy na jednym z boków.</p>
+		<p>Interesująca jest również obserwacja tego okręgu przy prawie współliniowych wszystkich wierzchołkach trójkąta.</p>
+		</desc>
+		<g id="objects"><circle cx="374.0452682892367" cy="276.26884383058416" r="237.77464116610176" style="fill: rgb(240, 200, 50);" type="CenterPointCircle" id="object10" parents="object9 object1"/><line x1="287" y1="55" x2="171" y2="400" style="stroke: rgb(253, 117, 29);" id="object3" parents="object2 object0" children="object8"/><line x1="171" y1="400" x2="588" y2="380" style="stroke: rgb(253, 117, 29);" id="object4" parents="object0 object1" children="object6"/><line x1="588" y1="380" x2="287" y2="55" style="stroke: rgb(253, 117, 29);" id="object5" parents="object1 object2" children="object7"/><line x1="325.2697716100676" y1="-740.7002619300906" x2="433.7302283899324" y2="1520.7002619300906" style="stroke: rgb(65, 105, 225);" type="LineBisector" id="object6" parents="object4" children="object9"/><line x1="-393.0227098788781" y1="986.6918020724379" x2="1268.0227098788782" y2="-551.6918020724379" style="stroke: rgb(65, 105, 225);" type="LineBisector" id="object7" parents="object5"/><line x1="1301.9728257756217" y1="588.2676747535423" x2="-843.9728257756217" y2="-133.26767475354234" style="stroke: rgb(65, 105, 225);" type="LineBisector" id="object8" parents="object3" children="object9"/></g>
+		<g id="handles"><circle r="5" cx="171" cy="400" id="object0" parents="" children="object3 object4"/><circle r="5" cx="588" cy="380" id="object1" parents="" children="object4 object5 object10"/><circle r="5" cx="287" cy="55" id="object2" parents="" children="object3 object5"/><circle r="5" cx="374.0452682892367" cy="276.26884383058416" type="LinesIntersection" id="object9" parents="object6 object8" children="object10"/></g>
+	</svg>
+	
+		</div>
+	
+		<div id="controls">
+			<dl id="newObject">
+				
+			</dl>
+			<div id="color">
+				<label for="selectColor">kolor:</label>
+				<select id="selectColor" name="selectColor">
+					<option value="#841839">karminowy</option>
+					<option value="#CF2929">krwisty</option>
+					<option value="#FD751D">marchewkowy</option>
+					<option value="#F0C832">żółcień</option>
+					<option value="#9FFB88">pistacjowy</option>
+					<option value="#808000">oliwkowy</option>
+					<option value="#4169E1">modry</option>
+					<option value="#19247C">kobaltowy</option>
+					<option value="#800080">jagodowy</option>
+					<option value="#4B0082">indygo</option>
+				</select>
+			</div>
+			<div id="selected">
+				<div id="objectName"></div>
+				Zaznacz:
+				<ul id="selectObjects"></ul>
+				<input type="button" id="okSelect" disabled="true" value="ok" onclick="Select.fire()" />
+				<input type="button" id="cancelSelect" value="anuluj" onclick="ObjectsGUI.off()" />
+			</div>
+		</div>
+	</div>
+	
+</body>
+</html>

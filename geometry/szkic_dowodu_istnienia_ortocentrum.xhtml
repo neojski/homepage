@@ -1,0 +1,73 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+	<link rel="stylesheet" href="design/style.css" type="text/css" />
+	
+	<script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/resigInheritance.js"></script>
+	<script type="text/javascript" src="js/dom.js"></script>
+	<script type="text/javascript" src="js/pointAndVector.js"></script>
+	<script type="text/javascript" src="js/mouser.js"></script>
+	<script type="text/javascript" src="js/svg_objects.js"></script>
+	<script type="text/javascript" src="js/objectsGUI.js"></script>
+	<script type="text/javascript" src="js/select.js"></script>
+	
+	<script type="text/javascript" src="js/objects/Handles.js"></script>
+	<script type="text/javascript" src="js/objects/Lines.js"></script>
+	<script type="text/javascript" src="js/objects/Circles.js"></script>
+	<script type="text/javascript" src="js/objects/Others.js"></script>
+	
+	<script type="text/javascript" src="js/geometry.js"></script>
+	
+	<title>GeomėTṛy - szkic dowodu istnienia ortocentrum</title>
+</head>
+<body>
+	<div id="box">
+		<h1>szkic dowodu istnienia ortocentrum</h1><div id="desc">
+	Dowód twierdzenia głoszącego, że wysokości przecinają się w jednym punkcie zwanym ortocentrum najłatwiej przenieść do prostszego przypadku. Otóż mamy dany ciemnoczerwony trójkąt. Kreślimy proste równoległe do jego boków przechodzące przez przeciwległe wierzchołki, otrzymując większy trójkąt. Teraz należy się tylko zastanowić, czym są dla dużego, a czym dla mniejszego trójkąta żółte proste.
+	</div>
+	</div>
+	
+	<div id="svgBox">
+		<div id="svg">
+			<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500">
+	<desc>
+	Dowód twierdzenia głoszącego, że wysokości przecinają się w jednym punkcie zwanym ortocentrum najłatwiej przenieść do prostszego przypadku. Otóż mamy dany ciemnoczerwony trójkąt. Kreślimy proste równoległe do jego boków przechodzące przez przeciwległe wierzchołki, otrzymując większy trójkąt. Teraz należy się tylko zastanowić, czym są dla dużego, a czym dla mniejszego trójkąta żółte proste.
+	</desc>
+	<g id="objects"><line x1="417" y1="262" x2="462" y2="76" style="stroke: rgb(132, 24, 57);" id="object3" parents="object0 object2" children="object7"/><line x1="417" y1="262" x2="689" y2="260" style="stroke: rgb(132, 24, 57);" id="object4" parents="object0 object1" children="object6"/><line x1="462" y1="76" x2="689" y2="260" style="stroke: rgb(132, 24, 57);" id="object5" parents="object2 object1" children="object8"/><line x1="1593.9694000297295" y1="67.6766955880167" x2="-669.9694000297295" y2="84.3233044119833" style="stroke: rgb(253, 117, 29);" type="ParallelLine" id="object6" parents="object2 object4" children="object11"/><line x1="955.1912900528029" y1="-840.2573322182518" x2="422.80870994719714" y2="1360.2573322182518" style="stroke: rgb(253, 117, 29);" type="ParallelLine" id="object7" parents="object1 object3" children="object9"/><line x1="1296.3899391386426" y1="974.8094660859481" x2="-462.3899391386425" y2="-450.8094660859481" style="stroke: rgb(253, 117, 29);" type="ParallelLine" id="object8" parents="object0 object5" children="object10"/><line x1="1789.2573322182518" y1="526.1912900528029" x2="-411.2573322182518" y2="-6.191290052802856" style="stroke: rgb(240, 200, 50);" type="LineBisector" id="object9" parents="object7"/><line x1="-295.80946608594803" y1="1141.3899391386426" x2="1129.809466085948" y2="-617.3899391386426" style="stroke: rgb(240, 200, 50);" type="LineBisector" id="object10" parents="object8"/><line x1="470.3233044119833" y1="1207.9694000297293" x2="453.6766955880167" y2="-1055.9694000297293" style="stroke: rgb(240, 200, 50);" type="LineBisector" id="object11" parents="object6"/></g>
+	<g id="handles"><circle r="5" cx="417" cy="262" id="object0" parents="" children="object3 object4 object8"/><circle r="5" cx="689" cy="260" id="object1" parents="" children="object4 object5 object7"/><circle r="5" cx="462" cy="76" id="object2" parents="" children="object3 object5 object6"/></g>
+</svg>
+		</div>
+	
+		<div id="controls">
+			<dl id="newObject">
+				
+			</dl>
+			<div id="color">
+				<label for="selectColor">kolor:</label>
+				<select id="selectColor" name="selectColor">
+					<option value="#841839">karminowy</option>
+					<option value="#CF2929">krwisty</option>
+					<option value="#FD751D">marchewkowy</option>
+					<option value="#F0C832">żółcień</option>
+					<option value="#9FFB88">pistacjowy</option>
+					<option value="#808000">oliwkowy</option>
+					<option value="#4169E1">modry</option>
+					<option value="#19247C">kobaltowy</option>
+					<option value="#800080">jagodowy</option>
+					<option value="#4B0082">indygo</option>
+				</select>
+			</div>
+			<div id="selected">
+				<div id="objectName"></div>
+				Zaznacz:
+				<ul id="selectObjects"></ul>
+				<input type="button" id="okSelect" disabled="true" value="ok" onclick="Select.fire()" />
+				<input type="button" id="cancelSelect" value="anuluj" onclick="ObjectsGUI.off()" />
+			</div>
+		</div>
+	</div>
+	
+</body>
+</html>

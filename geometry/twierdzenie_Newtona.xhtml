@@ -1,0 +1,77 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+	<link rel="stylesheet" href="design/style.css" type="text/css" />
+	
+	<script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/resigInheritance.js"></script>
+	<script type="text/javascript" src="js/dom.js"></script>
+	<script type="text/javascript" src="js/pointAndVector.js"></script>
+	<script type="text/javascript" src="js/mouser.js"></script>
+	<script type="text/javascript" src="js/svg_objects.js"></script>
+	<script type="text/javascript" src="js/objectsGUI.js"></script>
+	<script type="text/javascript" src="js/select.js"></script>
+	
+	<script type="text/javascript" src="js/objects/Handles.js"></script>
+	<script type="text/javascript" src="js/objects/Lines.js"></script>
+	<script type="text/javascript" src="js/objects/Circles.js"></script>
+	<script type="text/javascript" src="js/objects/Others.js"></script>
+	
+	<script type="text/javascript" src="js/geometry.js"></script>
+	
+	<title>GeomėTṛy - twierdzenie Newtona</title>
+</head>
+<body>
+	<div id="box">
+		<h1>twierdzenie Newtona</h1><div id="desc">
+	Twierdzenie Newtona głosi:
+	<blockquote>W czworokącie <em>opisanym na okręgu</em> środki przekątnych są współliniowe ze środkiem okręgu.</blockquote>
+	Ruszając poszczególnymi wierzchołkami zwróć więc uwagę na ciemnoniebieski odcinek.
+	</div>
+	</div>
+	
+	<div id="svgBox">
+		<div id="svg">
+			<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500">
+	<desc>
+	Twierdzenie Newtona głosi:
+	<blockquote>W czworokącie <em>opisanym na okręgu</em> środki przekątnych są współliniowe ze środkiem okręgu.</blockquote>
+	Ruszając poszczególnymi wierzchołkami zwróć więc uwagę na ciemnoniebieski odcinek.
+	</desc>
+	<g id="objects"><circle cx="403.7654116379085" cy="265.9847710757507" r="177.92483373923227" style="fill: rgb(240, 200, 50);" type="CenterPointCircle" id="object13" parents="object10 object12"/><line x1="247" y1="436" x2="574" y2="453" style="stroke: rgb(253, 117, 29);" id="object4" parents="object0 object1" children="object8 object9 object11 object12"/><line x1="574" y1="453" x2="592" y2="24" style="stroke: rgb(253, 117, 29);" id="object5" parents="object1 object2" children="object9"/><line x1="592" y1="24" x2="207" y2="137" style="stroke: rgb(253, 117, 29);" id="object6" parents="object2 object3"/><line x1="207" y1="137" x2="247" y2="436" style="stroke: rgb(253, 117, 29);" id="object7" parents="object3 object0" children="object8"/><line x1="247" y1="436" x2="1014.3591054411295" y2="-396.21632001336627" style="stroke: rgb(240, 200, 50);" type="AngleBisector" id="object8" parents="object7 object4" children="object10"/><line x1="574" y1="453" x2="-188.0064381860592" y2="-384.1201754604865" style="stroke: rgb(240, 200, 50);" type="AngleBisector" id="object9" parents="object5 object4" children="object10"/><line x1="394.5279714547932" y1="443.66964989214523" x2="403.7654116379085" y2="265.9847710757507" style="stroke: rgb(207, 41, 41);" type="PerpendicularLine" id="object11" parents="object10 object4" children="object12"/><line x1="207" y1="137" x2="574" y2="453" style="stroke: rgb(65, 105, 225);" id="object14" parents="object3 object1"/><line x1="247" y1="436" x2="592" y2="24" style="stroke: rgb(65, 105, 225);" id="object15" parents="object0 object2"/><line x1="390.5" y1="295" x2="419.5" y2="230" style="stroke: rgb(25, 36, 124);" id="object18" parents="object16 object17"/></g>
+	<g id="handles"><circle r="5" cx="247" cy="436" id="object0" parents="" children="object4 object7 object15 object17"/><circle r="5" cx="574" cy="453" id="object1" parents="" children="object4 object5 object14 object16"/><circle r="5" cx="592" cy="24" id="object2" parents="" children="object5 object6 object15 object17"/><circle r="5" cx="207" cy="137" id="object3" parents="" children="object6 object7 object14 object16"/><circle r="5" cx="403.7654116379085" cy="265.9847710757507" type="LinesIntersection" id="object10" parents="object8 object9" children="object11 object13"/><circle r="5" cx="394.5279714547932" cy="443.66964989214523" type="LinesIntersection" id="object12" parents="object11 object4" children="object13"/><circle r="5" cx="390.5" cy="295" type="Midpoint" id="object16" parents="object3 object1" children="object18"/><circle r="5" cx="419.5" cy="230" type="Midpoint" id="object17" parents="object0 object2" children="object18"/></g>
+</svg>
+		</div>
+	
+		<div id="controls">
+			<dl id="newObject">
+				
+			</dl>
+			<div id="color">
+				<label for="selectColor">kolor:</label>
+				<select id="selectColor" name="selectColor">
+					<option value="#841839">karminowy</option>
+					<option value="#CF2929">krwisty</option>
+					<option value="#FD751D">marchewkowy</option>
+					<option value="#F0C832">żółcień</option>
+					<option value="#9FFB88">pistacjowy</option>
+					<option value="#808000">oliwkowy</option>
+					<option value="#4169E1">modry</option>
+					<option value="#19247C">kobaltowy</option>
+					<option value="#800080">jagodowy</option>
+					<option value="#4B0082">indygo</option>
+				</select>
+			</div>
+			<div id="selected">
+				<div id="objectName"></div>
+				Zaznacz:
+				<ul id="selectObjects"></ul>
+				<input type="button" id="okSelect" disabled="true" value="ok" onclick="Select.fire()" />
+				<input type="button" id="cancelSelect" value="anuluj" onclick="ObjectsGUI.off()" />
+			</div>
+		</div>
+	</div>
+	
+</body>
+</html>

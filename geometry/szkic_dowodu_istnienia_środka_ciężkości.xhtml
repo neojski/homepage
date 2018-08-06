@@ -1,0 +1,73 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+	<link rel="stylesheet" href="design/style.css" type="text/css" />
+	
+	<script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/resigInheritance.js"></script>
+	<script type="text/javascript" src="js/dom.js"></script>
+	<script type="text/javascript" src="js/pointAndVector.js"></script>
+	<script type="text/javascript" src="js/mouser.js"></script>
+	<script type="text/javascript" src="js/svg_objects.js"></script>
+	<script type="text/javascript" src="js/objectsGUI.js"></script>
+	<script type="text/javascript" src="js/select.js"></script>
+	
+	<script type="text/javascript" src="js/objects/Handles.js"></script>
+	<script type="text/javascript" src="js/objects/Lines.js"></script>
+	<script type="text/javascript" src="js/objects/Circles.js"></script>
+	<script type="text/javascript" src="js/objects/Others.js"></script>
+	
+	<script type="text/javascript" src="js/geometry.js"></script>
+	
+	<title>GeomėTṛy - szkic dowodu istnienia środka ciężkości</title>
+</head>
+<body>
+	<div id="box">
+		<h1>szkic dowodu istnienia środka ciężkości</h1><div id="desc">
+	Aby zdefiniować środek ciężkości należy pokazać, że środkowe przecinają się w jedym punkcie. Jeden z dowodów wykorzystuje podaną obok konstrukcję - na rysunku zaznaczono środki odcinków wierzchołek - punkt przecięcia dwu środkowych. Dowodzi się, że żółta figura jest równoległobokiem, pokazując w końcu, że dwie dowolne środkowe przecinają się w stosunku 2:1. Zachęcam do przemyślenia proponowanego dowodu.
+	</div>
+	</div>
+	
+	<div id="svgBox">
+		<div id="svg">
+			<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500">
+	<desc>
+	Aby zdefiniować środek ciężkości należy pokazać, że środkowe przecinają się w jedym punkcie. Jeden z dowodów wykorzystuje podaną obok konstrukcję - na rysunku zaznaczono środki odcinków wierzchołek - punkt przecięcia dwu środkowych. Dowodzi się, że żółta figura jest równoległobokiem, pokazując w końcu, że dwie dowolne środkowe przecinają się w stosunku 2:1. Zachęcam do przemyślenia proponowanego dowodu.
+	</desc>
+	<g id="objects"><line x1="185" y1="363" x2="746" y2="359" style="stroke: rgb(65, 105, 225);" id="object3" parents="object0 object1"/><line x1="185" y1="363" x2="251" y2="55" style="stroke: rgb(65, 105, 225);" id="object4" parents="object0 object2"/><line x1="251" y1="55" x2="746" y2="359" style="stroke: rgb(65, 105, 225);" id="object5" parents="object2 object1"/><line x1="185" y1="363" x2="498.5" y2="207" style="stroke: rgb(253, 117, 29);" id="object10" parents="object0 object6" children="object12"/><line x1="746" y1="359" x2="218" y2="209" style="stroke: rgb(253, 117, 29);" id="object11" parents="object1 object8" children="object12"/><line x1="289.5" y1="311" x2="570" y2="309" style="stroke: rgb(240, 200, 50);" id="object15" parents="object13 object14"/><line x1="218" y1="209" x2="498.5" y2="207" style="stroke: rgb(240, 200, 50);" id="object16" parents="object8 object6"/><line x1="218" y1="209" x2="289.5" y2="311" style="stroke: rgb(240, 200, 50);" id="object17" parents="object8 object13"/><line x1="498.5" y1="207" x2="570" y2="309" style="stroke: rgb(240, 200, 50);" id="object18" parents="object6 object14"/></g>
+	<g id="handles"><circle r="5" cx="185" cy="363" id="object0" parents="" children="object3 object4 object8 object10 object13"/><circle r="5" cx="746" cy="359" id="object1" parents="" children="object3 object5 object6 object11 object14"/><circle r="5" cx="251" cy="55" id="object2" parents="" children="object4 object5 object6 object8 "/><circle r="5" cx="498.5" cy="207" type="Midpoint" id="object6" parents="object2 object1" children="object10 object16 object18"/><circle r="5" cx="218" cy="209" type="Midpoint" id="object8" parents="object2 object0" children="object11 object16 object17"/><circle r="5" cx="394" cy="259" type="LinesIntersection" id="object12" parents="object10 object11" children="object13 object14"/><circle r="5" cx="289.5" cy="311" type="Midpoint" id="object13" parents="object0 object12" children="object15 object17"/><circle r="5" cx="570" cy="309" type="Midpoint" id="object14" parents="object12 object1" children="object15 object18"/></g>
+</svg>
+		</div>
+	
+		<div id="controls">
+			<dl id="newObject">
+				
+			</dl>
+			<div id="color">
+				<label for="selectColor">kolor:</label>
+				<select id="selectColor" name="selectColor">
+					<option value="#841839">karminowy</option>
+					<option value="#CF2929">krwisty</option>
+					<option value="#FD751D">marchewkowy</option>
+					<option value="#F0C832">żółcień</option>
+					<option value="#9FFB88">pistacjowy</option>
+					<option value="#808000">oliwkowy</option>
+					<option value="#4169E1">modry</option>
+					<option value="#19247C">kobaltowy</option>
+					<option value="#800080">jagodowy</option>
+					<option value="#4B0082">indygo</option>
+				</select>
+			</div>
+			<div id="selected">
+				<div id="objectName"></div>
+				Zaznacz:
+				<ul id="selectObjects"></ul>
+				<input type="button" id="okSelect" disabled="true" value="ok" onclick="Select.fire()" />
+				<input type="button" id="cancelSelect" value="anuluj" onclick="ObjectsGUI.off()" />
+			</div>
+		</div>
+	</div>
+	
+</body>
+</html>

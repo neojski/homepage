@@ -1,0 +1,79 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+	<link rel="stylesheet" href="design/style.css" type="text/css" />
+	
+	<script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/resigInheritance.js"></script>
+	<script type="text/javascript" src="js/dom.js"></script>
+	<script type="text/javascript" src="js/pointAndVector.js"></script>
+	<script type="text/javascript" src="js/mouser.js"></script>
+	<script type="text/javascript" src="js/svg_objects.js"></script>
+	<script type="text/javascript" src="js/objectsGUI.js"></script>
+	<script type="text/javascript" src="js/select.js"></script>
+	
+	<script type="text/javascript" src="js/objects/Handles.js"></script>
+	<script type="text/javascript" src="js/objects/Lines.js"></script>
+	<script type="text/javascript" src="js/objects/Circles.js"></script>
+	<script type="text/javascript" src="js/objects/Others.js"></script>
+	
+	<script type="text/javascript" src="js/geometry.js"></script>
+	
+	<title>GeomėTṛy - bilard</title>
+</head>
+<body>
+	<div id="box">
+		<h1>bilard</h1><div id="desc">
+	<p>W czasach kryzysu ciężko o dobry stół bilardowy. Zatem warto poćwiczyć, gdyby przyszło nam grać na nieco skrzywionym.</p>
+	<p>Konstrukcję wykonano przez symetrię punktu A względem kolejnych boków. Łączono jest poczynając od B.</p>
+	<p>Manipulując bokami stołu zastanów się kiedy (i dlaczego?) konstrukcja traci sens.</p>
+	</div>
+	</div>
+	
+	<div id="svgBox">
+		<div id="svg">
+			
+			<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500">
+	<desc>
+	<p>W czasach kryzysu ciężko o dobry stół bilardowy. Zatem warto poćwiczyć, gdyby przyszło nam grać na nieco skrzywionym.</p>
+	<p>Konstrukcję wykonano przez symetrię punktu A względem kolejnych boków. Łączono jest poczynając od B.</p>
+	<p>Manipulując bokami stołu zastanów się kiedy (i dlaczego?) konstrukcja traci sens.</p>
+	</desc>
+				<g id="objects"><line x1="312" y1="371" x2="465" y2="318" style="stroke: rgb(132, 24, 57);" id="object4" parents="object0 object1" children="object13 object15"/><line x1="465" y1="318" x2="443" y2="222" style="stroke: rgb(132, 24, 57);" id="object5" parents="object1 object2" children="object12 object17"/><line x1="312" y1="371" x2="244" y2="241" style="stroke: rgb(132, 24, 57);" id="object6" parents="object0 object3" children="object10 object21"/><line x1="244" y1="241" x2="443" y2="222" style="stroke: rgb(132, 24, 57);" id="object7" parents="object3 object2" children="object11 object19"/><line x1="378" y1="311" x2="730.8708194717561" y2="414.9240400865517" style="stroke: rgb(207, 41, 41);" id="object14" parents="object8 object13" children="object15"/><line x1="435.944084017608" y1="328.06512122265866" x2="613.9444198258632" y2="77.38179205218148" style="stroke: rgb(253, 117, 29);" id="object16" parents="object15 object12" children="object17"/><line x1="459.65429795104654" y1="294.67330015002136" x2="226.1387645060801" y2="166.25392139629844" style="stroke: rgb(240, 200, 50);" id="object18" parents="object17 object11" children="object19"/><line x1="344.5915707272206" y1="231.39577967931058" x2="240.6056495075265" y2="317.7755064114477" style="stroke: rgb(159, 251, 136);" id="object20" parents="object19 object10" children="object21"/><line x1="270.96706420660547" y1="292.5546815714516" x2="309" y2="282" style="stroke: rgb(128, 128, 0);" id="object22" parents="object21 object9"/><text x="319" y="292" type="Label" id="object23" parents="object9">A</text><text x="388" y="321" type="Label" id="object24" parents="object8">B</text></g>
+				<g id="handles"><circle r="5" cx="312" cy="371" id="object0" parents="" children="object4 object6"/><circle r="5" cx="465" cy="318" id="object1" parents="" children="object4 object5"/><circle r="5" cx="443" cy="222" id="object2" parents="" children="object5 object7"/><circle r="5" cx="244" cy="241" id="object3" parents="" children="object6 object7"/><circle r="5" cx="378" cy="311" id="object8" parents="" children="object14 object24"/><circle r="5" cx="309" cy="282" id="object9" parents="" children="object10 object22 object23"/><circle r="5" cx="240.6056495075265" cy="317.7755064114477" type="ReflectionHandle" id="object10" parents="object9 object6" children="object11 object20"/><circle r="5" cx="226.1387645060801" cy="166.25392139629844" type="ReflectionHandle" id="object11" parents="object10 object7" children="object12 object18"/><circle r="5" cx="613.9444198258632" cy="77.38179205218148" type="ReflectionHandle" id="object12" parents="object11 object5" children="object13 object16"/><circle r="5" cx="730.8708194717561" cy="414.9240400865517" type="ReflectionHandle" id="object13" parents="object12 object4" children="object14"/><circle r="5" cx="435.944084017608" cy="328.06512122265866" type="LinesIntersection" id="object15" parents="object14 object4" children="object16"/><circle r="5" cx="459.65429795104654" cy="294.67330015002136" type="LinesIntersection" id="object17" parents="object16 object5" children="object18"/><circle r="5" cx="344.5915707272206" cy="231.39577967931058" type="LinesIntersection" id="object19" parents="object18 object7" children="object20"/><circle r="5" cx="270.96706420660547" cy="292.5546815714516" type="LinesIntersection" id="object21" parents="object20 object6" children="object22"/></g>
+			</svg>
+		
+		</div>
+	
+		<div id="controls">
+			<dl id="newObject">
+				
+			</dl>
+			<div id="color">
+				<label for="selectColor">kolor:</label>
+				<select id="selectColor" name="selectColor">
+					<option value="#841839">karminowy</option>
+					<option value="#CF2929">krwisty</option>
+					<option value="#FD751D">marchewkowy</option>
+					<option value="#F0C832">żółcień</option>
+					<option value="#9FFB88">pistacjowy</option>
+					<option value="#808000">oliwkowy</option>
+					<option value="#4169E1">modry</option>
+					<option value="#19247C">kobaltowy</option>
+					<option value="#800080">jagodowy</option>
+					<option value="#4B0082">indygo</option>
+				</select>
+			</div>
+			<div id="selected">
+				<div id="objectName"></div>
+				Zaznacz:
+				<ul id="selectObjects"></ul>
+				<input type="button" id="okSelect" disabled="true" value="ok" onclick="Select.fire()" />
+				<input type="button" id="cancelSelect" value="anuluj" onclick="ObjectsGUI.off()" />
+			</div>
+		</div>
+	</div>
+	
+</body>
+</html>

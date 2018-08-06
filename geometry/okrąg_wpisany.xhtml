@@ -1,0 +1,75 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+	<link rel="stylesheet" href="design/style.css" type="text/css" />
+	
+	<script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/resigInheritance.js"></script>
+	<script type="text/javascript" src="js/dom.js"></script>
+	<script type="text/javascript" src="js/pointAndVector.js"></script>
+	<script type="text/javascript" src="js/mouser.js"></script>
+	<script type="text/javascript" src="js/svg_objects.js"></script>
+	<script type="text/javascript" src="js/objectsGUI.js"></script>
+	<script type="text/javascript" src="js/select.js"></script>
+	
+	<script type="text/javascript" src="js/objects/Handles.js"></script>
+	<script type="text/javascript" src="js/objects/Lines.js"></script>
+	<script type="text/javascript" src="js/objects/Circles.js"></script>
+	<script type="text/javascript" src="js/objects/Others.js"></script>
+	
+	<script type="text/javascript" src="js/geometry.js"></script>
+	
+	<title>GeomėTṛy - okrąg wpisany</title>
+</head>
+<body>
+	<div id="box">
+		<h1>okrąg wpisany</h1><div id="desc">
+	<em>Okrąg wpisany</em> to okrąg styczny do wszystkich boków trójkąta. Jego środkiem jest punkt przecięcia dwusiecznych. Nieprzypadkowo zauważyliśmy nieco inną niż szkolna definicję dwusiecznej - teraz łatwo zauważyć dlaczego wszystkie dwusieczne przecinają się w jednym punkcie. (rozważyć odległość przecięcia dwu dwusiecznych od poszczególnych boków)
+	</div>
+	</div>
+	
+	<div id="svgBox">
+		<div id="svg">
+			
+	<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500">
+	<desc>
+	<em>Okrąg wpisany</em> to okrąg styczny do wszystkich boków trójkąta. Jego środkiem jest punkt przecięcia dwusiecznych. Nieprzypadkowo zauważyliśmy nieco inną niż szkolna definicję dwusiecznej - teraz łatwo zauważyć dlaczego wszystkie dwusieczne przecinają się w jednym punkcie. (rozważyć odległość przecięcia dwu dwusiecznych od poszczególnych boków)
+	</desc>
+		<g id="objects"><circle cx="380.2373269005021" cy="277.43361679845236" r="113.81287705357076" style="fill: rgb(240, 200, 50);" type="CenterPointCircle" id="object12" parents="object9 object11"/><line x1="179" y1="396" x2="733" y2="383" style="stroke: rgb(253, 117, 29);" id="object3" parents="object0 object1" children="object6 object7 object10 object11"/><line x1="179" y1="396" x2="344" y2="114" style="stroke: rgb(253, 117, 29);" id="object4" parents="object0 object2" children="object6 object8"/><line x1="344" y1="114" x2="733" y2="383" style="stroke: rgb(253, 117, 29);" id="object5" parents="object2 object1" children="object7 object8"/><line x1="179" y1="396" x2="1154.303718282314" y2="-178.63610842401124" style="stroke: rgb(65, 105, 225);" type="AngleBisector" id="object6" parents="object3 object4"/><line x1="733" y1="383" x2="-351.48114110587403" y2="58.46239881070534" style="stroke: rgb(65, 105, 225);" type="AngleBisector" id="object7" parents="object3 object5" children="object9"/><line x1="344" y1="114" x2="589.041652823275" y2="1219.1599831615501" style="stroke: rgb(65, 105, 225);" type="AngleBisector" id="object8" parents="object5 object4" children="object9"/><line x1="382.9072911891237" y1="391.2151718674032" x2="380.2373269005021" y2="277.43361679845236" style="stroke: rgb(207, 41, 41);" type="PerpendicularLine" id="object10" parents="object9 object3" children="object11"/></g>
+		<g id="handles"><circle r="5" cx="179" cy="396" id="object0" parents="" children="object3 object4"/><circle r="5" cx="733" cy="383" id="object1" parents="" children="object3 object5"/><circle r="5" cx="344" cy="114" id="object2" parents="" children="object4 object5"/><circle r="5" cx="380.2373269005021" cy="277.43361679845236" type="LinesIntersection" id="object9" parents="object8 object7" children="object10 object12"/><circle r="5" cx="382.9072911891237" cy="391.2151718674032" type="LinesIntersection" id="object11" parents="object10 object3" children="object12"/></g>
+	</svg>
+	
+		</div>
+	
+		<div id="controls">
+			<dl id="newObject">
+				
+			</dl>
+			<div id="color">
+				<label for="selectColor">kolor:</label>
+				<select id="selectColor" name="selectColor">
+					<option value="#841839">karminowy</option>
+					<option value="#CF2929">krwisty</option>
+					<option value="#FD751D">marchewkowy</option>
+					<option value="#F0C832">żółcień</option>
+					<option value="#9FFB88">pistacjowy</option>
+					<option value="#808000">oliwkowy</option>
+					<option value="#4169E1">modry</option>
+					<option value="#19247C">kobaltowy</option>
+					<option value="#800080">jagodowy</option>
+					<option value="#4B0082">indygo</option>
+				</select>
+			</div>
+			<div id="selected">
+				<div id="objectName"></div>
+				Zaznacz:
+				<ul id="selectObjects"></ul>
+				<input type="button" id="okSelect" disabled="true" value="ok" onclick="Select.fire()" />
+				<input type="button" id="cancelSelect" value="anuluj" onclick="ObjectsGUI.off()" />
+			</div>
+		</div>
+	</div>
+	
+</body>
+</html>

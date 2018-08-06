@@ -1,0 +1,75 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+	<link rel="stylesheet" href="design/style.css" type="text/css" />
+	
+	<script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/resigInheritance.js"></script>
+	<script type="text/javascript" src="js/dom.js"></script>
+	<script type="text/javascript" src="js/pointAndVector.js"></script>
+	<script type="text/javascript" src="js/mouser.js"></script>
+	<script type="text/javascript" src="js/svg_objects.js"></script>
+	<script type="text/javascript" src="js/objectsGUI.js"></script>
+	<script type="text/javascript" src="js/select.js"></script>
+	
+	<script type="text/javascript" src="js/objects/Handles.js"></script>
+	<script type="text/javascript" src="js/objects/Lines.js"></script>
+	<script type="text/javascript" src="js/objects/Circles.js"></script>
+	<script type="text/javascript" src="js/objects/Others.js"></script>
+	
+	<script type="text/javascript" src="js/geometry.js"></script>
+	
+	<title>GeomėTṛy - prosta Eulera</title>
+</head>
+<body>
+	<div id="box">
+		<h1>prosta Eulera</h1><div id="desc">
+	<em>Prosta Eulera</em> to prosta, która przechodzi przez ortocentrum danego trójkąta, środek okręgu opisanego oraz środek ciężkości trójkąta. Na prostej Eulera znajduje się też niezaznaczony tutaj środek okręgu dziewięciu punktów.
+	</div>
+	</div>
+	
+	<div id="svgBox">
+		<div id="svg">
+			
+	<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500">
+	<desc>
+	<em>Prosta Eulera</em> to prosta, która przechodzi przez ortocentrum danego trójkąta, środek okręgu opisanego oraz środek ciężkości trójkąta. Na prostej Eulera znajduje się też niezaznaczony tutaj środek okręgu dziewięciu punktów.
+	</desc>
+		<g id="objects"><line x1="148" y1="414" x2="716" y2="404" style="stroke: rgb(132, 24, 57);" id="object3" parents="object0 object1" children="object6 object9"/><line x1="148" y1="414" x2="231" y2="119" style="stroke: rgb(132, 24, 57);" id="object4" parents="object0 object2"/><line x1="231" y1="119" x2="716" y2="404" style="stroke: rgb(132, 24, 57);" id="object5" parents="object2 object1" children="object7 object8"/><line x1="236.16633408113435" y1="412.4477758084307" x2="231" y2="119" style="stroke: rgb(253, 117, 29);" type="PerpendicularLine" id="object6" parents="object2 object3" children="object14"/><line x1="298.15974087533573" y1="158.46500237004267" x2="148" y2="414" style="stroke: rgb(253, 117, 29);" type="PerpendicularLine" id="object7" parents="object0 object5" children="object14"/><line x1="1047.0070181692618" y1="-714.4680835511998" x2="-100.00701816926176" y2="1237.4680835512" style="stroke: rgb(128, 128, 0);" type="LineBisector" id="object8" parents="object5" children="object15"/><line x1="412.0735104867674" y1="-722.8246043516103" x2="451.9264895132326" y2="1540.8246043516103" style="stroke: rgb(128, 128, 0);" type="LineBisector" id="object9" parents="object3" children="object15"/><line x1="231" y1="119" x2="432" y2="409" style="stroke: rgb(240, 200, 50);" id="object12" parents="object2 object11"/><line x1="148" y1="414" x2="473.5" y2="261.5" style="stroke: rgb(240, 200, 50);" id="object13" parents="object0 object10"/><line x1="233.62820128351228" y1="268.28183290349665" x2="430.6858993582439" y2="334.35908354825165" style="stroke: rgb(65, 105, 225);" id="object16" parents="object14 object15"/></g>
+		<g id="handles"><circle r="5" cx="148" cy="414" id="object0" parents="" children="object3 object4 object7 object11 object13"/><circle r="5" cx="716" cy="404" id="object1" parents="" children="object3 object5 object10 object11"/><circle r="5" cx="231" cy="119" id="object2" parents="" children="object4 object5 object6 object10 object12"/><circle r="5" cx="473.5" cy="261.5" type="Midpoint" id="object10" parents="object2 object1" children="object13"/><circle r="5" cx="432" cy="409" type="Midpoint" id="object11" parents="object0 object1" children="object12"/><circle r="5" cx="233.62820128351228" cy="268.28183290349665" type="LinesIntersection" id="object14" parents="object6 object7" children="object16"/><circle r="5" cx="430.6858993582439" cy="334.35908354825165" type="LinesIntersection" id="object15" parents="object9 object8" children="object16"/></g>
+	</svg>
+	
+		</div>
+	
+		<div id="controls">
+			<dl id="newObject">
+				
+			</dl>
+			<div id="color">
+				<label for="selectColor">kolor:</label>
+				<select id="selectColor" name="selectColor">
+					<option value="#841839">karminowy</option>
+					<option value="#CF2929">krwisty</option>
+					<option value="#FD751D">marchewkowy</option>
+					<option value="#F0C832">żółcień</option>
+					<option value="#9FFB88">pistacjowy</option>
+					<option value="#808000">oliwkowy</option>
+					<option value="#4169E1">modry</option>
+					<option value="#19247C">kobaltowy</option>
+					<option value="#800080">jagodowy</option>
+					<option value="#4B0082">indygo</option>
+				</select>
+			</div>
+			<div id="selected">
+				<div id="objectName"></div>
+				Zaznacz:
+				<ul id="selectObjects"></ul>
+				<input type="button" id="okSelect" disabled="true" value="ok" onclick="Select.fire()" />
+				<input type="button" id="cancelSelect" value="anuluj" onclick="ObjectsGUI.off()" />
+			</div>
+		</div>
+	</div>
+	
+</body>
+</html>

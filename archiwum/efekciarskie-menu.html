@@ -1,0 +1,94 @@
+<?xml encoding="utf8" version="1.0"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+	<title>Menu javascript</title>
+	<script src="http://www.google-analytics.com/urchin.js" type="text/javascript"></script>
+        <script type="text/javascript">_uacct = "UA-441633-1";onload=urchinTracker</script>
+<script type="text/javascript">
+/*
+	author: Tomasz `neo` Kołodziejski
+	site: neo.mlodzi.pl
+	licence: http://creativecommons.org/licenses/by-sa/2.5/pl/
+*/
+menu={
+	init:function(c, color, bg){
+		for(var i=0,d; d=document.getElementsByTagName('*')[i++];){
+			if(d.className==c){
+				for(var j=0,e; e=d.getElementsByTagName('li')[j++];){
+					this.create(e, color, bg);
+				}
+			}
+		}
+	},
+	create:function(f, color, bg){	
+		var d=document.createElement('div');
+		d.appendChild(document.createTextNode(f.firstChild.data));
+		d.setAttribute('style', 'position:absolute; left:0; top:0; color:'+bg+'; background:'+color+'; height:0px; overflow:hidden; display:block; width:'+f.offsetWidth+'px');
+		f.style.position='relative';
+		f.appendChild(d);
+		f.d=d;
+		d.h=0;
+		d.m=f.offsetHeight;
+		f.onmouseover=function(){
+			menu.move(f.d,1);
+		}
+		f.onmouseout=function(){
+			menu.move(f.d,-1);
+		}
+	},
+	move:function(e, c){
+		clearTimeout(e.t);
+		if((e.h>0 && c<0) || (e.h<e.m&& c>0)){
+			e.h+=c;
+			e.style.height=e.h+'px';
+			e.t=setTimeout(function(){menu.move(e, c)}, 10);
+		}else{
+			clearTimeout(e.t);
+		}
+	}
+};
+
+var onl=window.onload||Function;
+onload=function(){
+	onl();
+	menu.init('menu', 'red', 'white');
+	menu.init('menu_a', 'yellowgreen', 'white');
+	menu.init('menu_b', 'yellowgreen', 'white');
+}
+</script>
+<style type="text/css">
+ul{border:2px solid; width:200px}
+ul li{font-size:20pt}
+ul.menu_b li{color:yellowgreen; background:white}
+</style>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	</head>
+	<body>
+	<h1>Efekciarskie menu js</h1>
+	<p>Zainspirowany <a href="http://devthought.com/cssjavascript-true-power-fancy-menu/">płynnym menu</a> piszę coś od siebie. Proszę bardzo:</p>
+	<ul class="menu">
+		<li>test</li>
+		<li>test</li>
+		<li>test</li>
+		<li>test</li>
+		<li>test</li>
+	</ul>
+	
+	<ul class="menu_a">
+		<li>test</li>
+		<li>test</li>
+		<li>test</li>
+		<li>test</li>
+		<li>test</li>
+	</ul>
+	
+	<ul class="menu_b">
+		<li>test</li>
+		<li>test</li>
+		<li>test</li>
+		<li>test</li>
+		<li>test</li>
+	</ul>
+	<p>Niestety wielce prawdopodobne jest, że ie zepsuje cały efekt - będą pewno problemy z wypozycjonowaniem elementów. Jeśli tak się dzieję - skorzystaj z <a href="http://browsehappy.pl/">lepszej przeglądarki</a>.</p>
+	</body>
+</html>

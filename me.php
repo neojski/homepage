@@ -13,10 +13,9 @@
 <?php
 $dane=array(
 	'mail'=>'tkolodziejski@gmail.com',
-	'jabbber'=>'neo007@jabber.com',
+	'jabbber'=>'neo007@jabber.org',
 	'gadu-gadu'=>'5878983',
-	'site'=>'neo.mlodzi.pl',
-	'search engine'=>'google.com'
+	'site'=>'neo.infeo.pl'
 );
 
 $max_v=$max_k=0;

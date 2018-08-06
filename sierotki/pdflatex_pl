@@ -1,0 +1,3 @@
+#!/bin/sh
+sierotki "$1" > "$1"_pl
+pdflatex "$1"_pl latex # cóż daje opcja latex?

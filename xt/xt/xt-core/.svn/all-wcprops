@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svnroot/xhtml-templates/!svn/ver/144/trunk/xt-core
+END
+node.class.php
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svnroot/xhtml-templates/!svn/ver/153/trunk/xt-core/node.class.php
+END
+xt.xt-loop.php
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svnroot/xhtml-templates/!svn/ver/132/trunk/xt-core/xt.xt-loop.php
+END
+xt.fragment.php
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svnroot/xhtml-templates/!svn/ver/149/trunk/xt-core/xt.fragment.php
+END
+css2xpath.php
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svnroot/xhtml-templates/!svn/ver/144/trunk/xt-core/css2xpath.php
+END
+xt.getnode.php
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svnroot/xhtml-templates/!svn/ver/146/trunk/xt-core/xt.getnode.php
+END
+xt.mydom.php
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svnroot/xhtml-templates/!svn/ver/132/trunk/xt-core/xt.mydom.php
+END
+xt.core.php
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svnroot/xhtml-templates/!svn/ver/153/trunk/xt-core/xt.core.php
+END
+xt.switcher.php
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svnroot/xhtml-templates/!svn/ver/132/trunk/xt-core/xt.switcher.php
+END
+xt.xtException.php
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svnroot/xhtml-templates/!svn/ver/132/trunk/xt-core/xt.xtException.php
+END
+README
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svnroot/xhtml-templates/!svn/ver/132/trunk/xt-core/README
+END

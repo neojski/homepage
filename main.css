@@ -1,0 +1,5 @@
+html{background:#000}
+body{max-width:750px;background:#fff; border-right: 15px solid #aaa; border-bottom:15px solid #aaa; padding: 20px; margin:0 auto 20px}
+a {color: #197e05}
+a:hover {color: #25b109;}
+.info{padding: 10px; border: 1px solid #31B229; background-color: #e6f5de;}

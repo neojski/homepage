@@ -1,0 +1,81 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+	<link rel="stylesheet" href="design/style.css" type="text/css" />
+	
+	<script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/resigInheritance.js"></script>
+	<script type="text/javascript" src="js/dom.js"></script>
+	<script type="text/javascript" src="js/pointAndVector.js"></script>
+	<script type="text/javascript" src="js/mouser.js"></script>
+	<script type="text/javascript" src="js/svg_objects.js"></script>
+	<script type="text/javascript" src="js/objectsGUI.js"></script>
+	<script type="text/javascript" src="js/select.js"></script>
+	
+	<script type="text/javascript" src="js/objects/Handles.js"></script>
+	<script type="text/javascript" src="js/objects/Lines.js"></script>
+	<script type="text/javascript" src="js/objects/Circles.js"></script>
+	<script type="text/javascript" src="js/objects/Others.js"></script>
+	
+	<script type="text/javascript" src="js/geometry.js"></script>
+	
+	<title>GeomėTṛy - okrąg ośmiu punktów</title>
+</head>
+<body>
+	<div id="box">
+		<h1>okrąg ośmiu punktów</h1><div id="desc">
+	<p>Nieco mniej znany interesujący okrąg.</p>
+	<p>Przy danym czworokącie, o prostopadłych przekątnych okrąg ośmiu punktów przechodzi przez środki boków oraz przez rzuty prostokątne tych środków na przeciwległe boki czworokąta.</p>
+	<p>Własność tę dostrzegł zupełnie niedawno, bo w 1944 roku, Louis Brand z Cincinnati</p>
+	<p>Zauważ, że punkty te charakterystyczne punkty leżą na okręgu nawet gdy nie jest wypukły</p>
+	</div>
+	</div>
+	
+	<div id="svgBox">
+		<div id="svg">
+			
+	<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500">
+	<desc>
+	<p>Nieco mniej znany interesujący okrąg.</p>
+	<p>Przy danym czworokącie, o prostopadłych przekątnych okrąg ośmiu punktów przechodzi przez środki boków oraz przez rzuty prostokątne tych środków na przeciwległe boki czworokąta.</p>
+	<p>Własność tę dostrzegł zupełnie niedawno, bo w 1944 roku, Louis Brand z Cincinnati</p>
+	<p>Zauważ, że punkty te charakterystyczne punkty leżą na okręgu nawet gdy nie jest wypukły</p>
+	</desc>
+		<g id="objects"><circle cx="371.79890592587435" cy="295.1820012911526" r="183.84124855481045" style="fill: rgb(240, 200, 50);" type="ThreePointCircle" id="object14" parents="object10 object11 object12"/><line x1="216" y1="445" x2="413" y2="83" style="stroke: rgb(65, 105, 225);" id="object2" parents="object0 object1" children="object3"/><line x1="-679.8021681378882" y1="-277.0981412242098" x2="1308.8021681378882" y2="805.0981412242098" style="stroke: rgb(65, 105, 225);" type="LineBisector" id="object3" parents="object2" children="object4 object5"/><line x1="161.62757688749787" y1="180.80699626198088" x2="413" y2="83" style="stroke: rgb(253, 117, 29);" id="object6" parents="object5 object1" children="object19 object21"/><line x1="413" y1="83" x2="696.5680468159994" y2="471.9210089026294" style="stroke: rgb(253, 117, 29);" id="object7" parents="object1 object4" children="object17 object23"/><line x1="696.5680468159994" y1="471.9210089026294" x2="216" y2="445" style="stroke: rgb(253, 117, 29);" id="object8" parents="object4 object0" children="object16 object22"/><line x1="216" y1="445" x2="161.62757688749787" y2="180.80699626198088" style="stroke: rgb(253, 117, 29);" id="object9" parents="object0 object5" children="object18 object20"/><line x1="269.60616765769873" y1="448.0029714341397" x2="287.31378844374893" y2="131.90349813099044" style="stroke: rgb(128, 128, 0);" type="PerpendicularLine" id="object16" parents="object12 object8" children="object22"/><line x1="444.6313087411839" y1="126.38316903707536" x2="188.81378844374893" y2="312.90349813099044" style="stroke: rgb(128, 128, 0);" type="PerpendicularLine" id="object17" parents="object13 object7" children="object23"/><line x1="196.6869708651494" y1="351.15891500993547" x2="554.7840234079997" y2="277.4605044513147" style="stroke: rgb(128, 128, 0);" type="PerpendicularLine" id="object18" parents="object11 object9" children="object20"/><line x1="323.71277214876477" y1="117.7409451385205" x2="456.2840234079997" y2="458.4605044513147" style="stroke: rgb(128, 128, 0);" type="PerpendicularLine" id="object19" parents="object10 object6" children="object21"/></g>
+		<g id="handles"><circle r="5" cx="216" cy="445" id="object0" parents="" children="object2 object8 object9 object10 object13"/><circle r="5" cx="413" cy="83" id="object1" parents="" children="object2 object6 object7 object11 object12 "/><circle r="5" cx="696.5680468159994" cy="471.9210089026294" percent="0.69" type="onLineHandle" id="object4" parents="object3" children="object7 object8 object10 object11"/><circle r="5" cx="161.62757688749787" cy="180.80699626198088" percent="0.42" type="onLineHandle" id="object5" parents="object3" children="object6 object9 object12 object13"/><circle r="5" cx="456.2840234079997" cy="458.4605044513147" type="Midpoint" id="object10" parents="object0 object4" children="object14 object19"/><circle r="5" cx="554.7840234079997" cy="277.4605044513147" type="Midpoint" id="object11" parents="object4 object1" children="object14 object18"/><circle r="5" cx="287.31378844374893" cy="131.90349813099044" type="Midpoint" id="object12" parents="object5 object1" children="object14 object16"/><circle r="5" cx="188.81378844374893" cy="312.90349813099044" type="Midpoint" id="object13" parents="object0 object5" children="object17"/><circle r="5" cx="196.6869708651494" cy="351.15891500993547" type="LinesIntersection" id="object20" parents="object9 object18"/><circle r="5" cx="323.71277214876477" cy="117.7409451385205" type="LinesIntersection" id="object21" parents="object19 object6"/><circle r="5" cx="269.60616765769873" cy="448.0029714341397" type="LinesIntersection" id="object22" parents="object16 object8"/><circle r="5" cx="444.6313087411839" cy="126.38316903707536" type="LinesIntersection" id="object23" parents="object17 object7"/></g>
+	</svg>
+	
+		</div>
+	
+		<div id="controls">
+			<dl id="newObject">
+				
+			</dl>
+			<div id="color">
+				<label for="selectColor">kolor:</label>
+				<select id="selectColor" name="selectColor">
+					<option value="#841839">karminowy</option>
+					<option value="#CF2929">krwisty</option>
+					<option value="#FD751D">marchewkowy</option>
+					<option value="#F0C832">żółcień</option>
+					<option value="#9FFB88">pistacjowy</option>
+					<option value="#808000">oliwkowy</option>
+					<option value="#4169E1">modry</option>
+					<option value="#19247C">kobaltowy</option>
+					<option value="#800080">jagodowy</option>
+					<option value="#4B0082">indygo</option>
+				</select>
+			</div>
+			<div id="selected">
+				<div id="objectName"></div>
+				Zaznacz:
+				<ul id="selectObjects"></ul>
+				<input type="button" id="okSelect" disabled="true" value="ok" onclick="Select.fire()" />
+				<input type="button" id="cancelSelect" value="anuluj" onclick="ObjectsGUI.off()" />
+			</div>
+		</div>
+	</div>
+	
+</body>
+</html>
