@@ -4373,4 +4373,9 @@ jQuery.each([ "Height", "Width" ], function(i, name){
 	};
 
 });
+})();ght on the element (default to pixels if value is unitless)
+					this.css( type, typeof size === "string" ? size : size + "px" );
+	};
+
+});
 })();

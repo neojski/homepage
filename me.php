@@ -7,7 +7,7 @@
 		<link rel="alternate stylesheet" href="me2.css" type="text/css" title="High contrast" />
 	</head>
 	<body>
-		<h1>Mój adres, chroniony w specjalny sposób</h1>
+		<h1>Kontakt</h1>
 		<p>Wystarczy zamienić słowo dot na kropkę i at na @</p>
 		<address>
 <?php
