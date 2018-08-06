@@ -2,9 +2,12 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
 
 <?php
+$server = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['SERVER_NAME'];
+
 function display($file){
+	global $server;
 	$return = '<url>' . "\n";
-	$return .= "\t" . '<loc>http://neo.infeo.pl/' . $file . '</loc>' . "\n";
+	$return .= "\t" . '<loc>' . $server . '/' . $file . '</loc>' . "\n";
 	$return .= "\t" . '<lastmod>' . date('c' , filemtime($file)). '</lastmod>' . "\n";
 	$return .= '</url>' . "\n";
 	
@@ -16,7 +19,7 @@ echo display('me.php');
 ?>
 
 <url>
-	<loc>http://neo.infeo.pl/zamiana-walut</loc>
+	<loc><?php echo $server ?>/zamiana-walut</loc>
 	<priority>1.0</priority>
 	<changefreq>daily</changefreq>
 	<lastmod><?php

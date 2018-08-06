@@ -1,6 +1,0 @@
-AuthUserFile /home/infeo/ftp/sites/neo/sec/.htpasswd
-AuthName "test"
-AuthType Basic
-<LIMIT GET POST PUT>
-require valid-user
-</LIMIT>

@@ -1,7 +1,0 @@
-<?php
-
-exec('zip -r profiler.zip profiler1');
-
-echo 'done';
-
-?>
