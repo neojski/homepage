@@ -75,7 +75,7 @@ foreach($list as $date){
 }
 
 // przesortuj w poszukiwaniu najbliższego kursu względem poszukiwanego
-// http://kolodziejski.me/archiwum/sortowanie-wg-odleglosci-od-liczby.html
+// https://kolodziejski.me/archiwum/sortowanie-wg-odleglosci-od-liczby.html
 function absSort($a, $b){
 	global $mdate;
 	return abs($a['date'] - $mdate) > abs($b['date'] - $mdate);
