@@ -43,14 +43,6 @@ foreach($archiwum as $file){
 }
 ?>
 
-<!-- sierotki -->
-<?php
-$archiwum = glob('sierotki/*');
-foreach($archiwum as $file){
-	echo display($file);
-}
-?>
-
 <!-- ort -->
 <?php
 $archiwum = glob('ort/*');
