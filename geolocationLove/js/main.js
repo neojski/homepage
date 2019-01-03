@@ -39,7 +39,7 @@ clock = new THREE.Clock(),
 
 atmoSize = 1.1,
 
-url = 'http://neo.infeo.pl/loveCounter.php',
+url = 'http://kolodziejski.me/loveCounter.php',
 
 requestAnimationFrameNeeded = true,
  

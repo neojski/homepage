@@ -15,7 +15,7 @@ $dane=array(
 	'mail'=>'tkolodziejski@gmail.com',
 	'jabbber'=>'tkolodziejski@gmail.com',
 	'gadu-gadu'=>'5878983',
-	'site'=>'neo.infeo.pl'
+	'site'=>'kolodziejski.me'
 );
 
 $max_v=$max_k=0;

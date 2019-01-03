@@ -8,7 +8,7 @@
 	<g>
 		<foreignObject id="foreign" width="100%" height="100%">
 			<body xmlns="http://www.w3.org/1999/xhtml" style="width: 100%; height: 100%" onresize="magic()">
-				<iframe src="http://neo.infeo.pl"></iframe>
+				<iframe src="http://kolodziejski.me"></iframe>
 			</body>
 			
 			<div xmlns="http://www.w3.org/1999/xhtml" style="width: 100%; height: 100%">test</div>

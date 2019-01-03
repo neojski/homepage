@@ -14,7 +14,7 @@
 		//]]>
 	</script>
 	<link href="/style/main.css" title="standardowy" rel="stylesheet" type="text/css" />
-	<link rel="alternate" type="application/atom+xml" title="Nowości z archiwum." href="http://neo.infeo.pl/atom.php" />
+	<link rel="alternate" type="application/atom+xml" title="Nowości z archiwum." href="http://kolodziejski.me/atom.php" />
 </head>
 <body>
 <header>
