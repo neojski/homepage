@@ -32,7 +32,7 @@ try {
             exit(json_encode(['error' => 'stale version',
                               'yours' => $in['version'] ?? null, 'current' => $cur['version']]));
         }
-        $clean = validate($in);
+        $statuses = validate($in);
 
         // dated backup of what is about to be replaced, kept before the write
         copy(STATE, BACKUPS . '/plots-state-' . gmdate('Ymd-His') . '.json');
@@ -40,8 +40,8 @@ try {
         $next = ['version'  => $cur['version'] + 1,
                  'updated'  => gmdate('c'),
                  'editor'   => $_SERVER['PHP_AUTH_USER'] ?? 'unknown',
-                 'palette'  => $clean['palette'],
-                 'statuses' => $clean['statuses']];
+                 'palette'  => $cur['palette'],      // not editable through the API
+                 'statuses' => $statuses];
         write_state($next);
         echo json_encode(['ok' => true, 'version' => $next['version'], 'updated' => $next['updated']]);
     } finally {

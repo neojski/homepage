@@ -13,9 +13,6 @@ body{margin:0;background:var(--bg);color:var(--text);font-size:14px}
 header{display:flex;align-items:center;gap:18px;flex-wrap:wrap;
   padding:10px 20px;border-bottom:1px solid var(--line);background:var(--panel)}
 header h1{font-size:14px;margin:0;font-weight:600}
-.sw{display:flex;align-items:center;gap:7px;font-size:13px}
-.sw input{width:30px;height:24px;padding:0;border:1px solid var(--line);border-radius:4px;
-  background:none;cursor:pointer}
 .right{margin-left:auto;display:flex;align-items:center;gap:8px}
 #msg{font-size:12px;color:var(--muted)}
 #msg.dirty{color:#b45309}#msg.bad{color:#a4302a}#msg.good{color:#2f6b45}
@@ -44,9 +41,6 @@ main{padding:22px}
 
 <header>
   <h1>Coleshill cremation plots</h1>
-  <div class="sw"><input type="color" id="c_free"><label for="c_free">Free</label></div>
-  <div class="sw"><input type="color" id="c_reserved"><label for="c_reserved">Reserved</label></div>
-  <div class="sw"><input type="color" id="c_occupied"><label for="c_occupied">Occupied</label></div>
   <div class="right">
     <span id="msg">v<?= (int) $state['version'] ?></span>
     <button id="save" class="primary" disabled>Save</button>
@@ -72,34 +66,11 @@ const ALL = ['free','reserved','occupied-reserved','occupied','unrecorded'];
 const LABEL = {free:'Free', reserved:'Reserved',
                'occupied-reserved':'Occupied, reserved for further ashes',
                occupied:'Occupied', unrecorded:'No status recorded'};
-let pal     = <?= json_encode($state['palette']) ?>;
 let version = <?= (int) $state['version'] ?>;
 let dirty   = false;
 const msg = document.getElementById('msg'), saveBtn = document.getElementById('save');
-
-const lum = h => { const v=[1,3,5].map(i=>parseInt(h.substr(i,2),16)/255)
-    .map(c=>c<=.03928?c/12.92:Math.pow((c+.055)/1.055,2.4));
-  return .2126*v[0]+.7152*v[1]+.0722*v[2]; };
-const contrast = (a,b) => { const [h,l]=[Math.max(a,b),Math.min(a,b)]; return (h+.05)/(l+.05); };
-function inkFor(s){
-  const parts = s==='occupied-reserved' ? [pal.reserved,pal.occupied]
-              : s==='unrecorded' ? [pal.ground] : [pal[s]];
-  const score = t => Math.min(...parts.map(c=>contrast(lum(c),lum(t))));
-  return score('#ffffff') > score(pal.ink) ? '#ffffff' : pal.ink;
-}
-function apply(){
-  for (const k in pal) svg.style.setProperty('--'+k, pal[k]);
-  svg.style.setProperty('--occupied-reserved', pal.occupied);
-  ALL.forEach(s => svg.style.setProperty('--on-'+s, inkFor(s)));
-}
 function setDirty(){ dirty = true; saveBtn.disabled = false;
   msg.className = 'dirty'; msg.textContent = 'unsaved changes'; }
-
-['free','reserved','occupied'].forEach(k => {
-  const el = document.getElementById('c_'+k);
-  el.value = pal[k];
-  el.addEventListener('input', e => { pal[k] = e.target.value; setDirty(); apply(); });
-});
 
 /* click a plot -> modal -> dropdown -> Cancel / OK */
 const modal = document.getElementById('modal'), sel = document.getElementById('mSelect');
@@ -137,7 +108,7 @@ saveBtn.onclick = async () => {
   saveBtn.disabled = true; msg.className = ''; msg.textContent = 'saving…';
   try {
     const r = await fetch('api.php', {method:'PUT', headers:{'Content-Type':'application/json'},
-                                      body: JSON.stringify({version, palette: pal, statuses})});
+                                      body: JSON.stringify({version, statuses})});
     const j = await r.json();
     if (r.status === 409){
       msg.className = 'bad';
@@ -153,5 +124,4 @@ saveBtn.onclick = async () => {
   }
 };
 addEventListener('beforeunload', e => { if (dirty) e.preventDefault(); });
-apply();
 </script>

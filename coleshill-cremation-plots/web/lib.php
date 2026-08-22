@@ -8,7 +8,6 @@
  */
 
 const STATES   = ['free', 'reserved', 'occupied-reserved', 'occupied', 'unrecorded'];
-const PAL_KEYS = ['free', 'reserved', 'occupied', 'ink', 'ground', 'hairline'];
 
 const MAP_SVG   = __DIR__ . '/map.svg';
 const DATA_DIR  = __DIR__ . '/../private';          // must sit outside the web root
@@ -64,18 +63,12 @@ function write_state(array $s): void {
 }
 
 /**
- * Reject anything unexpected rather than storing it. This is a burial record;
- * a malformed status is worse than a refused save.
+ * Statuses only. Every plot in the drawing must be present exactly once, and
+ * every value must be one of STATES. This is a burial record; a malformed
+ * status is worse than a refused save.
  */
 function validate(array $in): array {
     $known = surveyed();
-    $pal = [];
-    foreach (PAL_KEYS as $k) {
-        $v = $in['palette'][$k] ?? null;
-        if (!is_string($v) || !preg_match('/^#[0-9a-fA-F]{6}$/', $v))
-            throw new InvalidArgumentException("palette.$k must be a #rrggbb colour");
-        $pal[$k] = strtolower($v);
-    }
     $st = [];
     foreach ($in['statuses'] ?? [] as $id => $v) {
         if (!isset($known[(string) $id])) throw new InvalidArgumentException("unknown plot $id");
@@ -84,7 +77,7 @@ function validate(array $in): array {
     }
     if (count($st) !== count($known))
         throw new InvalidArgumentException(sprintf('expected %d plots, got %d', count($known), count($st)));
-    return ['palette' => $pal, 'statuses' => $st];
+    return $st;
 }
 
 /** Number colour that stays legible over every half of a cell. */
