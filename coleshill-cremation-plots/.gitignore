@@ -1,0 +1,3 @@
+# Live record and its dated backups. Written by the app at runtime and kept on
+# the server, not in the repo; api.php seeds a fresh one from web/map.svg.
+private/
