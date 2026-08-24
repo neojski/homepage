@@ -1,3 +1,9 @@
 # Allow files to be looked up without .php extension
 Options +Multiviews 
 AddType application/x-httpd-php7 .php
+
+# Deploy scripts live in the repo, and the repo is the document root.
+# Without this, deploy.sh is readable at https://kolodziejski.me/deploy.sh
+<FilesMatch "\.sh$">
+  Require all denied
+</FilesMatch>
