@@ -104,7 +104,8 @@ dl.words dd{margin:0;color:var(--muted);font-family:ui-monospace,Menlo,Consolas,
         <button id="clear" class="link" style="margin-left:auto">Clear</button>
       </div>
       <p class="hint">Select the two columns in Excel, copy, and paste here.
-        All <span id="plot-count">0</span> plots must be listed. Ctrl+Enter draws too.</p>
+        All <span id="plot-count">0</span> plots must be listed. The map redraws
+        as you edit.</p>
     </div>
 
     <div class="panel">
@@ -587,7 +588,18 @@ $('#print').onclick = () => window.print();
 $('#input').addEventListener('keydown', e => {
   if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); draw(); }
 });
-/* A paste arrives complete, so there is nothing to wait for. */
-$('#input').addEventListener('paste', () => setTimeout(draw, 0));
+
+/**
+ * Redraw as the text is edited, once it has been still for a moment. The wait
+ * matters more than it looks: a paste has to cover all 140 plots, so
+ * half-finished input is nearly always invalid, and drawing on every keystroke
+ * would flash the refusal panel at someone in the middle of fixing a line.
+ * Covers pasting too - `input` fires for that as well.
+ */
+let pending;
+$('#input').addEventListener('input', () => {
+  clearTimeout(pending);
+  pending = setTimeout(draw, 400);
+});
 </script>
 </html>
