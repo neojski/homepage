@@ -57,20 +57,32 @@ Two failure modes already hit, worth not repeating:
 
 ## Status categories
 
-occupied; occupied but reserved for further ashes (diagonal half-fill);
-reserved; free. Anything without a status renders as "unrecorded", hatched. In
-the 2026 survey that is plots **88 and 135**, still to be resolved with the
-parish — but the page reads that from the pasted data rather than assuming any
-particular plots are the blank ones.
+Five words, and only these five:
+
+    occupied
+    occupied-reserved     drawn as a diagonal half-fill
+    reserved
+    vacant
+    unknown               hatched, so it reads as absent data not a status
+
+Case is ignored; nothing else is. There are deliberately no synonyms — an
+unrecognised word refuses the whole paste rather than being guessed at, and a
+guessed status on a burial record is worse than a refusal. A cell left empty
+in the spreadsheet is the one exception: it counts as `unknown`, since that is
+how a blank is meant in the sheet.
+
+In the 2026 survey the unknowns are plots **88 and 135**, still to be resolved
+with the parish — but the page reads that from the pasted data rather than
+assuming any particular plots are the blank ones.
 
 The vocabulary is not fixed in code. `CONFIG.statuses` at the top of the script
-in `index.html` holds each status's key, label, accepted spellings and fill;
-the legend and the accepted-words panel are both generated from it. Changing
-the wording, or a colour, is a one-line edit there.
+in `index.html` holds each status's key, label and fill; the legend, the
+accepted-words panel and the colours are all generated from it. Changing a word
+or a colour is a one-line edit there.
 
 ## Where the design discussion got to
 
-- **Colour**: the four states are a sequence (free -> reserved -> occupied and
+- **Colour**: the four states are a sequence (vacant -> reserved -> occupied and
   reserved -> occupied), so lightness should carry the order and hue should only
   distinguish the kind of claim. Must survive photocopying. Unrecorded should be
   hatched rather than filled, so it reads as absent data rather than a status.
