@@ -1,6 +1,129 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1303 872" width="1303" height="872" font-family="Inter, Helvetica Neue, Arial, sans-serif">
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<title>Cremation plots — All Saints’ Church, Coleshill</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<!--
+  One file, no server. Paste two columns - plot number and status - and the map
+  is drawn from them. Nothing is stored anywhere but this browser.
+
+  To change the wording of a status, or add one, edit CONFIG near the top of the
+  script at the foot of this file. The legend, the accepted spellings and the
+  fill colours are all generated from it.
+
+  The <svg> in the middle is the measured geometry - 140 cells at coordinates
+  taken from the 2026 survey. Do not edit its coordinates by hand, and do not
+  tidy them onto a regular grid: the irregularity is real. See CLAUDE.md.
+-->
+
 <style>
-:root{--occupied:#6e8ca8;--occupied-reserved:#6e8ca8;--reserved:#d9a441;--free:#ffffff;--unrecorded:#e2e0da;--ink:#1f2933;--hairline:#5b6672;--ground:#f7f6f3;--on-free:#1f2933;--on-reserved:#ffffff;--on-occupied-reserved:#ffffff;--on-occupied:#ffffff;--on-unrecorded:#1f2933;}
+:root{
+  --bg:#f4f3ef; --panel:#fffefb; --line:#d9d6cd; --text:#1f2933;
+  --muted:#6b7280; --accent:#3f5f7d; --bad:#a4302a; --bad-bg:#fdf2f1;
+  font-family:Inter,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-size:14px;line-height:1.45}
+
+header{display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+  padding:10px 20px;border-bottom:1px solid var(--line);background:var(--panel)}
+header h1{font-size:14px;margin:0;font-weight:600}
+header .right{margin-left:auto;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+
+button{font:inherit;font-size:13px;padding:6px 12px;border:1px solid var(--line);
+  background:#fff;border-radius:5px;cursor:pointer;color:var(--text)}
+button:hover{border-color:var(--accent)}
+button.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+button.link{border:0;background:0;padding:2px 0;color:var(--accent);
+  text-decoration:underline;font-size:12.5px}
+
+main{display:grid;grid-template-columns:340px minmax(0,1fr);gap:18px;padding:18px 20px;
+  align-items:start}
+@media (max-width:900px){main{grid-template-columns:minmax(0,1fr)}}
+
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:14px}
+.panel h2{font-size:12px;text-transform:uppercase;letter-spacing:.08em;
+  color:var(--muted);margin:0 0 8px;font-weight:600}
+.panel + .panel{margin-top:14px}
+
+textarea{width:100%;height:300px;font:12.5px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  padding:9px;border:1px solid var(--line);border-radius:5px;background:#fff;
+  color:var(--text);resize:vertical;white-space:pre;tab-size:8}
+textarea:focus{outline:2px solid var(--accent);outline-offset:-1px}
+.hint{color:var(--muted);font-size:12px;margin:8px 0 0}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px}
+
+dl.words{margin:0;font-size:12.5px}
+dl.words dt{font-weight:600;margin-top:7px}
+dl.words dt:first-child{margin-top:0}
+dl.words dd{margin:0;color:var(--muted);font-family:ui-monospace,Menlo,Consolas,monospace;
+  font-size:11.5px}
+
+#problems{margin:0 0 14px;border:1px solid var(--bad);background:var(--bad-bg);
+  border-radius:6px;padding:12px 14px;color:var(--bad)}
+#problems[hidden]{display:none}
+#problems h2{font-size:13px;margin:0 0 6px;font-weight:600}
+#problems ul{margin:0;padding-left:18px;font-size:12.5px}
+#problems li{margin:2px 0}
+#problems .note{color:var(--muted);font-size:12px;margin:8px 0 0}
+
+#status{font-size:12.5px;color:var(--muted)}
+#status.good{color:#2f6b45}
+
+#sheet{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:10px}
+#sheet svg{max-width:100%;height:auto;display:block}
+
+/* One A4 landscape page, map only - replaces the old pdf.php. */
+@page{size:A4 landscape;margin:7mm}
+@media print{
+  body{background:#fff}
+  header,#side,#problems,#status{display:none!important}
+  main{display:block;padding:0}
+  #sheet{border:0;padding:0}
+  #sheet svg{width:100%;height:auto}
+}
+</style>
+
+<header>
+  <h1>Coleshill cremation plots</h1>
+  <span id="status"></span>
+  <div class="right">
+    <button id="print">Print</button>
+  </div>
+</header>
+
+<main>
+  <div id="side">
+    <div class="panel">
+      <h2>Plot numbers and statuses</h2>
+      <textarea id="input" spellcheck="false"
+        placeholder="Paste two columns from the spreadsheet, for example&#10;&#10;1&#9;occupied&#10;2&#9;reserved&#10;3&#9;free"></textarea>
+      <div class="row">
+        <button id="draw" class="primary">Draw map</button>
+        <button id="clear" class="link" style="margin-left:auto">Clear</button>
+      </div>
+      <p class="hint">Select the two columns in Excel, copy, and paste here.
+        All <span id="plot-count">0</span> plots must be listed. Ctrl+Enter draws too.</p>
+    </div>
+
+    <div class="panel">
+      <h2>Accepted statuses</h2>
+      <dl class="words" id="words"></dl>
+      <p class="hint">Case and punctuation are ignored. A blank status counts as
+        no status recorded.</p>
+    </div>
+  </div>
+
+  <div>
+    <div id="problems" hidden>
+      <h2 id="problems-title"></h2>
+      <ul id="problems-list"></ul>
+      <p class="note">The map is left as it was. Nothing is drawn until every line reads cleanly.</p>
+    </div>
+    <div id="sheet"><svg id="map" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1303 872" width="1303" height="872" font-family="Inter, Helvetica Neue, Arial, sans-serif">
+<style id="palette-css">
+:root{--occupied:#6e8ca8;--occupied-reserved:#6e8ca8;--reserved:#d9a441;--free:#ffffff;--unrecorded:#e2e0da;--ink:#1f2933;--hairline:#5b6672;--ground:#ffffff;--on-free:#1f2933;--on-reserved:#ffffff;--on-occupied-reserved:#ffffff;--on-occupied:#ffffff;--on-unrecorded:#1f2933;}
 .ground{fill:var(--ground)}
 .title{fill:var(--ink)}.sub{fill:var(--hairline)}
 .rule{stroke:var(--hairline)}
@@ -26,6 +149,7 @@
 <text class="title" x="96" y="62" font-size="27" font-weight="600" letter-spacing="0.5">All Saints’ Church, Coleshill</text>
 <text class="sub" x="96" y="90" font-size="15" letter-spacing="2.6">CREMATION PLOTS · 2026</text>
 <line class="rule" x1="96" y1="108" x2="456" y2="108"/>
+<g id="crib">
 <g class="cell key" data-status="occupied"><rect class="base" x="96" y="142" width="26" height="20"/><polygon class="half" points="96,142 122,142 96,162"/><rect class="edge" x="96" y="142" width="26" height="20"/><text class="num" x="109.0" y="156.5"></text></g>
 <text class="title" x="134" y="157" font-size="14">Occupied</text>
 <g class="cell key" data-status="occupied-reserved"><rect class="base" x="96" y="172" width="26" height="20"/><polygon class="half" points="96,172 122,172 96,192"/><rect class="edge" x="96" y="172" width="26" height="20"/><text class="num" x="109.0" y="186.5"></text></g>
@@ -36,11 +160,11 @@
 <text class="title" x="134" y="247" font-size="14">Free</text>
 <g class="cell key" data-status="unrecorded"><rect class="base" x="96" y="262" width="26" height="20"/><polygon class="half" points="96,262 122,262 96,282"/><rect class="edge" x="96" y="262" width="26" height="20"/><text class="num" x="109.0" y="276.5"></text></g>
 <text class="title" x="134" y="277" font-size="14">No status recorded</text>
+</g>
 <line class="rule" x1="56" y1="300.0" x2="56" y2="775.5" stroke-width="2"/>
 <text class="sub" x="40" y="538" font-size="13.5" letter-spacing="3.2" text-anchor="middle" transform="rotate(-90 40 538)">PATH</text>
 <line class="rule" x1="96" y1="809.5" x2="1183" y2="809.5" stroke-width="2"/>
 <text class="sub" x="96" y="831.5" font-size="13.5" letter-spacing="3.2">PATH</text>
-<text class="sub" x="1183" y="831.5" font-size="12.5" text-anchor="end">Cell positions measured from the 2026 survey. Plots 88 and 135 have no status recorded.</text>
 <g transform="translate(1251 360.0)">
 <line class="rule" x1="0" y1="46" x2="0" y2="-6" stroke="var(--ink)" stroke-width="1.6"/>
 <polygon class="title" points="0,-16 6,2 -6,2"/>
@@ -194,4 +318,284 @@
 <text class="sub" x="82" y="503.2" font-size="12" text-anchor="middle">D</text>
 <text class="sub" x="82" y="439.2" font-size="12" text-anchor="middle">E</text>
 <text class="sub" x="82" y="327.4" font-size="12" text-anchor="middle">F</text>
-</svg>
+</svg></div>
+  </div>
+</main>
+
+<script>
+/* ------------------------------------------------------------------------
+   CONFIG - the only thing to edit when the wording changes.
+
+   Order matters: it is the order of the legend, and the four real states are
+   meant to read as a sequence (free -> reserved -> occupied and reserved ->
+   occupied), so lightness should carry the order and hue only the kind of
+   claim. `fill` says how a cell is painted:
+
+     solid   flat `color`
+     half    `from` colour with a `to` triangle over it, for the split state
+     hatch   diagonal hatching, so absent data reads as absent rather than as
+             a status of its own
+   ------------------------------------------------------------------------ */
+const CONFIG = {
+  statuses: [
+    { key: 'occupied', label: 'Occupied',
+      aliases: ['occ', 'o', 'full', 'taken'],
+      fill: 'solid', color: '#6e8ca8' },
+
+    { key: 'occupied-reserved', label: 'Occupied, reserved for further ashes',
+      aliases: ['occ+res', 'occupied and reserved', 'part', 'half'],
+      fill: 'half', from: 'reserved', to: 'occupied' },
+
+    { key: 'reserved', label: 'Reserved',
+      aliases: ['res', 'r', 'booked'],
+      fill: 'solid', color: '#d9a441' },
+
+    { key: 'free', label: 'Free',
+      aliases: ['vacant', 'empty', 'f', 'available'],
+      fill: 'solid', color: '#ffffff' },
+
+    { key: 'unrecorded', label: 'No status recorded',
+      aliases: ['unknown', 'none', 'n/a', '?', ''],
+      fill: 'hatch' },
+  ],
+  ink: '#1f2933', ground: '#ffffff', hairline: '#5b6672',
+};
+
+const $ = s => document.querySelector(s);
+const svg = $('#sheet svg');
+const cells = [...svg.querySelectorAll('.cell[data-plot]')];
+const PLOTS = cells.map(g => g.dataset.plot);           // drawing order, which is plot order
+const KNOWN = new Set(PLOTS);
+const byKey = k => CONFIG.statuses.find(s => s.key === k);
+
+/* ---------- colour ------------------------------------------------------ */
+
+/** Default palette, straight out of CONFIG. */
+function basePalette() {
+  const p = { ink: CONFIG.ink, ground: CONFIG.ground, hairline: CONFIG.hairline };
+  for (const s of CONFIG.statuses) if (s.fill === 'solid') p[s.key] = s.color;
+  return p;
+}
+const palette = basePalette();
+
+/** The colours a cell in this state can show, so contrast can be judged. */
+function partsFor(s, p) {
+  if (s.fill === 'half')  return [p[s.from], p[s.to]];
+  if (s.fill === 'hatch') return [p.ground];
+  return [p[s.key]];
+}
+
+const lum = hex => {
+  const f = c => (c /= 255) <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+  return 0.2126 * f(parseInt(hex.slice(1, 3), 16))
+       + 0.7152 * f(parseInt(hex.slice(3, 5), 16))
+       + 0.0722 * f(parseInt(hex.slice(5, 7), 16));
+};
+
+/** Number colour that stays legible over every part of a cell. */
+function inkFor(s, p) {
+  const score = t => Math.min(...partsFor(s, p).map(c => {
+    const a = lum(c), b = lum(t);
+    return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+  }));
+  return score('#ffffff') > score(p.ink) ? '#ffffff' : p.ink;
+}
+
+/**
+ * Rebuild the drawing's stylesheet from CONFIG and the current palette. The
+ * SVG paints everything through these custom properties, so this is the whole
+ * of "apply a colour".
+ */
+function applyPalette() {
+  const vars = Object.entries(palette).map(([k, v]) => `--${k}:${v}`).join(';');
+  let css = `svg{${vars};`
+          + CONFIG.statuses.map(s => `--on-${s.key}:${inkFor(s, palette)}`).join(';') + '}\n'
+    + '.ground{fill:var(--ground)}.title{fill:var(--ink)}.sub{fill:var(--hairline)}\n'
+    + '.rule{stroke:var(--hairline)}\n'
+    + '.hatch-bg{fill:var(--ground)}.hatch-line{stroke:var(--hairline);stroke-width:1.4}\n'
+    + '.cell .half{display:none}.cell .edge{fill:none;stroke:var(--ink)}\n'
+    + '.cell .num{font-size:12.5px;text-anchor:middle}.key .num{font-size:0}\n';
+
+  for (const s of CONFIG.statuses) {
+    const sel = `.cell[data-status="${s.key}"]`;
+    if (s.fill === 'hatch')     css += `${sel} .base{fill:url(#hatch)}\n`;
+    else if (s.fill === 'half') css += `${sel} .base{fill:var(--${s.from})}\n`
+                                     + `${sel} .half{fill:var(--${s.to});display:inline}\n`;
+    else                        css += `${sel} .base{fill:var(--${s.key})}\n`;
+    css += `${sel} .num{fill:var(--on-${s.key})}\n`;
+  }
+  svg.querySelector('#palette-css').textContent = css;
+}
+
+/* ---------- legend, generated from CONFIG ------------------------------- */
+
+const SVGNS = 'http://www.w3.org/2000/svg';
+const el = (name, attrs, text) => {
+  const n = document.createElementNS(SVGNS, name);
+  for (const [k, v] of Object.entries(attrs)) n.setAttribute(k, v);
+  if (text != null) n.textContent = text;
+  return n;
+};
+
+/** The crib - the parish's word for the key panel. */
+function renderCrib() {
+  const crib = svg.querySelector('#crib');
+  const n = CONFIG.statuses.length;
+  const x = 96, top = 142, w = 26, h = 20;
+  const pitch = Math.min(30, 150 / n);           // keep clear of the path rule at y=300
+  crib.replaceChildren();
+
+  CONFIG.statuses.forEach((s, i) => {
+    const y = top + i * pitch;
+    const g = el('g', { class: 'cell key', 'data-status': s.key });
+    g.append(el('rect', { class: 'base', x, y, width: w, height: h }));
+    g.append(el('polygon', { class: 'half', points: `${x},${y} ${x + w},${y} ${x},${y + h}` }));
+    g.append(el('rect', { class: 'edge', x, y, width: w, height: h }));
+    g.append(el('text', { class: 'num', x: x + w / 2, y: y + h / 2 + 4.5 }, ''));
+    crib.append(g);
+    crib.append(el('text', { class: 'title', x: x + 38, y: y + 15, 'font-size': 14 }, s.label));
+  });
+}
+
+/* ---------- reading the pasted columns ---------------------------------- */
+
+/** Lowercase, strip punctuation, collapse spaces - so "Occ. + Res" meets "occ+res". */
+const norm = s => s.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+
+/** Every spelling of every status, resolved to its key. */
+const VOCAB = (() => {
+  const m = new Map();
+  for (const s of CONFIG.statuses)
+    for (const w of [s.key, s.label, ...s.aliases]) m.set(norm(w), s.key);
+  return m;
+})();
+
+const HEADER = /^(plot|plot ?no|no|number|#|grave|cell)$/i;
+
+/**
+ * Split a line into plot and status. Tabs win, then commas, then whitespace -
+ * and everything after the first field is rejoined, because one of the status
+ * labels has a comma in it.
+ */
+function fields(line) {
+  let sep = '\t';
+  if (!line.includes('\t')) sep = line.includes(',') ? ',' : ' ';
+  const parts = (sep === ' ' ? line.trim().split(/\s+/) : line.split(sep)).map(s => s.trim());
+  return [parts[0], parts.slice(1).join(sep === ',' ? ', ' : ' ').trim()];
+}
+
+/**
+ * Read the whole paste. Returns { statuses, problems }; if problems is
+ * non-empty the caller draws nothing - a part-read burial record is worse
+ * than a refusal.
+ */
+function read(text) {
+  const problems = [], statuses = {}, seen = new Map();
+  let first = true;
+
+  text.split(/\r?\n/).forEach((raw, i) => {
+    const lineNo = i + 1;
+    if (!raw.trim()) return;
+    let [plot, status] = fields(raw);
+    plot = plot.replace(/^["']|["']$/g, '').trim();
+
+    if (first) {                                  // allow one header line
+      first = false;
+      if (HEADER.test(plot)) return;
+    }
+
+    const m = /^(\d+)(?:\.0+)?$/.exec(plot);
+    if (!m) { problems.push(`Line ${lineNo}: “${plot}” is not a plot number.`); return; }
+    const id = m[1];
+
+    if (!KNOWN.has(id)) { problems.push(`Line ${lineNo}: plot ${id} is not on the map.`); return; }
+    if (seen.has(id)) {
+      problems.push(`Line ${lineNo}: plot ${id} was already given on line ${seen.get(id)}.`);
+      return;
+    }
+    seen.set(id, lineNo);
+
+    const key = VOCAB.get(norm(status));
+    if (key === undefined) {
+      problems.push(`Line ${lineNo}: “${status}” is not a status we know (plot ${id}).`);
+      return;
+    }
+    statuses[id] = key;
+  });
+
+  const missing = PLOTS.filter(p => !seen.has(p));
+  if (missing.length) {
+    const shown = missing.slice(0, 12).join(', ');
+    problems.push(`${missing.length} plot${missing.length > 1 ? 's are' : ' is'} missing: `
+      + shown + (missing.length > 12 ? `, and ${missing.length - 12} more.` : '.'));
+  }
+  return { statuses, problems };
+}
+
+/* ---------- drawing ----------------------------------------------------- */
+
+function showProblems(list) {
+  $('#problems-list').replaceChildren(...list.map(t => {
+    const li = document.createElement('li'); li.textContent = t; return li;
+  }));
+  $('#problems-title').textContent =
+    `${list.length} problem${list.length > 1 ? 's' : ''} — nothing was drawn`;
+  $('#problems').hidden = !list.length;
+}
+
+function blank() {
+  const u = CONFIG.statuses.find(s => s.fill === 'hatch') || CONFIG.statuses.at(-1);
+  for (const g of cells) g.dataset.status = u.key;
+}
+
+function draw() {
+  const { statuses, problems } = read($('#input').value);
+  showProblems(problems);
+  const s = $('#status');
+  if (problems.length) { s.className = ''; s.textContent = ''; return; }
+
+  for (const g of cells) g.dataset.status = statuses[g.dataset.plot];
+
+  const counts = new Map();
+  for (const k of Object.values(statuses)) counts.set(k, (counts.get(k) || 0) + 1);
+  s.className = 'good';
+  s.textContent = CONFIG.statuses
+    .filter(st => counts.get(st.key))
+    .map(st => `${counts.get(st.key)} ${st.label.toLowerCase()}`).join(' · ');
+}
+
+/* ---------- controls ---------------------------------------------------- */
+
+function renderWords() {
+  $('#words').replaceChildren(...CONFIG.statuses.flatMap(s => {
+    const dt = document.createElement('dt'); dt.textContent = s.label;
+    const dd = document.createElement('dd');
+    dd.textContent = [s.key, ...s.aliases].filter(Boolean).join(', ');
+    return [dt, dd];
+  }));
+}
+
+/* ---------- boot -------------------------------------------------------- */
+
+$('#plot-count').textContent = PLOTS.length;
+renderWords();
+renderCrib();
+applyPalette();
+blank();
+
+$('#draw').onclick = draw;
+$('#clear').onclick = () => {
+  $('#input').value = '';
+  showProblems([]);
+  $('#status').textContent = '';
+  blank();
+};
+$('#print').onclick = () => window.print();
+
+$('#input').addEventListener('keydown', e => {
+  if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); draw(); }
+});
+/* A paste arrives complete, so there is nothing to wait for. */
+$('#input').addEventListener('paste', () => setTimeout(draw, 0));
+</script>
+</html>

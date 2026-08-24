@@ -1,8 +1,8 @@
 # Coleshill cremation plot map
 
 Digitising the hand-drawn 2026 cremation plot survey for All Saints' Church,
-Coleshill. 140 plots. The end goal is a colour-coded map hosted on a personal
-website, with an authenticated editor for changing the palette and plot statuses.
+Coleshill. 140 plots. The map is one static page: someone pastes two columns —
+plot number and status — and it draws the colour-coded plan.
 
 ## Pipeline
 
@@ -16,6 +16,19 @@ Run in that order. `pdftoppm -r 300 -png -gray <pdf> scan` produces `scan-1.png`
 which the detection steps expect in the working directory.
 
 Requires: opencv-python, numpy. `pdftoppm` from poppler-utils.
+
+## The page
+
+`index.html` is the whole thing, and now the only thing — CONFIG, styles, the
+drawing and the script, in one file. No build step, no dependencies, no tooling.
+Edit it directly; open it off the filesystem to see the result.
+
+The `<svg>` in the middle is the measured geometry: 140 `<g class="cell">`
+elements carrying the surveyed coordinates. It began as a separate `map.svg`
+emitted by `render.py`, with a checked-in script that compared the two copies
+and failed on any coordinate drift. Both were dropped as surplus once the survey
+was final. That guard is gone, so the rule in the next section is now enforced
+by nothing but care.
 
 ## Why it is measured rather than traced
 
@@ -45,8 +58,15 @@ Two failure modes already hit, worth not repeating:
 ## Status categories
 
 occupied; occupied but reserved for further ashes (diagonal half-fill);
-reserved; free. Plots **88 and 135 have no status recorded** and render as
-"unrecorded" — still to be resolved with the parish.
+reserved; free. Anything without a status renders as "unrecorded", hatched. In
+the 2026 survey that is plots **88 and 135**, still to be resolved with the
+parish — but the page reads that from the pasted data rather than assuming any
+particular plots are the blank ones.
+
+The vocabulary is not fixed in code. `CONFIG.statuses` at the top of the script
+in `index.html` holds each status's key, label, accepted spellings and fill;
+the legend and the accepted-words panel are both generated from it. Changing
+the wording, or a colour, is a one-line edit there.
 
 ## Where the design discussion got to
 
@@ -55,20 +75,26 @@ reserved; free. Plots **88 and 135 have no status recorded** and render as
   distinguish the kind of claim. Must survive photocopying. Unrecorded should be
   hatched rather than filled, so it reads as absent data rather than a status.
 - **"Crib"** in the parish's correspondence means the legend/key panel.
-- **Hosting**: static geometry file plus a small JSON holding palette and plot
-  statuses. `GET /api/plots` public, `PUT /api/plots` authenticated. Editor on a
-  separate path from the public map.
-- **Writes**: temp file plus atomic rename, dated backup on every save, version
-  number in the JSON rejected on `PUT` if stale. It is a burial record.
-- **Auth**: `.htaccess` Basic auth is sufficient for one or two editors, given
-  HTTPS, `htpasswd -B`, and the password file outside the web root. It guards
-  the URL path, so static JSON is covered as well as any scripts.
+- **Hosting**: one file, `index.html`. Works over `file://` or from any
+  static host. No server, no credentials, no stored record — the parish's
+  spreadsheet is the only source of truth and the page is a viewer for it.
+  An earlier PHP version (writable JSON, atomic writes, dated backups, version
+  conflicts, `.htaccess` Basic auth) was removed in favour of this; it is in
+  the history if the reasoning is ever needed.
+- **Bad input is refused whole.** Any unknown plot, unreadable status, duplicate
+  row, or missing plot lists every problem and draws nothing. A paste must cover
+  all 140 plots — with no stored state there is nothing to merge a partial paste
+  into. It is a burial record; a refusal beats a half-applied one.
+- **Nothing is stored at all.** The paste lives in the textarea and nowhere
+  else — no network, no `localStorage`, no cache. Reload and the page is blank
+  again. A burial record that looked current but was a stale cached paste would
+  be worse than an obviously empty page. That is what makes it safe to host
+  publicly today — and what open question 4 would change.
 
 ## Open questions
 
 1. Are all plots the same size on the ground, or are rows D-F genuinely larger?
 2. Statuses for 88 and 135.
 3. Where does 83 actually sit?
-4. Should the editor also change plot statuses, or only the palette?
-5. Will names ever be attached to plots? That changes whether the map can be
-   public.
+4. Will names ever be attached to plots? That changes whether the map can be
+   public, and would end the paste-anything-in model.
