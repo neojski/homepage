@@ -1,0 +1,601 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<title>Cremation plots — All Saints’ Church, Coleshill</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<!--
+  One file, no server. Paste two columns - plot number and status - and the map
+  is drawn from them. Nothing is stored anywhere but this browser.
+
+  To change the wording of a status, or add one, edit CONFIG near the top of the
+  script at the foot of this file. The legend, the accepted spellings and the
+  fill colours are all generated from it.
+
+  The <svg> in the middle is the measured geometry - 140 cells at coordinates
+  taken from the 2026 survey. Do not edit its coordinates by hand, and do not
+  tidy them onto a regular grid: the irregularity is real. See CLAUDE.md.
+-->
+
+<style>
+:root{
+  --bg:#f4f3ef; --panel:#fffefb; --line:#d9d6cd; --text:#1f2933;
+  --muted:#6b7280; --accent:#3f5f7d; --bad:#a4302a; --bad-bg:#fdf2f1;
+  font-family:Inter,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-size:14px;line-height:1.45}
+
+header{display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+  padding:10px 20px;border-bottom:1px solid var(--line);background:var(--panel)}
+header h1{font-size:14px;margin:0;font-weight:600}
+header .right{margin-left:auto;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+
+button{font:inherit;font-size:13px;padding:6px 12px;border:1px solid var(--line);
+  background:#fff;border-radius:5px;cursor:pointer;color:var(--text)}
+button:hover{border-color:var(--accent)}
+button.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+button.link{border:0;background:0;padding:2px 0;color:var(--accent);
+  text-decoration:underline;font-size:12.5px}
+
+main{display:grid;grid-template-columns:340px minmax(0,1fr);gap:18px;padding:18px 20px;
+  align-items:start}
+@media (max-width:900px){main{grid-template-columns:minmax(0,1fr)}}
+
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:14px}
+.panel h2{font-size:12px;text-transform:uppercase;letter-spacing:.08em;
+  color:var(--muted);margin:0 0 8px;font-weight:600}
+.panel + .panel{margin-top:14px}
+
+textarea{width:100%;height:300px;font:12.5px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  padding:9px;border:1px solid var(--line);border-radius:5px;background:#fff;
+  color:var(--text);resize:vertical;white-space:pre;tab-size:8}
+textarea:focus{outline:2px solid var(--accent);outline-offset:-1px}
+.hint{color:var(--muted);font-size:12px;margin:8px 0 0}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px}
+
+dl.words{margin:0;font-size:12.5px}
+dl.words dt{font-weight:600;margin-top:7px}
+dl.words dt:first-child{margin-top:0}
+dl.words dd{margin:0;color:var(--muted);font-family:ui-monospace,Menlo,Consolas,monospace;
+  font-size:11.5px}
+
+#problems{margin:0 0 14px;border:1px solid var(--bad);background:var(--bad-bg);
+  border-radius:6px;padding:12px 14px;color:var(--bad)}
+#problems[hidden]{display:none}
+#problems h2{font-size:13px;margin:0 0 6px;font-weight:600}
+#problems ul{margin:0;padding-left:18px;font-size:12.5px}
+#problems li{margin:2px 0}
+#problems .note{color:var(--muted);font-size:12px;margin:8px 0 0}
+
+#status{font-size:12.5px;color:var(--muted)}
+#status.good{color:#2f6b45}
+
+#sheet{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:10px}
+#sheet svg{max-width:100%;height:auto;display:block}
+
+/* One A4 landscape page, map only - replaces the old pdf.php. */
+@page{size:A4 landscape;margin:7mm}
+@media print{
+  body{background:#fff}
+  header,#side,#problems,#status{display:none!important}
+  main{display:block;padding:0}
+  #sheet{border:0;padding:0}
+  #sheet svg{width:100%;height:auto}
+}
+</style>
+
+<header>
+  <h1>Coleshill cremation plots</h1>
+  <span id="status"></span>
+  <div class="right">
+    <button id="print">Print</button>
+  </div>
+</header>
+
+<main>
+  <div id="side">
+    <div class="panel">
+      <h2>Plot numbers and statuses</h2>
+      <textarea id="input" spellcheck="false"
+        placeholder="Paste two columns from the spreadsheet, for example&#10;&#10;1&#9;occupied&#10;2&#9;reserved&#10;3&#9;free"></textarea>
+      <div class="row">
+        <button id="draw" class="primary">Draw map</button>
+        <button id="clear" class="link" style="margin-left:auto">Clear</button>
+      </div>
+      <p class="hint">Select the two columns in Excel, copy, and paste here.
+        All <span id="plot-count">0</span> plots must be listed. Ctrl+Enter draws too.</p>
+    </div>
+
+    <div class="panel">
+      <h2>Accepted statuses</h2>
+      <dl class="words" id="words"></dl>
+      <p class="hint">Case and punctuation are ignored. A blank status counts as
+        no status recorded.</p>
+    </div>
+  </div>
+
+  <div>
+    <div id="problems" hidden>
+      <h2 id="problems-title"></h2>
+      <ul id="problems-list"></ul>
+      <p class="note">The map is left as it was. Nothing is drawn until every line reads cleanly.</p>
+    </div>
+    <div id="sheet"><svg id="map" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1303 872" width="1303" height="872" font-family="Inter, Helvetica Neue, Arial, sans-serif">
+<style id="palette-css">
+:root{--occupied:#6e8ca8;--occupied-reserved:#6e8ca8;--reserved:#d9a441;--free:#ffffff;--unrecorded:#e2e0da;--ink:#1f2933;--hairline:#5b6672;--ground:#ffffff;--on-free:#1f2933;--on-reserved:#ffffff;--on-occupied-reserved:#ffffff;--on-occupied:#ffffff;--on-unrecorded:#1f2933;}
+.ground{fill:var(--ground)}
+.title{fill:var(--ink)}.sub{fill:var(--hairline)}
+.rule{stroke:var(--hairline)}
+.hatch-bg{fill:var(--ground)}.hatch-line{stroke:var(--hairline);stroke-width:1.4}
+.cell[data-status="free"] .base{fill:var(--free)}
+.cell[data-status="free"] .num{fill:var(--on-free)}
+.cell[data-status="reserved"] .base{fill:var(--reserved)}
+.cell[data-status="reserved"] .num{fill:var(--on-reserved)}
+.cell[data-status="occupied-reserved"] .base{fill:var(--reserved)}
+.cell[data-status="occupied-reserved"] .num{fill:var(--on-occupied-reserved)}
+.cell[data-status="occupied"] .base{fill:var(--occupied)}
+.cell[data-status="occupied"] .num{fill:var(--on-occupied)}
+.cell[data-status="unrecorded"] .base{fill:url(#hatch)}
+.cell[data-status="unrecorded"] .num{fill:var(--on-unrecorded)}
+.cell .half{fill:var(--occupied-reserved);display:none}
+.cell[data-status="occupied-reserved"] .half{display:inline}
+.cell .edge{fill:none;stroke:var(--ink)}
+.cell .num{font-size:12.5px;text-anchor:middle}
+.key .num{font-size:0}
+</style>
+<defs><pattern id="hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect class="hatch-bg" width="7" height="7"/><line class="hatch-line" x1="0" y1="0" x2="0" y2="7"/></pattern></defs>
+<rect class="ground" width="1303" height="872"/>
+<text class="title" x="96" y="62" font-size="27" font-weight="600" letter-spacing="0.5">All Saints’ Church, Coleshill</text>
+<text class="sub" x="96" y="90" font-size="15" letter-spacing="2.6">CREMATION PLOTS · 2026</text>
+<line class="rule" x1="96" y1="108" x2="456" y2="108"/>
+<g id="crib">
+<g class="cell key" data-status="occupied"><rect class="base" x="96" y="142" width="26" height="20"/><polygon class="half" points="96,142 122,142 96,162"/><rect class="edge" x="96" y="142" width="26" height="20"/><text class="num" x="109.0" y="156.5"></text></g>
+<text class="title" x="134" y="157" font-size="14">Occupied</text>
+<g class="cell key" data-status="occupied-reserved"><rect class="base" x="96" y="172" width="26" height="20"/><polygon class="half" points="96,172 122,172 96,192"/><rect class="edge" x="96" y="172" width="26" height="20"/><text class="num" x="109.0" y="186.5"></text></g>
+<text class="title" x="134" y="187" font-size="14">Occupied, reserved for further ashes</text>
+<g class="cell key" data-status="reserved"><rect class="base" x="96" y="202" width="26" height="20"/><polygon class="half" points="96,202 122,202 96,222"/><rect class="edge" x="96" y="202" width="26" height="20"/><text class="num" x="109.0" y="216.5"></text></g>
+<text class="title" x="134" y="217" font-size="14">Reserved</text>
+<g class="cell key" data-status="free"><rect class="base" x="96" y="232" width="26" height="20"/><polygon class="half" points="96,232 122,232 96,252"/><rect class="edge" x="96" y="232" width="26" height="20"/><text class="num" x="109.0" y="246.5"></text></g>
+<text class="title" x="134" y="247" font-size="14">Free</text>
+<g class="cell key" data-status="unrecorded"><rect class="base" x="96" y="262" width="26" height="20"/><polygon class="half" points="96,262 122,262 96,282"/><rect class="edge" x="96" y="262" width="26" height="20"/><text class="num" x="109.0" y="276.5"></text></g>
+<text class="title" x="134" y="277" font-size="14">No status recorded</text>
+</g>
+<line class="rule" x1="56" y1="300.0" x2="56" y2="775.5" stroke-width="2"/>
+<text class="sub" x="40" y="538" font-size="13.5" letter-spacing="3.2" text-anchor="middle" transform="rotate(-90 40 538)">PATH</text>
+<line class="rule" x1="96" y1="809.5" x2="1183" y2="809.5" stroke-width="2"/>
+<text class="sub" x="96" y="831.5" font-size="13.5" letter-spacing="3.2">PATH</text>
+<g transform="translate(1251 360.0)">
+<line class="rule" x1="0" y1="46" x2="0" y2="-6" stroke="var(--ink)" stroke-width="1.6"/>
+<polygon class="title" points="0,-16 6,2 -6,2"/>
+<text class="title" x="0" y="66" font-size="14" font-weight="600" text-anchor="middle">N</text>
+</g>
+<g id="plots">
+<g class="cell" data-status="occupied" data-plot="1" data-row="A"><rect class="base" x="96.0" y="731.6" width="34.9" height="43.9"/><polygon class="half" points="96.0,731.6 130.9,731.6 96.0,775.5"/><rect class="edge" x="96.0" y="731.6" width="34.9" height="43.9"/><text class="num" x="113.5" y="758.1">1</text></g>
+<g class="cell" data-status="occupied" data-plot="2" data-row="A"><rect class="base" x="130.9" y="731.6" width="34.2" height="43.9"/><polygon class="half" points="130.9,731.6 165.10000000000002,731.6 130.9,775.5"/><rect class="edge" x="130.9" y="731.6" width="34.2" height="43.9"/><text class="num" x="148.0" y="758.1">2</text></g>
+<g class="cell" data-status="occupied" data-plot="3" data-row="A"><rect class="base" x="165.1" y="731.6" width="36.0" height="43.9"/><polygon class="half" points="165.1,731.6 201.1,731.6 165.1,775.5"/><rect class="edge" x="165.1" y="731.6" width="36.0" height="43.9"/><text class="num" x="183.1" y="758.1">3</text></g>
+<g class="cell" data-status="occupied" data-plot="4" data-row="A"><rect class="base" x="201.1" y="731.6" width="35.3" height="43.9"/><polygon class="half" points="201.1,731.6 236.39999999999998,731.6 201.1,775.5"/><rect class="edge" x="201.1" y="731.6" width="35.3" height="43.9"/><text class="num" x="218.8" y="758.1">4</text></g>
+<g class="cell" data-status="occupied" data-plot="5" data-row="A"><rect class="base" x="236.4" y="731.6" width="29.9" height="43.9"/><polygon class="half" points="236.4,731.6 266.3,731.6 236.4,775.5"/><rect class="edge" x="236.4" y="731.6" width="29.9" height="43.9"/><text class="num" x="251.3" y="758.1">5</text></g>
+<g class="cell" data-status="occupied" data-plot="6" data-row="A"><rect class="base" x="266.3" y="731.6" width="36.0" height="43.9"/><polygon class="half" points="266.3,731.6 302.3,731.6 266.3,775.5"/><rect class="edge" x="266.3" y="731.6" width="36.0" height="43.9"/><text class="num" x="284.3" y="758.1">6</text></g>
+<g class="cell" data-status="occupied" data-plot="7" data-row="A"><rect class="base" x="302.3" y="731.6" width="35.3" height="43.9"/><polygon class="half" points="302.3,731.6 337.6,731.6 302.3,775.5"/><rect class="edge" x="302.3" y="731.6" width="35.3" height="43.9"/><text class="num" x="319.9" y="758.1">7</text></g>
+<g class="cell" data-status="occupied" data-plot="8" data-row="A"><rect class="base" x="337.6" y="731.6" width="34.6" height="43.9"/><polygon class="half" points="337.6,731.6 372.20000000000005,731.6 337.6,775.5"/><rect class="edge" x="337.6" y="731.6" width="34.6" height="43.9"/><text class="num" x="354.9" y="758.1">8</text></g>
+<g class="cell" data-status="occupied" data-plot="9" data-row="A"><rect class="base" x="372.1" y="731.6" width="34.2" height="43.9"/><polygon class="half" points="372.1,731.6 406.3,731.6 372.1,775.5"/><rect class="edge" x="372.1" y="731.6" width="34.2" height="43.9"/><text class="num" x="389.2" y="758.1">9</text></g>
+<g class="cell" data-status="occupied" data-plot="10" data-row="A"><rect class="base" x="406.3" y="731.6" width="35.6" height="43.9"/><polygon class="half" points="406.3,731.6 441.90000000000003,731.6 406.3,775.5"/><rect class="edge" x="406.3" y="731.6" width="35.6" height="43.9"/><text class="num" x="424.1" y="758.1">10</text></g>
+<g class="cell" data-status="occupied" data-plot="11" data-row="A"><rect class="base" x="442.0" y="731.6" width="36.7" height="43.9"/><polygon class="half" points="442.0,731.6 478.7,731.6 442.0,775.5"/><rect class="edge" x="442.0" y="731.6" width="36.7" height="43.9"/><text class="num" x="460.4" y="758.1">11</text></g>
+<g class="cell" data-status="occupied" data-plot="13" data-row="A"><rect class="base" x="516.1" y="731.6" width="36.4" height="43.9"/><polygon class="half" points="516.1,731.6 552.5,731.6 516.1,775.5"/><rect class="edge" x="516.1" y="731.6" width="36.4" height="43.9"/><text class="num" x="534.3" y="758.1">13</text></g>
+<g class="cell" data-status="occupied" data-plot="14" data-row="A"><rect class="base" x="552.5" y="731.6" width="36.0" height="43.9"/><polygon class="half" points="552.5,731.6 588.5,731.6 552.5,775.5"/><rect class="edge" x="552.5" y="731.6" width="36.0" height="43.9"/><text class="num" x="570.5" y="758.1">14</text></g>
+<g class="cell" data-status="occupied" data-plot="15" data-row="A"><rect class="base" x="588.5" y="731.6" width="34.2" height="43.9"/><polygon class="half" points="588.5,731.6 622.7,731.6 588.5,775.5"/><rect class="edge" x="588.5" y="731.6" width="34.2" height="43.9"/><text class="num" x="605.6" y="758.1">15</text></g>
+<g class="cell" data-status="occupied" data-plot="16" data-row="A"><rect class="base" x="622.7" y="731.6" width="34.6" height="43.9"/><polygon class="half" points="622.7,731.6 657.3000000000001,731.6 622.7,775.5"/><rect class="edge" x="622.7" y="731.6" width="34.6" height="43.9"/><text class="num" x="640.0" y="758.1">16</text></g>
+<g class="cell" data-status="occupied" data-plot="17" data-row="A"><rect class="base" x="657.2" y="731.6" width="33.5" height="43.9"/><polygon class="half" points="657.2,731.6 690.7,731.6 657.2,775.5"/><rect class="edge" x="657.2" y="731.6" width="33.5" height="43.9"/><text class="num" x="674.0" y="758.1">17</text></g>
+<g class="cell" data-status="occupied" data-plot="18" data-row="A"><rect class="base" x="690.7" y="731.6" width="33.8" height="43.9"/><polygon class="half" points="690.7,731.6 724.5,731.6 690.7,775.5"/><rect class="edge" x="690.7" y="731.6" width="33.8" height="43.9"/><text class="num" x="707.6" y="758.1">18</text></g>
+<g class="cell" data-status="occupied" data-plot="19" data-row="A"><rect class="base" x="724.6" y="731.6" width="36.4" height="43.9"/><polygon class="half" points="724.6,731.6 761.0,731.6 724.6,775.5"/><rect class="edge" x="724.6" y="731.6" width="36.4" height="43.9"/><text class="num" x="742.8" y="758.1">19</text></g>
+<g class="cell" data-status="occupied" data-plot="20" data-row="A"><rect class="base" x="760.9" y="731.6" width="33.5" height="43.9"/><polygon class="half" points="760.9,731.6 794.4,731.6 760.9,775.5"/><rect class="edge" x="760.9" y="731.6" width="33.5" height="43.9"/><text class="num" x="777.6" y="758.1">20</text></g>
+<g class="cell" data-status="occupied" data-plot="22" data-row="A"><rect class="base" x="829.7" y="731.6" width="37.1" height="43.9"/><polygon class="half" points="829.7,731.6 866.8000000000001,731.6 829.7,775.5"/><rect class="edge" x="829.7" y="731.6" width="37.1" height="43.9"/><text class="num" x="848.2" y="758.1">22</text></g>
+<g class="cell" data-status="occupied" data-plot="23" data-row="A"><rect class="base" x="866.8" y="731.6" width="33.1" height="43.9"/><polygon class="half" points="866.8,731.6 899.9,731.6 866.8,775.5"/><rect class="edge" x="866.8" y="731.6" width="33.1" height="43.9"/><text class="num" x="883.3" y="758.1">23</text></g>
+<g class="cell" data-status="occupied" data-plot="24" data-row="A"><rect class="base" x="899.9" y="731.6" width="36.0" height="43.9"/><polygon class="half" points="899.9,731.6 935.9,731.6 899.9,775.5"/><rect class="edge" x="899.9" y="731.6" width="36.0" height="43.9"/><text class="num" x="917.9" y="758.1">24</text></g>
+<g class="cell" data-status="occupied" data-plot="25" data-row="A"><rect class="base" x="935.9" y="731.6" width="34.2" height="43.9"/><polygon class="half" points="935.9,731.6 970.1,731.6 935.9,775.5"/><rect class="edge" x="935.9" y="731.6" width="34.2" height="43.9"/><text class="num" x="953.0" y="758.1">25</text></g>
+<g class="cell" data-status="occupied" data-plot="27" data-row="A"><rect class="base" x="1000.3" y="731.6" width="37.8" height="43.9"/><polygon class="half" points="1000.3,731.6 1038.1,731.6 1000.3,775.5"/><rect class="edge" x="1000.3" y="731.6" width="37.8" height="43.9"/><text class="num" x="1019.2" y="758.1">27</text></g>
+<g class="cell" data-status="occupied" data-plot="28" data-row="A"><rect class="base" x="1059.0" y="731.6" width="35.3" height="43.9"/><polygon class="half" points="1059.0,731.6 1094.3,731.6 1059.0,775.5"/><rect class="edge" x="1059.0" y="731.6" width="35.3" height="43.9"/><text class="num" x="1076.7" y="758.1">28</text></g>
+<g class="cell" data-status="occupied" data-plot="29" data-row="A"><rect class="base" x="1094.3" y="731.6" width="34.6" height="43.9"/><polygon class="half" points="1094.3,731.6 1128.8999999999999,731.6 1094.3,775.5"/><rect class="edge" x="1094.3" y="731.6" width="34.6" height="43.9"/><text class="num" x="1111.6" y="758.1">29</text></g>
+<g class="cell" data-status="occupied" data-plot="30" data-row="B"><rect class="base" x="97.4" y="639.5" width="35.3" height="47.5"/><polygon class="half" points="97.4,639.5 132.7,639.5 97.4,687.0"/><rect class="edge" x="97.4" y="639.5" width="35.3" height="47.5"/><text class="num" x="115.1" y="667.8">30</text></g>
+<g class="cell" data-status="occupied" data-plot="31" data-row="B"><rect class="base" x="132.7" y="639.5" width="32.4" height="47.5"/><polygon class="half" points="132.7,639.5 165.1,639.5 132.7,687.0"/><rect class="edge" x="132.7" y="639.5" width="32.4" height="47.5"/><text class="num" x="148.9" y="667.8">31</text></g>
+<g class="cell" data-status="occupied" data-plot="32" data-row="B"><rect class="base" x="165.1" y="639.5" width="35.6" height="47.5"/><polygon class="half" points="165.1,639.5 200.7,639.5 165.1,687.0"/><rect class="edge" x="165.1" y="639.5" width="35.6" height="47.5"/><text class="num" x="182.9" y="667.8">32</text></g>
+<g class="cell" data-status="occupied" data-plot="33" data-row="B"><rect class="base" x="200.8" y="639.5" width="31.3" height="47.5"/><polygon class="half" points="200.8,639.5 232.10000000000002,639.5 200.8,687.0"/><rect class="edge" x="200.8" y="639.5" width="31.3" height="47.5"/><text class="num" x="216.5" y="667.8">33</text></g>
+<g class="cell" data-status="occupied" data-plot="34" data-row="B"><rect class="base" x="232.1" y="639.5" width="34.6" height="47.5"/><polygon class="half" points="232.1,639.5 266.7,639.5 232.1,687.0"/><rect class="edge" x="232.1" y="639.5" width="34.6" height="47.5"/><text class="num" x="249.4" y="667.8">34</text></g>
+<g class="cell" data-status="occupied" data-plot="35" data-row="B"><rect class="base" x="286.8" y="639.5" width="33.8" height="47.5"/><polygon class="half" points="286.8,639.5 320.6,639.5 286.8,687.0"/><rect class="edge" x="286.8" y="639.5" width="33.8" height="47.5"/><text class="num" x="303.7" y="667.8">35</text></g>
+<g class="cell" data-status="occupied" data-plot="37" data-row="B"><rect class="base" x="339.4" y="639.5" width="33.5" height="47.5"/><polygon class="half" points="339.4,639.5 372.9,639.5 339.4,687.0"/><rect class="edge" x="339.4" y="639.5" width="33.5" height="47.5"/><text class="num" x="356.1" y="667.8">37</text></g>
+<g class="cell" data-status="occupied" data-plot="38" data-row="B"><rect class="base" x="372.8" y="639.5" width="35.6" height="47.5"/><polygon class="half" points="372.8,639.5 408.40000000000003,639.5 372.8,687.0"/><rect class="edge" x="372.8" y="639.5" width="35.6" height="47.5"/><text class="num" x="390.6" y="667.8">38</text></g>
+<g class="cell" data-status="occupied" data-plot="39" data-row="B"><rect class="base" x="408.5" y="639.5" width="36.0" height="47.5"/><polygon class="half" points="408.5,639.5 444.5,639.5 408.5,687.0"/><rect class="edge" x="408.5" y="639.5" width="36.0" height="47.5"/><text class="num" x="426.5" y="667.8">39</text></g>
+<g class="cell" data-status="occupied" data-plot="40" data-row="B"><rect class="base" x="444.5" y="639.5" width="34.2" height="47.5"/><polygon class="half" points="444.5,639.5 478.7,639.5 444.5,687.0"/><rect class="edge" x="444.5" y="639.5" width="34.2" height="47.5"/><text class="num" x="461.6" y="667.8">40</text></g>
+<g class="cell" data-status="reserved" data-plot="42" data-row="B"><rect class="base" x="515.8" y="639.5" width="34.2" height="47.5"/><polygon class="half" points="515.8,639.5 550.0,639.5 515.8,687.0"/><rect class="edge" x="515.8" y="639.5" width="34.2" height="47.5"/><text class="num" x="532.9" y="667.8">42</text></g>
+<g class="cell" data-status="occupied" data-plot="43" data-row="B"><rect class="base" x="550.0" y="639.5" width="37.1" height="47.5"/><polygon class="half" points="550.0,639.5 587.1,639.5 550.0,687.0"/><rect class="edge" x="550.0" y="639.5" width="37.1" height="47.5"/><text class="num" x="568.5" y="667.8">43</text></g>
+<g class="cell" data-status="occupied-reserved" data-plot="44" data-row="B"><rect class="base" x="587.0" y="639.5" width="35.6" height="47.5"/><polygon class="half" points="587.0,639.5 622.6,639.5 587.0,687.0"/><rect class="edge" x="587.0" y="639.5" width="35.6" height="47.5"/><text class="num" x="604.8" y="667.8">44</text></g>
+<g class="cell" data-status="free" data-plot="45" data-row="B"><rect class="base" x="622.7" y="639.5" width="34.9" height="47.5"/><polygon class="half" points="622.7,639.5 657.6,639.5 622.7,687.0"/><rect class="edge" x="622.7" y="639.5" width="34.9" height="47.5"/><text class="num" x="640.2" y="667.8">45</text></g>
+<g class="cell" data-status="free" data-plot="46" data-row="B"><rect class="base" x="657.6" y="639.5" width="32.0" height="47.5"/><polygon class="half" points="657.6,639.5 689.6,639.5 657.6,687.0"/><rect class="edge" x="657.6" y="639.5" width="32.0" height="47.5"/><text class="num" x="673.6" y="667.8">46</text></g>
+<g class="cell" data-status="occupied" data-plot="47" data-row="B"><rect class="base" x="689.6" y="639.5" width="36.7" height="47.5"/><polygon class="half" points="689.6,639.5 726.3000000000001,639.5 689.6,687.0"/><rect class="edge" x="689.6" y="639.5" width="36.7" height="47.5"/><text class="num" x="708.0" y="667.8">47</text></g>
+<g class="cell" data-status="reserved" data-plot="48" data-row="B"><rect class="base" x="726.4" y="639.5" width="34.6" height="47.5"/><polygon class="half" points="726.4,639.5 761.0,639.5 726.4,687.0"/><rect class="edge" x="726.4" y="639.5" width="34.6" height="47.5"/><text class="num" x="743.7" y="667.8">48</text></g>
+<g class="cell" data-status="occupied" data-plot="49" data-row="B"><rect class="base" x="760.9" y="639.5" width="29.2" height="47.5"/><polygon class="half" points="760.9,639.5 790.1,639.5 760.9,687.0"/><rect class="edge" x="760.9" y="639.5" width="29.2" height="47.5"/><text class="num" x="775.5" y="667.8">49</text></g>
+<g class="cell" data-status="occupied" data-plot="51" data-row="B"><rect class="base" x="831.8" y="639.5" width="36.4" height="47.5"/><polygon class="half" points="831.8,639.5 868.1999999999999,639.5 831.8,687.0"/><rect class="edge" x="831.8" y="639.5" width="36.4" height="47.5"/><text class="num" x="850.0" y="667.8">51</text></g>
+<g class="cell" data-status="occupied" data-plot="52" data-row="B"><rect class="base" x="868.2" y="639.5" width="32.0" height="47.5"/><polygon class="half" points="868.2,639.5 900.2,639.5 868.2,687.0"/><rect class="edge" x="868.2" y="639.5" width="32.0" height="47.5"/><text class="num" x="884.2" y="667.8">52</text></g>
+<g class="cell" data-status="occupied" data-plot="53" data-row="B"><rect class="base" x="911.0" y="639.5" width="35.3" height="47.5"/><polygon class="half" points="911.0,639.5 946.3,639.5 911.0,687.0"/><rect class="edge" x="911.0" y="639.5" width="35.3" height="47.5"/><text class="num" x="928.6" y="667.8">53</text></g>
+<g class="cell" data-status="occupied" data-plot="54" data-row="B"><rect class="base" x="946.3" y="639.5" width="37.8" height="47.5"/><polygon class="half" points="946.3,639.5 984.0999999999999,639.5 946.3,687.0"/><rect class="edge" x="946.3" y="639.5" width="37.8" height="47.5"/><text class="num" x="965.2" y="667.8">54</text></g>
+<g class="cell" data-status="occupied" data-plot="55" data-row="B"><rect class="base" x="984.1" y="639.5" width="36.0" height="47.5"/><polygon class="half" points="984.1,639.5 1020.1,639.5 984.1,687.0"/><rect class="edge" x="984.1" y="639.5" width="36.0" height="47.5"/><text class="num" x="1002.1" y="667.8">55</text></g>
+<g class="cell" data-status="occupied" data-plot="56" data-row="B"><rect class="base" x="1020.1" y="639.5" width="34.6" height="47.5"/><polygon class="half" points="1020.1,639.5 1054.7,639.5 1020.1,687.0"/><rect class="edge" x="1020.1" y="639.5" width="34.6" height="47.5"/><text class="num" x="1037.4" y="667.8">56</text></g>
+<g class="cell" data-status="occupied" data-plot="57" data-row="B"><rect class="base" x="1054.7" y="639.5" width="36.4" height="47.5"/><polygon class="half" points="1054.7,639.5 1091.1000000000001,639.5 1054.7,687.0"/><rect class="edge" x="1054.7" y="639.5" width="36.4" height="47.5"/><text class="num" x="1072.9" y="667.8">57</text></g>
+<g class="cell" data-status="occupied" data-plot="58" data-row="B"><rect class="base" x="1091.0" y="639.5" width="36.0" height="47.5"/><polygon class="half" points="1091.0,639.5 1127.0,639.5 1091.0,687.0"/><rect class="edge" x="1091.0" y="639.5" width="36.0" height="47.5"/><text class="num" x="1109.0" y="667.8">58</text></g>
+<g class="cell" data-status="occupied" data-plot="59" data-row="C"><rect class="base" x="97.4" y="584.8" width="36.0" height="43.9"/><polygon class="half" points="97.4,584.8 133.4,584.8 97.4,628.6999999999999"/><rect class="edge" x="97.4" y="584.8" width="36.0" height="43.9"/><text class="num" x="115.4" y="611.2">59</text></g>
+<g class="cell" data-status="occupied" data-plot="60" data-row="C"><rect class="base" x="133.4" y="584.8" width="31.7" height="43.9"/><polygon class="half" points="133.4,584.8 165.1,584.8 133.4,628.6999999999999"/><rect class="edge" x="133.4" y="584.8" width="31.7" height="43.9"/><text class="num" x="149.2" y="611.2">60</text></g>
+<g class="cell" data-status="occupied" data-plot="62" data-row="C"><rect class="base" x="201.1" y="584.8" width="32.4" height="43.9"/><polygon class="half" points="201.1,584.8 233.5,584.8 201.1,628.6999999999999"/><rect class="edge" x="201.1" y="584.8" width="32.4" height="43.9"/><text class="num" x="217.3" y="611.2">62</text></g>
+<g class="cell" data-status="occupied" data-plot="63" data-row="C"><rect class="base" x="233.5" y="584.8" width="32.4" height="43.9"/><polygon class="half" points="233.5,584.8 265.9,584.8 233.5,628.6999999999999"/><rect class="edge" x="233.5" y="584.8" width="32.4" height="43.9"/><text class="num" x="249.7" y="611.2">63</text></g>
+<g class="cell" data-status="occupied" data-plot="64" data-row="C"><rect class="base" x="287.2" y="584.8" width="34.2" height="43.9"/><polygon class="half" points="287.2,584.8 321.4,584.8 287.2,628.6999999999999"/><rect class="edge" x="287.2" y="584.8" width="34.2" height="43.9"/><text class="num" x="304.3" y="611.2">64</text></g>
+<g class="cell" data-status="reserved" data-plot="65" data-row="C"><rect class="base" x="340.1" y="584.8" width="34.2" height="43.9"/><polygon class="half" points="340.1,584.8 374.3,584.8 340.1,628.6999999999999"/><rect class="edge" x="340.1" y="584.8" width="34.2" height="43.9"/><text class="num" x="357.2" y="611.2">65</text></g>
+<g class="cell" data-status="occupied" data-plot="66" data-row="C"><rect class="base" x="374.3" y="584.8" width="34.9" height="43.9"/><polygon class="half" points="374.3,584.8 409.2,584.8 374.3,628.6999999999999"/><rect class="edge" x="374.3" y="584.8" width="34.9" height="43.9"/><text class="num" x="391.8" y="611.2">66</text></g>
+<g class="cell" data-status="occupied" data-plot="67" data-row="C"><rect class="base" x="409.2" y="584.8" width="36.7" height="43.9"/><polygon class="half" points="409.2,584.8 445.9,584.8 409.2,628.6999999999999"/><rect class="edge" x="409.2" y="584.8" width="36.7" height="43.9"/><text class="num" x="427.6" y="611.2">67</text></g>
+<g class="cell" data-status="reserved" data-plot="68" data-row="C"><rect class="base" x="445.9" y="584.8" width="32.4" height="43.9"/><polygon class="half" points="445.9,584.8 478.29999999999995,584.8 445.9,628.6999999999999"/><rect class="edge" x="445.9" y="584.8" width="32.4" height="43.9"/><text class="num" x="462.1" y="611.2">68</text></g>
+<g class="cell" data-status="occupied" data-plot="71" data-row="C"><rect class="base" x="514.0" y="584.8" width="35.3" height="43.9"/><polygon class="half" points="514.0,584.8 549.3,584.8 514.0,628.6999999999999"/><rect class="edge" x="514.0" y="584.8" width="35.3" height="43.9"/><text class="num" x="531.6" y="611.2">71</text></g>
+<g class="cell" data-status="occupied" data-plot="72" data-row="C"><rect class="base" x="549.2" y="584.8" width="37.1" height="43.9"/><polygon class="half" points="549.2,584.8 586.3000000000001,584.8 549.2,628.6999999999999"/><rect class="edge" x="549.2" y="584.8" width="37.1" height="43.9"/><text class="num" x="567.8" y="611.2">72</text></g>
+<g class="cell" data-status="reserved" data-plot="73" data-row="C"><rect class="base" x="586.3" y="584.8" width="35.6" height="43.9"/><polygon class="half" points="586.3,584.8 621.9,584.8 586.3,628.6999999999999"/><rect class="edge" x="586.3" y="584.8" width="35.6" height="43.9"/><text class="num" x="604.1" y="611.2">73</text></g>
+<g class="cell" data-status="occupied" data-plot="74" data-row="C"><rect class="base" x="622.0" y="584.8" width="34.9" height="43.9"/><polygon class="half" points="622.0,584.8 656.9,584.8 622.0,628.6999999999999"/><rect class="edge" x="622.0" y="584.8" width="34.9" height="43.9"/><text class="num" x="639.5" y="611.2">74</text></g>
+<g class="cell" data-status="occupied" data-plot="75" data-row="C"><rect class="base" x="656.9" y="584.8" width="32.0" height="43.9"/><polygon class="half" points="656.9,584.8 688.9,584.8 656.9,628.6999999999999"/><rect class="edge" x="656.9" y="584.8" width="32.0" height="43.9"/><text class="num" x="672.9" y="611.2">75</text></g>
+<g class="cell" data-status="occupied" data-plot="76" data-row="C"><rect class="base" x="688.9" y="584.8" width="37.4" height="43.9"/><polygon class="half" points="688.9,584.8 726.3,584.8 688.9,628.6999999999999"/><rect class="edge" x="688.9" y="584.8" width="37.4" height="43.9"/><text class="num" x="707.6" y="611.2">76</text></g>
+<g class="cell" data-status="occupied" data-plot="77" data-row="C"><rect class="base" x="726.4" y="584.8" width="33.8" height="43.9"/><polygon class="half" points="726.4,584.8 760.1999999999999,584.8 726.4,628.6999999999999"/><rect class="edge" x="726.4" y="584.8" width="33.8" height="43.9"/><text class="num" x="743.3" y="611.2">77</text></g>
+<g class="cell" data-status="occupied" data-plot="78" data-row="C"><rect class="base" x="760.2" y="584.8" width="28.4" height="43.9"/><polygon class="half" points="760.2,584.8 788.6,584.8 760.2,628.6999999999999"/><rect class="edge" x="760.2" y="584.8" width="28.4" height="43.9"/><text class="num" x="774.4" y="611.2">78</text></g>
+<g class="cell" data-status="occupied" data-plot="80" data-row="C"><rect class="base" x="832.2" y="584.8" width="36.7" height="43.9"/><polygon class="half" points="832.2,584.8 868.9000000000001,584.8 832.2,628.6999999999999"/><rect class="edge" x="832.2" y="584.8" width="36.7" height="43.9"/><text class="num" x="850.6" y="611.2">80</text></g>
+<g class="cell" data-status="occupied" data-plot="81" data-row="C"><rect class="base" x="868.9" y="584.8" width="31.7" height="43.9"/><polygon class="half" points="868.9,584.8 900.6,584.8 868.9,628.6999999999999"/><rect class="edge" x="868.9" y="584.8" width="31.7" height="43.9"/><text class="num" x="884.8" y="611.2">81</text></g>
+<g class="cell" data-status="occupied" data-plot="82" data-row="C"><rect class="base" x="913.6" y="584.8" width="34.2" height="43.9"/><polygon class="half" points="913.6,584.8 947.8000000000001,584.8 913.6,628.6999999999999"/><rect class="edge" x="913.6" y="584.8" width="34.2" height="43.9"/><text class="num" x="930.7" y="611.2">82</text></g>
+<g class="cell" data-status="occupied" data-plot="83" data-row="C" data-detached="1"><rect class="base" x="1147.6" y="680.5" width="35.6" height="43.6"/><polygon class="half" points="1147.6,680.5 1183.1999999999998,680.5 1147.6,724.1"/><rect class="edge" x="1147.6" y="680.5" width="35.6" height="43.6"/><text class="num" x="1165.4" y="706.8">83</text></g>
+<g class="cell" data-status="occupied" data-plot="84" data-row="C"><rect class="base" x="947.8" y="584.8" width="37.4" height="43.9"/><polygon class="half" points="947.8,584.8 985.1999999999999,584.8 947.8,628.6999999999999"/><rect class="edge" x="947.8" y="584.8" width="37.4" height="43.9"/><text class="num" x="966.5" y="611.2">84</text></g>
+<g class="cell" data-status="occupied" data-plot="85" data-row="C"><rect class="base" x="985.2" y="584.8" width="36.0" height="43.9"/><polygon class="half" points="985.2,584.8 1021.2,584.8 985.2,628.6999999999999"/><rect class="edge" x="985.2" y="584.8" width="36.0" height="43.9"/><text class="num" x="1003.2" y="611.2">85</text></g>
+<g class="cell" data-status="occupied" data-plot="86" data-row="C"><rect class="base" x="1021.2" y="584.8" width="35.3" height="43.9"/><polygon class="half" points="1021.2,584.8 1056.5,584.8 1021.2,628.6999999999999"/><rect class="edge" x="1021.2" y="584.8" width="35.3" height="43.9"/><text class="num" x="1038.9" y="611.2">86</text></g>
+<g class="cell" data-status="occupied" data-plot="87" data-row="C"><rect class="base" x="1056.5" y="584.8" width="34.9" height="43.9"/><polygon class="half" points="1056.5,584.8 1091.4,584.8 1056.5,628.6999999999999"/><rect class="edge" x="1056.5" y="584.8" width="34.9" height="43.9"/><text class="num" x="1074.0" y="611.2">87</text></g>
+<g class="cell" data-status="unrecorded" data-plot="88" data-row="C"><rect class="base" x="1091.4" y="584.8" width="33.5" height="43.9"/><polygon class="half" points="1091.4,584.8 1124.9,584.8 1091.4,628.6999999999999"/><rect class="edge" x="1091.4" y="584.8" width="33.5" height="43.9"/><text class="num" x="1108.2" y="611.2">88</text></g>
+<g class="cell" data-status="free" data-plot="89" data-row="D"><rect class="base" x="99.6" y="475.7" width="47.2" height="46.1"/><polygon class="half" points="99.6,475.7 146.8,475.7 99.6,521.8"/><rect class="edge" x="99.6" y="475.7" width="47.2" height="46.1"/><text class="num" x="123.2" y="503.2">89</text></g>
+<g class="cell" data-status="occupied" data-plot="90" data-row="D"><rect class="base" x="146.8" y="475.7" width="45.4" height="46.1"/><polygon class="half" points="146.8,475.7 192.20000000000002,475.7 146.8,521.8"/><rect class="edge" x="146.8" y="475.7" width="45.4" height="46.1"/><text class="num" x="169.5" y="503.2">90</text></g>
+<g class="cell" data-status="occupied-reserved" data-plot="91" data-row="D"><rect class="base" x="192.1" y="475.7" width="46.8" height="46.1"/><polygon class="half" points="192.1,475.7 238.89999999999998,475.7 192.1,521.8"/><rect class="edge" x="192.1" y="475.7" width="46.8" height="46.1"/><text class="num" x="215.5" y="503.2">91</text></g>
+<g class="cell" data-status="occupied" data-plot="92" data-row="D"><rect class="base" x="238.9" y="475.7" width="39.2" height="46.1"/><polygon class="half" points="238.9,475.7 278.1,475.7 238.9,521.8"/><rect class="edge" x="238.9" y="475.7" width="39.2" height="46.1"/><text class="num" x="258.5" y="503.2">92</text></g>
+<g class="cell" data-status="occupied" data-plot="93" data-row="D"><rect class="base" x="278.2" y="475.7" width="48.2" height="46.1"/><polygon class="half" points="278.2,475.7 326.4,475.7 278.2,521.8"/><rect class="edge" x="278.2" y="475.7" width="48.2" height="46.1"/><text class="num" x="302.3" y="503.2">93</text></g>
+<g class="cell" data-status="occupied" data-plot="94" data-row="D"><rect class="base" x="326.4" y="475.7" width="46.1" height="46.1"/><polygon class="half" points="326.4,475.7 372.5,475.7 326.4,521.8"/><rect class="edge" x="326.4" y="475.7" width="46.1" height="46.1"/><text class="num" x="349.4" y="503.2">94</text></g>
+<g class="cell" data-status="reserved" data-plot="95" data-row="D"><rect class="base" x="372.5" y="475.7" width="45.7" height="46.1"/><polygon class="half" points="372.5,475.7 418.2,475.7 372.5,521.8"/><rect class="edge" x="372.5" y="475.7" width="45.7" height="46.1"/><text class="num" x="395.4" y="503.2">95</text></g>
+<g class="cell" data-status="occupied" data-plot="96" data-row="D"><rect class="base" x="418.2" y="475.7" width="44.3" height="46.1"/><polygon class="half" points="418.2,475.7 462.5,475.7 418.2,521.8"/><rect class="edge" x="418.2" y="475.7" width="44.3" height="46.1"/><text class="num" x="440.3" y="503.2">96</text></g>
+<g class="cell" data-status="occupied" data-plot="97" data-row="D"><rect class="base" x="462.5" y="475.7" width="46.8" height="46.1"/><polygon class="half" points="462.5,475.7 509.3,475.7 462.5,521.8"/><rect class="edge" x="462.5" y="475.7" width="46.8" height="46.1"/><text class="num" x="485.9" y="503.2">97</text></g>
+<g class="cell" data-status="occupied" data-plot="98" data-row="D"><rect class="base" x="509.3" y="475.7" width="43.6" height="46.1"/><polygon class="half" points="509.3,475.7 552.9,475.7 509.3,521.8"/><rect class="edge" x="509.3" y="475.7" width="43.6" height="46.1"/><text class="num" x="531.1" y="503.2">98</text></g>
+<g class="cell" data-status="occupied" data-plot="99" data-row="D"><rect class="base" x="552.8" y="475.7" width="52.9" height="46.1"/><polygon class="half" points="552.8,475.7 605.6999999999999,475.7 552.8,521.8"/><rect class="edge" x="552.8" y="475.7" width="52.9" height="46.1"/><text class="num" x="579.2" y="503.2">99</text></g>
+<g class="cell" data-status="occupied" data-plot="100" data-row="D"><rect class="base" x="605.8" y="475.7" width="44.3" height="46.1"/><polygon class="half" points="605.8,475.7 650.0999999999999,475.7 605.8,521.8"/><rect class="edge" x="605.8" y="475.7" width="44.3" height="46.1"/><text class="num" x="627.9" y="503.2">100</text></g>
+<g class="cell" data-status="occupied" data-plot="101" data-row="D"><rect class="base" x="650.0" y="475.7" width="42.5" height="46.1"/><polygon class="half" points="650.0,475.7 692.5,475.7 650.0,521.8"/><rect class="edge" x="650.0" y="475.7" width="42.5" height="46.1"/><text class="num" x="671.2" y="503.2">101</text></g>
+<g class="cell" data-status="occupied" data-plot="102" data-row="D"><rect class="base" x="692.5" y="475.7" width="48.2" height="46.1"/><polygon class="half" points="692.5,475.7 740.7,475.7 692.5,521.8"/><rect class="edge" x="692.5" y="475.7" width="48.2" height="46.1"/><text class="num" x="716.6" y="503.2">102</text></g>
+<g class="cell" data-status="occupied-reserved" data-plot="103" data-row="D"><rect class="base" x="740.8" y="475.7" width="46.8" height="46.1"/><polygon class="half" points="740.8,475.7 787.5999999999999,475.7 740.8,521.8"/><rect class="edge" x="740.8" y="475.7" width="46.8" height="46.1"/><text class="num" x="764.2" y="503.2">103</text></g>
+<g class="cell" data-status="occupied" data-plot="109" data-row="D"><rect class="base" x="829.7" y="475.7" width="48.6" height="46.1"/><polygon class="half" points="829.7,475.7 878.3000000000001,475.7 829.7,521.8"/><rect class="edge" x="829.7" y="475.7" width="48.6" height="46.1"/><text class="num" x="854.0" y="503.2">109</text></g>
+<g class="cell" data-status="reserved" data-plot="110" data-row="D"><rect class="base" x="910.7" y="475.7" width="35.3" height="46.1"/><polygon class="half" points="910.7,475.7 946.0,475.7 910.7,521.8"/><rect class="edge" x="910.7" y="475.7" width="35.3" height="46.1"/><text class="num" x="928.4" y="503.2">110</text></g>
+<g class="cell" data-status="occupied" data-plot="111" data-row="D"><rect class="base" x="946.0" y="475.7" width="37.4" height="46.1"/><polygon class="half" points="946.0,475.7 983.4,475.7 946.0,521.8"/><rect class="edge" x="946.0" y="475.7" width="37.4" height="46.1"/><text class="num" x="964.7" y="503.2">111</text></g>
+<g class="cell" data-status="occupied" data-plot="112" data-row="D"><rect class="base" x="983.4" y="475.7" width="34.9" height="46.1"/><polygon class="half" points="983.4,475.7 1018.3,475.7 983.4,521.8"/><rect class="edge" x="983.4" y="475.7" width="34.9" height="46.1"/><text class="num" x="1000.9" y="503.2">112</text></g>
+<g class="cell" data-status="occupied" data-plot="113" data-row="D"><rect class="base" x="1018.3" y="475.7" width="36.7" height="46.1"/><polygon class="half" points="1018.3,475.7 1055.0,475.7 1018.3,521.8"/><rect class="edge" x="1018.3" y="475.7" width="36.7" height="46.1"/><text class="num" x="1036.6" y="503.2">113</text></g>
+<g class="cell" data-status="occupied" data-plot="114" data-row="D"><rect class="base" x="1055.0" y="475.7" width="36.4" height="46.1"/><polygon class="half" points="1055.0,475.7 1091.4,475.7 1055.0,521.8"/><rect class="edge" x="1055.0" y="475.7" width="36.4" height="46.1"/><text class="num" x="1073.2" y="503.2">114</text></g>
+<g class="cell" data-status="reserved" data-plot="115" data-row="D"><rect class="base" x="1091.4" y="475.7" width="33.5" height="46.1"/><polygon class="half" points="1091.4,475.7 1124.9,475.7 1091.4,521.8"/><rect class="edge" x="1091.4" y="475.7" width="33.5" height="46.1"/><text class="num" x="1108.2" y="503.2">115</text></g>
+<g class="cell" data-status="occupied" data-plot="116" data-row="E"><rect class="base" x="1055.8" y="412.0" width="35.6" height="45.4"/><polygon class="half" points="1055.8,412.0 1091.3999999999999,412.0 1055.8,457.4"/><rect class="edge" x="1055.8" y="412.0" width="35.6" height="45.4"/><text class="num" x="1073.6" y="439.2">116</text></g>
+<g class="cell" data-status="occupied" data-plot="117" data-row="E"><rect class="base" x="1019.8" y="412.0" width="36.0" height="45.4"/><polygon class="half" points="1019.8,412.0 1055.8,412.0 1019.8,457.4"/><rect class="edge" x="1019.8" y="412.0" width="36.0" height="45.4"/><text class="num" x="1037.8" y="439.2">117</text></g>
+<g class="cell" data-status="reserved" data-plot="118" data-row="E"><rect class="base" x="984.8" y="412.0" width="34.9" height="45.4"/><polygon class="half" points="984.8,412.0 1019.6999999999999,412.0 984.8,457.4"/><rect class="edge" x="984.8" y="412.0" width="34.9" height="45.4"/><text class="num" x="1002.2" y="439.2">118</text></g>
+<g class="cell" data-status="reserved" data-plot="119" data-row="E"><rect class="base" x="947.0" y="412.0" width="37.8" height="45.4"/><polygon class="half" points="947.0,412.0 984.8,412.0 947.0,457.4"/><rect class="edge" x="947.0" y="412.0" width="37.8" height="45.4"/><text class="num" x="965.9" y="439.2">119</text></g>
+<g class="cell" data-status="occupied" data-plot="120" data-row="E"><rect class="base" x="908.5" y="412.0" width="38.5" height="45.4"/><polygon class="half" points="908.5,412.0 947.0,412.0 908.5,457.4"/><rect class="edge" x="908.5" y="412.0" width="38.5" height="45.4"/><text class="num" x="927.8" y="439.2">120</text></g>
+<g class="cell" data-status="reserved" data-plot="121" data-row="E"><rect class="base" x="868.2" y="412.0" width="40.3" height="45.4"/><polygon class="half" points="868.2,412.0 908.5,412.0 868.2,457.4"/><rect class="edge" x="868.2" y="412.0" width="40.3" height="45.4"/><text class="num" x="888.4" y="439.2">121</text></g>
+<g class="cell" data-status="reserved" data-plot="122" data-row="E"><rect class="base" x="829.7" y="412.0" width="38.5" height="45.4"/><polygon class="half" points="829.7,412.0 868.2,412.0 829.7,457.4"/><rect class="edge" x="829.7" y="412.0" width="38.5" height="45.4"/><text class="num" x="849.0" y="439.2">122</text></g>
+<g class="cell" data-status="occupied-reserved" data-plot="128" data-row="E"><rect class="base" x="740.0" y="412.0" width="45.7" height="45.4"/><polygon class="half" points="740.0,412.0 785.7,412.0 740.0,457.4"/><rect class="edge" x="740.0" y="412.0" width="45.7" height="45.4"/><text class="num" x="762.9" y="439.2">128</text></g>
+<g class="cell" data-status="reserved" data-plot="129" data-row="E"><rect class="base" x="692.2" y="412.0" width="47.9" height="45.4"/><polygon class="half" points="692.2,412.0 740.1,412.0 692.2,457.4"/><rect class="edge" x="692.2" y="412.0" width="47.9" height="45.4"/><text class="num" x="716.2" y="439.2">129</text></g>
+<g class="cell" data-status="occupied-reserved" data-plot="130" data-row="E"><rect class="base" x="649.7" y="412.0" width="42.5" height="45.4"/><polygon class="half" points="649.7,412.0 692.2,412.0 649.7,457.4"/><rect class="edge" x="649.7" y="412.0" width="42.5" height="45.4"/><text class="num" x="671.0" y="439.2">130</text></g>
+<g class="cell" data-status="reserved" data-plot="131" data-row="E"><rect class="base" x="605.8" y="412.0" width="43.9" height="45.4"/><polygon class="half" points="605.8,412.0 649.6999999999999,412.0 605.8,457.4"/><rect class="edge" x="605.8" y="412.0" width="43.9" height="45.4"/><text class="num" x="627.8" y="439.2">131</text></g>
+<g class="cell" data-status="occupied" data-plot="132" data-row="E"><rect class="base" x="552.8" y="412.0" width="52.9" height="45.4"/><polygon class="half" points="552.8,412.0 605.6999999999999,412.0 552.8,457.4"/><rect class="edge" x="552.8" y="412.0" width="52.9" height="45.4"/><text class="num" x="579.2" y="439.2">132</text></g>
+<g class="cell" data-status="occupied" data-plot="133" data-row="E"><rect class="base" x="508.6" y="412.0" width="44.3" height="45.4"/><polygon class="half" points="508.6,412.0 552.9,412.0 508.6,457.4"/><rect class="edge" x="508.6" y="412.0" width="44.3" height="45.4"/><text class="num" x="530.8" y="439.2">133</text></g>
+<g class="cell" data-status="occupied-reserved" data-plot="134" data-row="E"><rect class="base" x="462.5" y="412.0" width="46.1" height="45.4"/><polygon class="half" points="462.5,412.0 508.6,412.0 462.5,457.4"/><rect class="edge" x="462.5" y="412.0" width="46.1" height="45.4"/><text class="num" x="485.6" y="439.2">134</text></g>
+<g class="cell" data-status="unrecorded" data-plot="135" data-row="E"><rect class="base" x="417.8" y="412.0" width="44.6" height="45.4"/><polygon class="half" points="417.8,412.0 462.40000000000003,412.0 417.8,457.4"/><rect class="edge" x="417.8" y="412.0" width="44.6" height="45.4"/><text class="num" x="440.1" y="439.2">135</text></g>
+<g class="cell" data-status="occupied" data-plot="136" data-row="E"><rect class="base" x="371.4" y="412.0" width="46.4" height="45.4"/><polygon class="half" points="371.4,412.0 417.79999999999995,412.0 371.4,457.4"/><rect class="edge" x="371.4" y="412.0" width="46.4" height="45.4"/><text class="num" x="394.6" y="439.2">136</text></g>
+<g class="cell" data-status="reserved" data-plot="137" data-row="E"><rect class="base" x="325.7" y="412.0" width="45.7" height="45.4"/><polygon class="half" points="325.7,412.0 371.4,412.0 325.7,457.4"/><rect class="edge" x="325.7" y="412.0" width="45.7" height="45.4"/><text class="num" x="348.6" y="439.2">137</text></g>
+<g class="cell" data-status="reserved" data-plot="138" data-row="E"><rect class="base" x="277.4" y="412.0" width="48.2" height="45.4"/><polygon class="half" points="277.4,412.0 325.59999999999997,412.0 277.4,457.4"/><rect class="edge" x="277.4" y="412.0" width="48.2" height="45.4"/><text class="num" x="301.5" y="439.2">138</text></g>
+<g class="cell" data-status="reserved" data-plot="139" data-row="E"><rect class="base" x="238.2" y="412.0" width="39.2" height="45.4"/><polygon class="half" points="238.2,412.0 277.4,412.0 238.2,457.4"/><rect class="edge" x="238.2" y="412.0" width="39.2" height="45.4"/><text class="num" x="257.8" y="439.2">139</text></g>
+<g class="cell" data-status="reserved" data-plot="140" data-row="E"><rect class="base" x="190.7" y="412.0" width="47.5" height="45.4"/><polygon class="half" points="190.7,412.0 238.2,412.0 190.7,457.4"/><rect class="edge" x="190.7" y="412.0" width="47.5" height="45.4"/><text class="num" x="214.4" y="439.2">140</text></g>
+<g class="cell" data-status="reserved" data-plot="141" data-row="E"><rect class="base" x="145.0" y="412.0" width="45.7" height="45.4"/><polygon class="half" points="145.0,412.0 190.7,412.0 145.0,457.4"/><rect class="edge" x="145.0" y="412.0" width="45.7" height="45.4"/><text class="num" x="167.8" y="439.2">141</text></g>
+<g class="cell" data-status="reserved" data-plot="142" data-row="E"><rect class="base" x="99.2" y="412.0" width="45.7" height="45.4"/><polygon class="half" points="99.2,412.0 144.9,412.0 99.2,457.4"/><rect class="edge" x="99.2" y="412.0" width="45.7" height="45.4"/><text class="num" x="122.1" y="439.2">142</text></g>
+<g class="cell" data-status="free" data-plot="143" data-row="F"><rect class="base" x="98.2" y="300.0" width="43.6" height="45.7"/><polygon class="half" points="98.2,300.0 141.8,300.0 98.2,345.7"/><rect class="edge" x="98.2" y="300.0" width="43.6" height="45.7"/><text class="num" x="120.0" y="327.4">143</text></g>
+<g class="cell" data-status="free" data-plot="144" data-row="F"><rect class="base" x="141.7" y="300.0" width="46.4" height="45.7"/><polygon class="half" points="141.7,300.0 188.1,300.0 141.7,345.7"/><rect class="edge" x="141.7" y="300.0" width="46.4" height="45.7"/><text class="num" x="164.9" y="327.4">144</text></g>
+<g class="cell" data-status="free" data-plot="145" data-row="F"><rect class="base" x="188.2" y="300.0" width="48.6" height="45.7"/><polygon class="half" points="188.2,300.0 236.79999999999998,300.0 188.2,345.7"/><rect class="edge" x="188.2" y="300.0" width="48.6" height="45.7"/><text class="num" x="212.5" y="327.4">145</text></g>
+<g class="cell" data-status="free" data-plot="146" data-row="F"><rect class="base" x="236.8" y="300.0" width="39.2" height="45.7"/><polygon class="half" points="236.8,300.0 276.0,300.0 236.8,345.7"/><rect class="edge" x="236.8" y="300.0" width="39.2" height="45.7"/><text class="num" x="256.4" y="327.4">146</text></g>
+<g class="cell" data-status="free" data-plot="147" data-row="F"><rect class="base" x="276.0" y="300.0" width="47.5" height="45.7"/><polygon class="half" points="276.0,300.0 323.5,300.0 276.0,345.7"/><rect class="edge" x="276.0" y="300.0" width="47.5" height="45.7"/><text class="num" x="299.8" y="327.4">147</text></g>
+<g class="cell" data-status="free" data-plot="148" data-row="F"><rect class="base" x="323.5" y="300.0" width="46.1" height="45.7"/><polygon class="half" points="323.5,300.0 369.6,300.0 323.5,345.7"/><rect class="edge" x="323.5" y="300.0" width="46.1" height="45.7"/><text class="num" x="346.6" y="327.4">148</text></g>
+<g class="cell" data-status="free" data-plot="149" data-row="F"><rect class="base" x="369.6" y="300.0" width="46.8" height="45.7"/><polygon class="half" points="369.6,300.0 416.40000000000003,300.0 369.6,345.7"/><rect class="edge" x="369.6" y="300.0" width="46.8" height="45.7"/><text class="num" x="393.0" y="327.4">149</text></g>
+<g class="cell" data-status="free" data-plot="150" data-row="F"><rect class="base" x="416.4" y="300.0" width="45.7" height="45.7"/><polygon class="half" points="416.4,300.0 462.09999999999997,300.0 416.4,345.7"/><rect class="edge" x="416.4" y="300.0" width="45.7" height="45.7"/><text class="num" x="439.2" y="327.4">150</text></g>
+<g class="cell" data-status="free" data-plot="151" data-row="F"><rect class="base" x="462.1" y="300.0" width="46.1" height="45.7"/><polygon class="half" points="462.1,300.0 508.20000000000005,300.0 462.1,345.7"/><rect class="edge" x="462.1" y="300.0" width="46.1" height="45.7"/><text class="num" x="485.2" y="327.4">151</text></g>
+<g class="cell" data-status="free" data-plot="152" data-row="F"><rect class="base" x="508.2" y="300.0" width="45.4" height="45.7"/><polygon class="half" points="508.2,300.0 553.6,300.0 508.2,345.7"/><rect class="edge" x="508.2" y="300.0" width="45.4" height="45.7"/><text class="num" x="530.9" y="327.4">152</text></g>
+<g class="cell" data-status="free" data-plot="153" data-row="F"><rect class="base" x="553.6" y="300.0" width="52.2" height="45.7"/><polygon class="half" points="553.6,300.0 605.8000000000001,300.0 553.6,345.7"/><rect class="edge" x="553.6" y="300.0" width="52.2" height="45.7"/><text class="num" x="579.7" y="327.4">153</text></g>
+<g class="cell" data-status="free" data-plot="154" data-row="F"><rect class="base" x="605.8" y="300.0" width="43.9" height="45.7"/><polygon class="half" points="605.8,300.0 649.6999999999999,300.0 605.8,345.7"/><rect class="edge" x="605.8" y="300.0" width="43.9" height="45.7"/><text class="num" x="627.8" y="327.4">154</text></g>
+<g class="cell" data-status="free" data-plot="155" data-row="F"><rect class="base" x="649.7" y="300.0" width="41.8" height="45.7"/><polygon class="half" points="649.7,300.0 691.5,300.0 649.7,345.7"/><rect class="edge" x="649.7" y="300.0" width="41.8" height="45.7"/><text class="num" x="670.6" y="327.4">155</text></g>
+<g class="cell" data-status="free" data-plot="156" data-row="F"><rect class="base" x="691.4" y="300.0" width="47.5" height="45.7"/><polygon class="half" points="691.4,300.0 738.9,300.0 691.4,345.7"/><rect class="edge" x="691.4" y="300.0" width="47.5" height="45.7"/><text class="num" x="715.1" y="327.4">156</text></g>
+<g class="cell" data-status="free" data-plot="157" data-row="F"><rect class="base" x="739.0" y="300.0" width="44.6" height="45.7"/><polygon class="half" points="739.0,300.0 783.6,300.0 739.0,345.7"/><rect class="edge" x="739.0" y="300.0" width="44.6" height="45.7"/><text class="num" x="761.3" y="327.4">157</text></g>
+<g class="cell" data-status="free" data-plot="159" data-row="F"><rect class="base" x="827.2" y="300.0" width="34.2" height="45.7"/><polygon class="half" points="827.2,300.0 861.4000000000001,300.0 827.2,345.7"/><rect class="edge" x="827.2" y="300.0" width="34.2" height="45.7"/><text class="num" x="844.3" y="327.4">159</text></g>
+<g class="cell" data-status="free" data-plot="160" data-row="F"><rect class="base" x="861.4" y="300.0" width="36.7" height="45.7"/><polygon class="half" points="861.4,300.0 898.1,300.0 861.4,345.7"/><rect class="edge" x="861.4" y="300.0" width="36.7" height="45.7"/><text class="num" x="879.8" y="327.4">160</text></g>
+<g class="cell" data-status="free" data-plot="161" data-row="F"><rect class="base" x="898.1" y="300.0" width="34.9" height="45.7"/><polygon class="half" points="898.1,300.0 933.0,300.0 898.1,345.7"/><rect class="edge" x="898.1" y="300.0" width="34.9" height="45.7"/><text class="num" x="915.6" y="327.4">161</text></g>
+</g>
+<text class="sub" x="82" y="758.1" font-size="12" text-anchor="middle">A</text>
+<text class="sub" x="82" y="667.8" font-size="12" text-anchor="middle">B</text>
+<text class="sub" x="82" y="611.3" font-size="12" text-anchor="middle">C</text>
+<text class="sub" x="82" y="503.2" font-size="12" text-anchor="middle">D</text>
+<text class="sub" x="82" y="439.2" font-size="12" text-anchor="middle">E</text>
+<text class="sub" x="82" y="327.4" font-size="12" text-anchor="middle">F</text>
+</svg></div>
+  </div>
+</main>
+
+<script>
+/* ------------------------------------------------------------------------
+   CONFIG - the only thing to edit when the wording changes.
+
+   Order matters: it is the order of the legend, and the four real states are
+   meant to read as a sequence (free -> reserved -> occupied and reserved ->
+   occupied), so lightness should carry the order and hue only the kind of
+   claim. `fill` says how a cell is painted:
+
+     solid   flat `color`
+     half    `from` colour with a `to` triangle over it, for the split state
+     hatch   diagonal hatching, so absent data reads as absent rather than as
+             a status of its own
+   ------------------------------------------------------------------------ */
+const CONFIG = {
+  statuses: [
+    { key: 'occupied', label: 'Occupied',
+      aliases: ['occ', 'o', 'full', 'taken'],
+      fill: 'solid', color: '#6e8ca8' },
+
+    { key: 'occupied-reserved', label: 'Occupied, reserved for further ashes',
+      aliases: ['occ+res', 'occupied and reserved', 'part', 'half'],
+      fill: 'half', from: 'reserved', to: 'occupied' },
+
+    { key: 'reserved', label: 'Reserved',
+      aliases: ['res', 'r', 'booked'],
+      fill: 'solid', color: '#d9a441' },
+
+    { key: 'free', label: 'Free',
+      aliases: ['vacant', 'empty', 'f', 'available'],
+      fill: 'solid', color: '#ffffff' },
+
+    { key: 'unrecorded', label: 'No status recorded',
+      aliases: ['unknown', 'none', 'n/a', '?', ''],
+      fill: 'hatch' },
+  ],
+  ink: '#1f2933', ground: '#ffffff', hairline: '#5b6672',
+};
+
+const $ = s => document.querySelector(s);
+const svg = $('#sheet svg');
+const cells = [...svg.querySelectorAll('.cell[data-plot]')];
+const PLOTS = cells.map(g => g.dataset.plot);           // drawing order, which is plot order
+const KNOWN = new Set(PLOTS);
+const byKey = k => CONFIG.statuses.find(s => s.key === k);
+
+/* ---------- colour ------------------------------------------------------ */
+
+/** Default palette, straight out of CONFIG. */
+function basePalette() {
+  const p = { ink: CONFIG.ink, ground: CONFIG.ground, hairline: CONFIG.hairline };
+  for (const s of CONFIG.statuses) if (s.fill === 'solid') p[s.key] = s.color;
+  return p;
+}
+const palette = basePalette();
+
+/** The colours a cell in this state can show, so contrast can be judged. */
+function partsFor(s, p) {
+  if (s.fill === 'half')  return [p[s.from], p[s.to]];
+  if (s.fill === 'hatch') return [p.ground];
+  return [p[s.key]];
+}
+
+const lum = hex => {
+  const f = c => (c /= 255) <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+  return 0.2126 * f(parseInt(hex.slice(1, 3), 16))
+       + 0.7152 * f(parseInt(hex.slice(3, 5), 16))
+       + 0.0722 * f(parseInt(hex.slice(5, 7), 16));
+};
+
+/** Number colour that stays legible over every part of a cell. */
+function inkFor(s, p) {
+  const score = t => Math.min(...partsFor(s, p).map(c => {
+    const a = lum(c), b = lum(t);
+    return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+  }));
+  return score('#ffffff') > score(p.ink) ? '#ffffff' : p.ink;
+}
+
+/**
+ * Rebuild the drawing's stylesheet from CONFIG and the current palette. The
+ * SVG paints everything through these custom properties, so this is the whole
+ * of "apply a colour".
+ */
+function applyPalette() {
+  const vars = Object.entries(palette).map(([k, v]) => `--${k}:${v}`).join(';');
+  let css = `svg{${vars};`
+          + CONFIG.statuses.map(s => `--on-${s.key}:${inkFor(s, palette)}`).join(';') + '}\n'
+    + '.ground{fill:var(--ground)}.title{fill:var(--ink)}.sub{fill:var(--hairline)}\n'
+    + '.rule{stroke:var(--hairline)}\n'
+    + '.hatch-bg{fill:var(--ground)}.hatch-line{stroke:var(--hairline);stroke-width:1.4}\n'
+    + '.cell .half{display:none}.cell .edge{fill:none;stroke:var(--ink)}\n'
+    + '.cell .num{font-size:12.5px;text-anchor:middle}.key .num{font-size:0}\n';
+
+  for (const s of CONFIG.statuses) {
+    const sel = `.cell[data-status="${s.key}"]`;
+    if (s.fill === 'hatch')     css += `${sel} .base{fill:url(#hatch)}\n`;
+    else if (s.fill === 'half') css += `${sel} .base{fill:var(--${s.from})}\n`
+                                     + `${sel} .half{fill:var(--${s.to});display:inline}\n`;
+    else                        css += `${sel} .base{fill:var(--${s.key})}\n`;
+    css += `${sel} .num{fill:var(--on-${s.key})}\n`;
+  }
+  svg.querySelector('#palette-css').textContent = css;
+}
+
+/* ---------- legend, generated from CONFIG ------------------------------- */
+
+const SVGNS = 'http://www.w3.org/2000/svg';
+const el = (name, attrs, text) => {
+  const n = document.createElementNS(SVGNS, name);
+  for (const [k, v] of Object.entries(attrs)) n.setAttribute(k, v);
+  if (text != null) n.textContent = text;
+  return n;
+};
+
+/** The crib - the parish's word for the key panel. */
+function renderCrib() {
+  const crib = svg.querySelector('#crib');
+  const n = CONFIG.statuses.length;
+  const x = 96, top = 142, w = 26, h = 20;
+  const pitch = Math.min(30, 150 / n);           // keep clear of the path rule at y=300
+  crib.replaceChildren();
+
+  CONFIG.statuses.forEach((s, i) => {
+    const y = top + i * pitch;
+    const g = el('g', { class: 'cell key', 'data-status': s.key });
+    g.append(el('rect', { class: 'base', x, y, width: w, height: h }));
+    g.append(el('polygon', { class: 'half', points: `${x},${y} ${x + w},${y} ${x},${y + h}` }));
+    g.append(el('rect', { class: 'edge', x, y, width: w, height: h }));
+    g.append(el('text', { class: 'num', x: x + w / 2, y: y + h / 2 + 4.5 }, ''));
+    crib.append(g);
+    crib.append(el('text', { class: 'title', x: x + 38, y: y + 15, 'font-size': 14 }, s.label));
+  });
+}
+
+/* ---------- reading the pasted columns ---------------------------------- */
+
+/** Lowercase, strip punctuation, collapse spaces - so "Occ. + Res" meets "occ+res". */
+const norm = s => s.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+
+/** Every spelling of every status, resolved to its key. */
+const VOCAB = (() => {
+  const m = new Map();
+  for (const s of CONFIG.statuses)
+    for (const w of [s.key, s.label, ...s.aliases]) m.set(norm(w), s.key);
+  return m;
+})();
+
+const HEADER = /^(plot|plot ?no|no|number|#|grave|cell)$/i;
+
+/**
+ * Split a line into plot and status. Tabs win, then commas, then whitespace -
+ * and everything after the first field is rejoined, because one of the status
+ * labels has a comma in it.
+ */
+function fields(line) {
+  let sep = '\t';
+  if (!line.includes('\t')) sep = line.includes(',') ? ',' : ' ';
+  const parts = (sep === ' ' ? line.trim().split(/\s+/) : line.split(sep)).map(s => s.trim());
+  return [parts[0], parts.slice(1).join(sep === ',' ? ', ' : ' ').trim()];
+}
+
+/**
+ * Read the whole paste. Returns { statuses, problems }; if problems is
+ * non-empty the caller draws nothing - a part-read burial record is worse
+ * than a refusal.
+ */
+function read(text) {
+  const problems = [], statuses = {}, seen = new Map();
+  let first = true;
+
+  text.split(/\r?\n/).forEach((raw, i) => {
+    const lineNo = i + 1;
+    if (!raw.trim()) return;
+    let [plot, status] = fields(raw);
+    plot = plot.replace(/^["']|["']$/g, '').trim();
+
+    if (first) {                                  // allow one header line
+      first = false;
+      if (HEADER.test(plot)) return;
+    }
+
+    const m = /^(\d+)(?:\.0+)?$/.exec(plot);
+    if (!m) { problems.push(`Line ${lineNo}: “${plot}” is not a plot number.`); return; }
+    const id = m[1];
+
+    if (!KNOWN.has(id)) { problems.push(`Line ${lineNo}: plot ${id} is not on the map.`); return; }
+    if (seen.has(id)) {
+      problems.push(`Line ${lineNo}: plot ${id} was already given on line ${seen.get(id)}.`);
+      return;
+    }
+    seen.set(id, lineNo);
+
+    const key = VOCAB.get(norm(status));
+    if (key === undefined) {
+      problems.push(`Line ${lineNo}: “${status}” is not a status we know (plot ${id}).`);
+      return;
+    }
+    statuses[id] = key;
+  });
+
+  const missing = PLOTS.filter(p => !seen.has(p));
+  if (missing.length) {
+    const shown = missing.slice(0, 12).join(', ');
+    problems.push(`${missing.length} plot${missing.length > 1 ? 's are' : ' is'} missing: `
+      + shown + (missing.length > 12 ? `, and ${missing.length - 12} more.` : '.'));
+  }
+  return { statuses, problems };
+}
+
+/* ---------- drawing ----------------------------------------------------- */
+
+function showProblems(list) {
+  $('#problems-list').replaceChildren(...list.map(t => {
+    const li = document.createElement('li'); li.textContent = t; return li;
+  }));
+  $('#problems-title').textContent =
+    `${list.length} problem${list.length > 1 ? 's' : ''} — nothing was drawn`;
+  $('#problems').hidden = !list.length;
+}
+
+function blank() {
+  const u = CONFIG.statuses.find(s => s.fill === 'hatch') || CONFIG.statuses.at(-1);
+  for (const g of cells) g.dataset.status = u.key;
+}
+
+function draw() {
+  const { statuses, problems } = read($('#input').value);
+  showProblems(problems);
+  const s = $('#status');
+  if (problems.length) { s.className = ''; s.textContent = ''; return; }
+
+  for (const g of cells) g.dataset.status = statuses[g.dataset.plot];
+
+  const counts = new Map();
+  for (const k of Object.values(statuses)) counts.set(k, (counts.get(k) || 0) + 1);
+  s.className = 'good';
+  s.textContent = CONFIG.statuses
+    .filter(st => counts.get(st.key))
+    .map(st => `${counts.get(st.key)} ${st.label.toLowerCase()}`).join(' · ');
+}
+
+/* ---------- controls ---------------------------------------------------- */
+
+function renderWords() {
+  $('#words').replaceChildren(...CONFIG.statuses.flatMap(s => {
+    const dt = document.createElement('dt'); dt.textContent = s.label;
+    const dd = document.createElement('dd');
+    dd.textContent = [s.key, ...s.aliases].filter(Boolean).join(', ');
+    return [dt, dd];
+  }));
+}
+
+/* ---------- boot -------------------------------------------------------- */
+
+$('#plot-count').textContent = PLOTS.length;
+renderWords();
+renderCrib();
+applyPalette();
+blank();
+
+$('#draw').onclick = draw;
+$('#clear').onclick = () => {
+  $('#input').value = '';
+  showProblems([]);
+  $('#status').textContent = '';
+  blank();
+};
+$('#print').onclick = () => window.print();
+
+$('#input').addEventListener('keydown', e => {
+  if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); draw(); }
+});
+/* A paste arrives complete, so there is nothing to wait for. */
+$('#input').addEventListener('paste', () => setTimeout(draw, 0));
+</script>
+</html>
