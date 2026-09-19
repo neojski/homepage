@@ -98,20 +98,24 @@ dl.words dd{margin:0;color:var(--muted);font-family:ui-monospace,Menlo,Consolas,
     <div class="panel">
       <h2>Plot numbers and statuses</h2>
       <textarea id="input" spellcheck="false"
-        placeholder="Paste two columns from the spreadsheet, for example&#10;&#10;1&#9;occupied&#10;2&#9;reserved&#10;3&#9;vacant"></textarea>
+        placeholder="Paste from the register, heading row and all, for example&#10;&#10;Plot&#9;Date of Death&#10;1&#9;1979&#10;2&#9;reserved&#10;3&#9;vacant"></textarea>
       <div class="row">
         <button id="draw" class="primary">Draw map</button>
         <button id="clear" class="link" style="margin-left:auto">Clear</button>
       </div>
-      <p class="hint">Select the two columns in Excel, copy, and paste here.
-        All <span id="plot-count">0</span> plots must be listed. The map redraws
-        as you edit.</p>
+      <p class="hint">Select the plot column and the status or date-of-death
+        column in Excel — take the heading row with them — copy, and paste here.
+        All <span id="plot-count">0</span> plots must be listed, though a plot may
+        appear on several lines. The map redraws as you edit.</p>
     </div>
 
     <div class="panel">
       <h2>Accepted statuses</h2>
       <dl class="words" id="words"></dl>
-      <p class="hint">Case is ignored. A blank status counts as unknown.</p>
+      <p class="hint">Case is ignored, and a date of death counts as occupied.
+        A plot listed twice, once buried and once reserved, is drawn as the
+        split state. A line with no status is fine so long as another line for
+        that plot has one; a plot no line speaks for is refused.</p>
     </div>
   </div>
 
@@ -123,26 +127,22 @@ dl.words dd{margin:0;color:var(--muted);font-family:ui-monospace,Menlo,Consolas,
     </div>
     <div id="sheet"><svg id="map" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1303 872" width="1303" height="872" font-family="Inter, Helvetica Neue, Arial, sans-serif">
 <style id="palette-css">
-:root{--occupied:#6e8ca8;--occupied-reserved:#6e8ca8;--reserved:#d9a441;--vacant:#ffffff;--unknown:#e2e0da;--ink:#1f2933;--hairline:#5b6672;--ground:#ffffff;--on-vacant:#1f2933;--on-reserved:#ffffff;--on-occupied-reserved:#ffffff;--on-occupied:#ffffff;--on-unknown:#1f2933;}
-.ground{fill:var(--ground)}
-.title{fill:var(--ink)}.sub{fill:var(--hairline)}
+svg{--ink:#1f2933;--ground:#ffffff;--hairline:#5b6672;--occupied:#6e8ca8;--reserved:#d9a441;--vacant:#ffffff;--on-occupied:#1f2933;--on-occupied-reserved:#1f2933;--on-reserved:#1f2933;--on-vacant:#1f2933}
+.ground{fill:var(--ground)}.title{fill:var(--ink)}.sub{fill:var(--hairline)}
 .rule{stroke:var(--hairline)}
 .hatch-bg{fill:var(--ground)}.hatch-line{stroke:var(--hairline);stroke-width:1.4}
-.cell[data-status="vacant"] .base{fill:var(--vacant)}
-.cell[data-status="vacant"] .num{fill:var(--on-vacant)}
-.cell[data-status="reserved"] .base{fill:var(--reserved)}
-.cell[data-status="reserved"] .num{fill:var(--on-reserved)}
-.cell[data-status="occupied-reserved"] .base{fill:var(--reserved)}
-.cell[data-status="occupied-reserved"] .num{fill:var(--on-occupied-reserved)}
+.cell .half{display:none}.cell .edge{fill:none;stroke:var(--ink)}
+.cell .num{font-size:12.5px;text-anchor:middle}.key .num{font-size:0}
+.cell:not([data-status]) .base{fill:url(#hatch)}
 .cell[data-status="occupied"] .base{fill:var(--occupied)}
 .cell[data-status="occupied"] .num{fill:var(--on-occupied)}
-.cell[data-status="unknown"] .base{fill:url(#hatch)}
-.cell[data-status="unknown"] .num{fill:var(--on-unknown)}
-.cell .half{fill:var(--occupied-reserved);display:none}
-.cell[data-status="occupied-reserved"] .half{display:inline}
-.cell .edge{fill:none;stroke:var(--ink)}
-.cell .num{font-size:12.5px;text-anchor:middle}
-.key .num{font-size:0}
+.cell[data-status="occupied-reserved"] .base{fill:var(--reserved)}
+.cell[data-status="occupied-reserved"] .half{fill:var(--occupied);display:inline}
+.cell[data-status="occupied-reserved"] .num{fill:var(--on-occupied-reserved)}
+.cell[data-status="reserved"] .base{fill:var(--reserved)}
+.cell[data-status="reserved"] .num{fill:var(--on-reserved)}
+.cell[data-status="vacant"] .base{fill:var(--vacant)}
+.cell[data-status="vacant"] .num{fill:var(--on-vacant)}
 </style>
 <defs><pattern id="hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect class="hatch-bg" width="7" height="7"/><line class="hatch-line" x1="0" y1="0" x2="0" y2="7"/></pattern></defs>
 <rect class="ground" width="1303" height="872"/>
@@ -157,18 +157,16 @@ dl.words dd{margin:0;color:var(--muted);font-family:ui-monospace,Menlo,Consolas,
 <g class="cell key" data-status="reserved"><rect class="base" x="96" y="202" width="26" height="20"/><polygon class="half" points="96,202 122,202 96,222"/><rect class="edge" x="96" y="202" width="26" height="20"/><text class="num" x="109.0" y="216.5"></text></g>
 <text class="title" x="134" y="217" font-size="14">Reserved</text>
 <g class="cell key" data-status="vacant"><rect class="base" x="96" y="232" width="26" height="20"/><polygon class="half" points="96,232 122,232 96,252"/><rect class="edge" x="96" y="232" width="26" height="20"/><text class="num" x="109.0" y="246.5"></text></g>
-<text class="title" x="134" y="247" font-size="14">Free</text>
-<g class="cell key" data-status="unknown"><rect class="base" x="96" y="262" width="26" height="20"/><polygon class="half" points="96,262 122,262 96,282"/><rect class="edge" x="96" y="262" width="26" height="20"/><text class="num" x="109.0" y="276.5"></text></g>
-<text class="title" x="134" y="277" font-size="14">No status recorded</text>
+<text class="title" x="134" y="247" font-size="14">Vacant</text>
 </g>
 <line class="rule" x1="56" y1="300.0" x2="56" y2="775.5" stroke-width="2"/>
 <text class="sub" x="40" y="538" font-size="13.5" letter-spacing="3.2" text-anchor="middle" transform="rotate(-90 40 538)">PATH</text>
 <line class="rule" x1="96" y1="809.5" x2="1183" y2="809.5" stroke-width="2"/>
 <text class="sub" x="96" y="831.5" font-size="13.5" letter-spacing="3.2">PATH</text>
-<g transform="translate(1251 360.0)">
-<line class="rule" x1="0" y1="46" x2="0" y2="-6" stroke="var(--ink)" stroke-width="1.6"/>
-<polygon class="title" points="0,-16 6,2 -6,2"/>
-<text class="title" x="0" y="66" font-size="14" font-weight="600" text-anchor="middle">N</text>
+<g transform="translate(1237 360.0)">
+<line class="rule" x1="-30" y1="0" x2="30" y2="0" stroke="var(--ink)" stroke-width="1.6"/>
+<polygon class="title" points="40,0 22,6 22,-6"/>
+<text class="title" x="-44" y="5" font-size="14" font-weight="600" text-anchor="middle">N</text>
 </g>
 <g id="plots">
 <g class="cell" data-status="occupied" data-plot="1" data-row="A"><rect class="base" x="96.0" y="731.6" width="34.9" height="43.9"/><polygon class="half" points="96.0,731.6 130.9,731.6 96.0,775.5"/><rect class="edge" x="96.0" y="731.6" width="34.9" height="43.9"/><text class="num" x="113.5" y="758.1">1</text></g>
@@ -333,8 +331,10 @@ dl.words dd{margin:0;color:var(--muted);font-family:ui-monospace,Menlo,Consolas,
 
      solid   flat `color`
      half    `from` colour with a `to` triangle over it, for the split state
-     hatch   diagonal hatching, so absent data reads as absent rather than as
-             a status of its own
+
+   Every plot must be given one of these. There is no status for absent data:
+   a blank in the sheet is refused, not drawn. The hatching that used to mean
+   that is now only the look of a map with nothing pasted into it yet.
    ------------------------------------------------------------------------ */
 const CONFIG = {
   statuses: [
@@ -349,9 +349,6 @@ const CONFIG = {
 
     { key: 'vacant',            label: 'Vacant',
       fill: 'solid', color: '#ffffff' },
-
-    { key: 'unknown',           label: 'Unknown',
-      fill: 'hatch' },
   ],
   ink: '#1f2933', ground: '#ffffff', hairline: '#5b6672',
 };
@@ -375,8 +372,7 @@ const palette = basePalette();
 
 /** The colours a cell in this state can show, so contrast can be judged. */
 function partsFor(s, p) {
-  if (s.fill === 'half')  return [p[s.from], p[s.to]];
-  if (s.fill === 'hatch') return [p.ground];
+  if (s.fill === 'half') return [p[s.from], p[s.to]];
   return [p[s.key]];
 }
 
@@ -409,14 +405,16 @@ function applyPalette() {
     + '.rule{stroke:var(--hairline)}\n'
     + '.hatch-bg{fill:var(--ground)}.hatch-line{stroke:var(--hairline);stroke-width:1.4}\n'
     + '.cell .half{display:none}.cell .edge{fill:none;stroke:var(--ink)}\n'
-    + '.cell .num{font-size:12.5px;text-anchor:middle}.key .num{font-size:0}\n';
+    + '.cell .num{font-size:12.5px;text-anchor:middle}.key .num{font-size:0}\n'
+    // No paste yet: hatched, so an empty map reads as no data rather than as
+    // a churchyard of vacant plots.
+    + '.cell:not([data-status]) .base{fill:url(#hatch)}\n';
 
   for (const s of CONFIG.statuses) {
     const sel = `.cell[data-status="${s.key}"]`;
-    if (s.fill === 'hatch')     css += `${sel} .base{fill:url(#hatch)}\n`;
-    else if (s.fill === 'half') css += `${sel} .base{fill:var(--${s.from})}\n`
-                                     + `${sel} .half{fill:var(--${s.to});display:inline}\n`;
-    else                        css += `${sel} .base{fill:var(--${s.key})}\n`;
+    if (s.fill === 'half') css += `${sel} .base{fill:var(--${s.from})}\n`
+                                + `${sel} .half{fill:var(--${s.to});display:inline}\n`;
+    else                   css += `${sel} .base{fill:var(--${s.key})}\n`;
     css += `${sel} .num{fill:var(--on-${s.key})}\n`;
   }
   svg.querySelector('#palette-css').textContent = css;
@@ -460,61 +458,154 @@ const norm = s => s.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
 /** The accepted words. One per status, its key - nothing else is recognised. */
 const VOCAB = new Map(CONFIG.statuses.map(s => [norm(s.key), s.key]));
 
-/** A cell left empty in the spreadsheet means the status is not known. */
-const BLANK = (CONFIG.statuses.find(s => s.fill === 'hatch') || CONFIG.statuses.at(-1)).key;
+/**
+ * The split state and the two claims it is made of, read out of CONFIG rather
+ * than named here, so the vocabulary stays a one-line edit at the top.
+ */
+const HALF = CONFIG.statuses.find(s => s.fill === 'half');
+const OCCUPIED = HALF ? HALF.to : 'occupied';
+const RESERVED = HALF ? HALF.from : 'reserved';
 
-const HEADER = /^(plot|plot ?no|no|number|#|grave|cell)$/i;
+/** Headings the parish register uses for its first and its status column. */
+const PLOT_HEADER   = /^(plot|plot ?no|no|number|#|grave|cell)$/i;
+const STATUS_HEADER = /^(status|date ?of ?death|died|death)$/i;
 
 /**
- * Split a line into plot and status. Tabs win, then commas, then whitespace -
- * and everything after the first field is rejoined, because one of the status
- * labels has a comma in it.
+ * A date of death is not a status, but it settles one: someone is buried
+ * there. The register writes dates three ways - a bare year, an Excel serial,
+ * and a real date - and all three say the same thing.
  */
-function fields(line) {
-  let sep = '\t';
-  if (!line.includes('\t')) sep = line.includes(',') ? ',' : ' ';
-  const parts = (sep === ' ' ? line.trim().split(/\s+/) : line.split(sep)).map(s => s.trim());
-  return [parts[0], parts.slice(1).join(sep === ',' ? ', ' : ' ').trim()];
+const isDate = v => /^\d{3,5}$/.test(v)
+                 || /^\d{1,4}[/.-]\d{1,2}[/.-]\d{1,4}$/.test(v);
+
+/**
+ * A line whose status cell is empty makes no claim of its own. The register
+ * often has a second interment without a recorded date of death, and the
+ * other line for that plot settles it; only a plot that no line speaks for
+ * is a gap worth refusing.
+ */
+const NOTHING = Symbol('no status');
+
+/** One cell's worth of status, or undefined if the word is not one of ours. */
+function statusFor(value) {
+  if (value === '') return NOTHING;
+  const word = VOCAB.get(norm(value));
+  if (word !== undefined) return word;
+  return isDate(value) ? OCCUPIED : undefined;
+}
+
+/** What a status claims. The split state claims both. */
+const claims = k => (HALF && k === HALF.key) ? [OCCUPIED, RESERVED] : [k];
+
+/**
+ * Fold two lines about the same plot together. The register keeps a line per
+ * interment, so a plot holding someone with the space beside them spoken for
+ * arrives as two lines - which is exactly the split state. Anything else that
+ * disagrees is a contradiction in the sheet, and is reported rather than
+ * resolved.
+ */
+function merge(a, b) {
+  if (a === NOTHING) return b;
+  if (b === NOTHING) return a;
+  if (a === b) return a;
+  const c = new Set([...claims(a), ...claims(b)]);
+  if (HALF && c.size === 2 && c.has(OCCUPIED) && c.has(RESERVED)) return HALF.key;
+  return null;
+}
+
+const labelFor = k => (byKey(k) || { label: k }).label.toLowerCase();
+
+/**
+ * Split a line into its columns. Tabs win, then commas, then whitespace.
+ * The separator comes back too, because a two-column paste has to rejoin
+ * everything after the plot - one of the status labels has a comma in it.
+ */
+function split(line) {
+  const sep = line.includes('\t') ? '\t' : line.includes(',') ? ',' : ' ';
+  const parts = (sep === ' ' ? line.trim().split(/\s+/) : line.split(sep))
+    .map(s => s.trim().replace(/^["']|["']$/g, '').trim());
+  return { sep, parts };
 }
 
 /**
  * Read the whole paste. Returns { statuses, problems }; if problems is
  * non-empty the caller draws nothing - a part-read burial record is worse
  * than a refusal.
+ *
+ * Two shapes are accepted. Two bare columns, plot and status; or the parish
+ * register itself, heading row and all, in which case the headings say which
+ * column is the plot and which carries the status or the date of death.
  */
 function read(text) {
   const problems = [], statuses = {}, seen = new Map();
-  let first = true;
+  const lines = text.split(/\r?\n/)
+    .map((raw, i) => [i + 1, raw])
+    .filter(([, raw]) => raw.trim());
 
-  text.split(/\r?\n/).forEach((raw, i) => {
-    const lineNo = i + 1;
-    if (!raw.trim()) return;
-    let [plot, status] = fields(raw);
-    plot = plot.replace(/^["']|["']$/g, '').trim();
-
-    if (first) {                                  // allow one header line
-      first = false;
-      if (HEADER.test(plot)) return;
+  let plotCol = 0, statusCol = null, start = 0;   // null: everything after the plot
+  if (lines.length) {
+    const head = split(lines[0][1]).parts;
+    const p = head.findIndex(h => PLOT_HEADER.test(h));
+    if (p >= 0) {
+      start = 1;
+      plotCol = p;
+      const c = head.findIndex(h => STATUS_HEADER.test(h));
+      if (c >= 0) statusCol = c;
+      else if (head.length > 2) {
+        problems.push('Line 1: this looks like the register’s heading row, but none of '
+          + 'its columns is a status or a date of death.');
+        return { statuses, problems };
+      }
     }
+  }
+
+  // Only for tab-separated text: that is what Excel pastes, and a comma-separated
+  // line is allowed extra fields because one status label has a comma in it.
+  if (statusCol === null && lines.length > start
+      && split(lines[start][1]).sep === '\t'
+      && split(lines[start][1]).parts.length > 2) {
+    problems.push('These lines carry more than two columns. Include the spreadsheet’s '
+      + 'heading row so the status column can be found, or copy just the plot column '
+      + 'and the status column.');
+    return { statuses, problems };
+  }
+
+  for (const [lineNo, raw] of lines.slice(start)) {
+    const { sep, parts } = split(raw);
+    const plot = parts[plotCol] || '';
+    const value = statusCol === null
+      ? parts.slice(plotCol + 1).join(sep === ',' ? ', ' : ' ').trim()
+      : (parts[statusCol] || '');
 
     const m = /^(\d+)(?:\.0+)?$/.exec(plot);
-    if (!m) { problems.push(`Line ${lineNo}: “${plot}” is not a plot number.`); return; }
+    if (!m) { problems.push(`Line ${lineNo}: “${plot}” is not a plot number.`); continue; }
     const id = m[1];
 
-    if (!KNOWN.has(id)) { problems.push(`Line ${lineNo}: plot ${id} is not on the map.`); return; }
-    if (seen.has(id)) {
-      problems.push(`Line ${lineNo}: plot ${id} was already given on line ${seen.get(id)}.`);
-      return;
-    }
-    seen.set(id, lineNo);
+    if (!KNOWN.has(id)) { problems.push(`Line ${lineNo}: plot ${id} is not on the map.`); continue; }
 
-    const key = status.trim() === '' ? BLANK : VOCAB.get(norm(status));
+    const key = statusFor(value);
     if (key === undefined) {
-      problems.push(`Line ${lineNo}: “${status}” is not a status we know (plot ${id}).`);
-      return;
+      problems.push(`Line ${lineNo}: “${value}” is not a status we know (plot ${id}).`);
+      continue;
     }
-    statuses[id] = key;
-  });
+
+    if (!seen.has(id)) { seen.set(id, lineNo); statuses[id] = key; continue; }
+
+    const both = merge(statuses[id], key);
+    if (both === null) {
+      problems.push(`Line ${lineNo}: plot ${id} reads ${labelFor(key)} here and `
+        + `${labelFor(statuses[id])} on line ${seen.get(id)}.`);
+      continue;
+    }
+    statuses[id] = both;
+  }
+
+  for (const [id, lineNo] of seen) {
+    if (statuses[id] !== NOTHING) continue;
+    problems.push(`Line ${lineNo}: plot ${id} has no status, and no other line `
+      + 'gives it one.');
+    delete statuses[id];
+  }
 
   const missing = PLOTS.filter(p => !seen.has(p));
   if (missing.length) {
@@ -536,9 +627,9 @@ function showProblems(list) {
   $('#problems').hidden = !list.length;
 }
 
+/** Nothing pasted: no cell has a status at all, and the whole map hatches. */
 function blank() {
-  const u = CONFIG.statuses.find(s => s.fill === 'hatch') || CONFIG.statuses.at(-1);
-  for (const g of cells) g.dataset.status = u.key;
+  for (const g of cells) delete g.dataset.status;
 }
 
 function draw() {

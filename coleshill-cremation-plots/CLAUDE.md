@@ -52,40 +52,83 @@ Two failure modes already hit, worth not repeating:
   is real and is why 71-78 spans the same ground as 98-103.
 - Plot 116 is the last cell of row E, not row D. Row E reads 142-128, then
   122 down to 116. Row D's final block is 110-115.
+- North is to the right of the sheet, along the rows — not up the page. The
+  compass on the drawing was wrong until the parish corrected it on a printout.
 - Plot 83 is drawn detached at the foot of the sheet, in the space between rows
   A and B, beyond the end of both. Its true position on the ground is unknown.
 
 ## Status categories
 
-Five words, and only these five:
+Four words, and only these four:
 
     occupied
     occupied-reserved     drawn as a diagonal half-fill
     reserved
     vacant
-    unknown               hatched, so it reads as absent data not a status
 
 Case is ignored; nothing else is. There are deliberately no synonyms — an
 unrecognised word refuses the whole paste rather than being guessed at, and a
-guessed status on a burial record is worse than a refusal. A cell left empty
-in the spreadsheet is the one exception: it counts as `unknown`, since that is
-how a blank is meant in the sheet.
+guessed status on a burial record is worse than a refusal.
 
-In the 2026 survey the unknowns are plots **88 and 135**, still to be resolved
-with the parish — but the page reads that from the pasted data rather than
-assuming any particular plots are the blank ones.
+**There is no word for absent data.** There was a fifth, `unknown`, drawn
+hatched, and a cell left empty in the sheet became it. It is gone: every plot
+on the drawn map holds one of the four. A map that quietly carried "we do not
+know" for a plot was too easy to read past, and the sheet is the place to fix
+a gap, not the map. The hatching survives only as the look of a map with
+nothing pasted into it yet — cells with no `data-status` at all — so an empty
+page cannot be mistaken for a churchyard of vacant plots.
+
+A blank status cell is therefore not a status but a *silence*, and silence is
+only refused when nothing else speaks. Two names against one plot with a date
+of death on only one of them is the ordinary shape of the register, not an
+error: the dated line settles the plot and the other adds nothing. It is a
+plot that no line speaks for that is refused, by line number.
+
+The 2026 register settles the two the scan left blank: **88** is occupied and
+**135** is reserved.
 
 The vocabulary is not fixed in code. `CONFIG.statuses` at the top of the script
 in `index.html` holds each status's key, label and fill; the legend, the
 accepted-words panel and the colours are all generated from it. Changing a word
 or a colour is a one-line edit there.
 
+## What the page will read
+
+Two shapes, and the reader decides between them from the first line.
+
+- **Two bare columns**, plot and status, as before.
+- **The parish register itself**, headings and all — `Cremation Plots update
+  2026.pdf.xlsx`, sheet *Cremations - Corrected*, columns
+  `Plot | | Surname | Christian name | Date of Death | …`. If the first line
+  has a plot heading it is used to find the plot column and the status column
+  (`Status`, `Date of Death`, `Died`); every other column is ignored, names
+  included. Paste the whole block or just those two columns; either works.
+
+The register is a line per interment, not per plot, so two rules follow:
+
+- **A date of death is a status.** It says someone is buried there, so it reads
+  as occupied. Dates arrive as bare years, as Excel serials, and as real dates,
+  and all three count. This is the only inference the reader makes; an
+  unrecognised *word* is still refused rather than guessed at.
+- **An empty status column defers rather than refuses.** Row 99 of the 2026
+  sheet is the case to keep working: plot 98, a second interment with no date
+  of death recorded, settled by the dated line above it. Only a plot where
+  every line is silent is refused.
+- **Several lines may share a plot.** Their statuses are folded together, and
+  occupied plus reserved is exactly the split state the map draws. A folding
+  that makes no sense — vacant against occupied — is reported as a
+  contradiction in the sheet and nothing is drawn.
+
+A tab-separated paste of more than two columns with no heading row is refused
+with an explanation rather than line by line; a comma-separated line may still
+run long, because `occupied, reserved` is a status key with a comma in it.
+
 ## Where the design discussion got to
 
 - **Colour**: the four states are a sequence (vacant -> reserved -> occupied and
   reserved -> occupied), so lightness should carry the order and hue should only
-  distinguish the kind of claim. Must survive photocopying. Unrecorded should be
-  hatched rather than filled, so it reads as absent data rather than a status.
+  distinguish the kind of claim. Must survive photocopying. Hatching is kept
+  back from the vocabulary entirely, for the map that has no data in it yet.
 - **"Crib"** in the parish's correspondence means the legend/key panel.
 - **Hosting**: one file, `index.html`. Works over `file://` or from any
   static host. No server, no credentials, no stored record — the parish's
@@ -106,7 +149,11 @@ or a colour is a one-line edit there.
 ## Open questions
 
 1. Are all plots the same size on the ground, or are rows D-F genuinely larger?
-2. Statuses for 88 and 135.
+2. Plot **115** is on the map but has no line at all in the 2026 register, so
+   a paste of that sheet is one plot short and is refused. The printed survey
+   has it reserved. The sheet needs the line; the page should not paper over
+   it. (Plot 98's undated second interment, Michael Temple Darvill, is *not*
+   a gap of this kind — the dated line settles the plot.)
 3. Where does 83 actually sit?
 4. Will names ever be attached to plots? That changes whether the map can be
    public, and would end the paste-anything-in model.
