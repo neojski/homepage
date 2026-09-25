@@ -676,6 +676,18 @@ $('#clear').onclick = () => {
 };
 $('#print').onclick = () => window.print();
 
+/**
+ * Browsers name a saved PDF after the title, so date it for the length of the
+ * print - a printout of a burial record should say when it was true. The
+ * events rather than the button, so Ctrl+P is dated too.
+ */
+const TITLE = document.title;
+addEventListener('beforeprint', () => {
+  const d = new Date(), pad = n => String(n).padStart(2, '0');
+  document.title = `${TITLE} — ${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+});
+addEventListener('afterprint', () => { document.title = TITLE; });
+
 $('#input').addEventListener('keydown', e => {
   if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); draw(); }
 });
