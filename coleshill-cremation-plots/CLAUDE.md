@@ -24,7 +24,8 @@ drawing and the script, in one file. No build step, no dependencies, no tooling.
 Edit it directly; open it off the filesystem to see the result.
 
 The `<svg>` in the middle is the measured geometry: 140 `<g class="cell">`
-elements carrying the surveyed coordinates. It began as a separate `map.svg`
+elements carrying the surveyed coordinates. They carry no `data-status` — a
+status only ever comes from the paste, never from the file. It began as a separate `map.svg`
 emitted by `render.py`, with a checked-in script that compared the two copies
 and failed on any coordinate drift. Both were dropped as surplus once the survey
 was final. That guard is gone, so the rule in the next section is now enforced
