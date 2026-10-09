@@ -95,6 +95,18 @@ li.row:first-child{border-top:0}
 .opt.best .k{color:var(--met)}
 .note{font-size:.78rem;color:var(--muted);padding:10px 14px;border-top:1px solid var(--rule)}
 .sort-note{border-top:0;border-bottom:1px solid var(--rule)}
+/* the three picks: side by side on wide screens; on a phone each is one card with its timeline on the right */
+.picks{display:grid;gap:10px;padding:12px 14px;border-bottom:1px solid var(--rule)}
+.picks:empty{display:none}
+.pick{border:1px solid var(--rule);padding:10px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:10px}
+.pick.best{border-color:transparent}
+.pick .k{color:var(--ink)}
+.pick .tl{margin-top:0}
+@media (min-width:640px){
+  .picks{grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}
+  .pick{display:block}
+  .pick .tl{margin-top:8px}
+}
 .settings{display:flex;gap:14px;flex-wrap:wrap;font-size:.85rem;color:var(--muted);padding:10px 14px;border-top:1px solid var(--rule)}
 .settings label{display:flex;gap:6px;align-items:center}
 .settings input{width:3.4rem;font:600 .85rem var(--mono);padding:4px 6px;border:1px solid var(--rule);border-radius:6px;background:var(--bg);color:var(--ink)}
@@ -121,7 +133,8 @@ li.row:first-child{border-top:0}
       <h2 id="h-conn"><span class="bar"></span>Leave Liverpool Street on…</h2>
       <button id="refresh" type="button">Refresh</button>
     </div>
-    <div class="note sort-note">Soonest into Amersham first. For the same arrival, the latest Liverpool Street departure comes first.</div>
+    <div class="picks" id="picks"></div>
+    <div class="note sort-note">Every departure, in the order they leave Liverpool Street.</div>
     <ul id="conn"><li class="empty">Working out connections…</li></ul>
     <div class="settings">
       <label for="ride">Liverpool St → Baker St <input id="ride" type="number" min="5" max="30" value="14"> min</label>
@@ -317,7 +330,8 @@ function renderConnections(){
   direct.filter(d=>d.dep>Date.now() && !rows.some(t=>t.direct===d)).slice(0,2)
     .forEach(d=>rows.push({line:"metropolitan",when:d.dep,through:true,direct:d,timetabled:true}));
   rows.sort((a,b)=>a.when-b.when);
-  if(!rows.length){$("conn").innerHTML='<li class="empty">No Liverpool Street departures to plan from right now.</li>';return;}
+  if(!rows.length){$("picks").innerHTML="";$("conn").innerHTML='<li class="empty">No Liverpool Street departures to plan from right now.</li>';return;}
+  const cands=[];   // every (departure, route) pair, for the picks above the list
   $("conn").innerHTML = rows.map(t=>{
     let atBST = new Date(+t.when+ride);
     let met;
@@ -337,19 +351,35 @@ function renderConnections(){
       const g=Math.round((x.dep-atBST)/60000), spare=g-need;
       return {chip:g+" min to change", tight:spare<2, sub:what+(spare>0?spare+" min spare":"no spare")};
     };
+    const metGap = met && !met.stay && gap(met,num("chg"),""), chiGap = chi && gap(chi,num("walk"),num("walk")+" min walk, ");
     const metTl = met && timeline(met.stay
       ? [first,{mins:Math.round((met.dep-t.when)/60000),seg:MET},{time:hm(met.dep),name:"Baker St · stay on",seg:MET},rideOn(met,MET),{time:hm(met.arr),name:"Amersham",seg:MET}]
-      : [first,ride1,atBaker,gap(met,num("chg"),""),{time:hm(met.dep),name:"Baker St · Met",seg:MET},rideOn(met,MET),{time:hm(met.arr),name:"Amersham",seg:MET}]);
+      : [first,ride1,atBaker,metGap,{time:hm(met.dep),name:"Baker St · Met",seg:MET},rideOn(met,MET),{time:hm(met.arr),name:"Amersham",seg:MET}]);
     const chiTl = chi && timeline(
-        [first,ride1,atBaker,gap(chi,num("walk"),num("walk")+" min walk, "),{time:hm(chi.dep),name:"Marylebone",seg:CHI},rideOn(chi,CHI),{time:hm(chi.arr),name:"Amersham",seg:CHI}]);
+        [first,ride1,atBaker,chiGap,{time:hm(chi.dep),name:"Marylebone",seg:CHI},rideOn(chi,CHI),{time:hm(chi.arr),name:"Amersham",seg:CHI}]);
+    const metLinks = link(citymapper(ST.BST,ST.AMS),"Citymapper"), chiLinks = link(citymapper(ST.MYB,ST.AMS),"Citymapper")+link(NR_LIVE,"Live board");
+    const leaves = (mins(t.when)<=0?'Due':'in '+mins(t.when)+' min')+(t.timetabled?' · timetabled':'');
+    if(met) cands.push({t,x:met,tl:metTl,links:metLinks,leaves,direct:!!met.stay,what:met.stay?"direct Met":"Met, change at Baker St",pref:met.stay?0:metGap.tight?2:1});
+    if(chi) cands.push({t,x:chi,tl:chiTl,links:chiLinks,leaves,chiltern:true,what:"Chiltern",pref:chiGap.tight?2:1});
     const opt=(key,label,x,tl,links)=> x
-      ? '<div class="opt'+(best===key?' best':'')+'"><div class="k">'+label+(best===key?' · fastest':'')+'</div><div class="v">'+hm(x.arr)+' <span class="s">at Amersham</span></div><div class="dur"><b>'+Math.max(0,mins(x.arr))+' min</b> from now</div>'+tl+'<div class="links">'+links+'</div></div>'
+      ? '<div class="opt'+(best===key?' best':'')+'"><div class="k">'+label+(best===key?' · faster':'')+'</div><div class="v">'+hm(x.arr)+' <span class="s">at Amersham</span></div><div class="dur"><b>'+Math.max(0,mins(x.arr))+' min</b> from now</div>'+tl+'<div class="links">'+links+'</div></div>'
       : '<div class="opt"><div class="k">'+label+'</div><div class="v">—</div><div class="s">No train found</div></div>';
-    const html = '<li class="row"><span class="t"><span class="line-tag '+t.line+'">'+LINE_NAME[t.line]+'</span>'+hm(t.when)+'<small>'+(mins(t.when)<=0?'Due':'in '+mins(t.when)+' min')+(t.timetabled?' · timetabled':'')+'</small>'+'</span>'+
-      opt("met",met&&met.stay?"Direct Met":"Via Met",met,metTl,link(citymapper(ST.BST,ST.AMS),"Citymapper"))+
-      opt("chi","Via Chiltern",chi,chiTl,link(citymapper(ST.MYB,ST.AMS),"Citymapper")+link(NR_LIVE,"Live board"))+'</li>';
-    return {html, when:+t.when, arr: best==="met" ? +met.arr : best==="chi" ? +chi.arr : Infinity};
-  }).sort((a,b)=>a.arr-b.arr||b.when-a.when).map(r=>r.html).join("");   // soonest into Amersham first
+    const html = '<li class="row"><span class="t"><span class="line-tag '+t.line+'">'+LINE_NAME[t.line]+'</span>'+hm(t.when)+'<small>'+leaves+'</small>'+'</span>'+
+      opt("met",met&&met.stay?"Direct Met":"Via Met",met,metTl,metLinks)+
+      opt("chi","Via Chiltern",chi,chiTl,chiLinks)+'</li>';
+    return html;
+  }).join("");
+  // Picks: soonest into Amersham; for the same arrival prefer no change, then a comfortable change, then the later departure.
+  const rank = (a,b) => a.x.arr-b.x.arr || a.pref-b.pref || b.t.when-a.t.when;
+  const top = f => cands.filter(f).sort(rank)[0];
+  const fastest = top(()=>true), picks = [];
+  if(fastest) picks.push({c:fastest,label:"Fastest · "+fastest.what});
+  [[top(c=>c.direct),"Fastest direct"],[top(c=>c.chiltern),"Fastest Chiltern"]].forEach(([c,label])=>{ if(c && c!==fastest) picks.push({c,label}); });
+  $("picks").innerHTML = picks.map(({c,label},i)=>
+    '<div class="opt pick'+(i===0?' best':'')+'"><div><div class="k">'+label+'</div>'+
+    '<div class="dur">Leave <b>'+hm(c.t.when)+'</b> <span class="line-tag '+c.t.line+'">'+LINE_NAME[c.t.line]+'</span></div><div class="s">'+c.leaves+'</div>'+
+    '<div class="v">'+hm(c.x.arr)+' <span class="s">at Amersham</span></div><div class="dur"><b>'+Math.max(0,mins(c.x.arr))+' min</b> from now</div>'+
+    '<div class="links">'+c.links+'</div></div>'+c.tl+'</div>').join("");
 }
 
 /* ---------- loop ---------- */
