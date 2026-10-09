@@ -211,8 +211,12 @@ async function getJSON(path){
 function plannerParams(d){
   return "date="+d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate())+"&time="+pad(d.getHours())+pad(d.getMinutes());
 }
-/* Journey planner returns ~3 journeys; ask twice to cover a longer window. */
+/* Journey planner returns ~3 journeys; ask twice to cover a longer window.
+   Timetables barely move, so results are reused for 5 minutes: anonymous TfL access is rate limited (429). */
+const planCache = {}, PLAN_TTL = 5*60000, STATUS_TTL = 2*60000;
 async function planned(from,to,mode){
+  const key=from+"|"+to+"|"+mode, c=planCache[key], upcoming=x=>x.dep>Date.now()-60000;
+  if(c && Date.now()-c.at<PLAN_TTL) return c.list.filter(upcoming);
   const out=[]; let when=new Date();
   for(let i=0;i<2;i++){
     const j = await getJSON("/Journey/JourneyResults/"+from+"/to/"+to+"?mode="+mode+"&"+plannerParams(when));
@@ -229,7 +233,9 @@ async function planned(from,to,mode){
     if(!out.length) break;
     when=new Date(+out[out.length-1].dep+60000);
   }
-  return out.filter(x=>x.dep>Date.now()-60000).sort((a,b)=>a.dep-b.dep);
+  const list = out.filter(upcoming).sort((a,b)=>a.dep-b.dep);
+  planCache[key]={at:Date.now(),list};
+  return list;
 }
 
 let leg1=[], leg2=[], leg2live=[], leg3=[], direct=[];
@@ -265,7 +271,9 @@ async function loadLeg2(){
 /* Timetabled through trains: live arrivals only reveal a train's destination a few minutes out. */
 async function loadDirect(){ direct = await planned(ST.LVT.naptan, ST.AMS.naptan, "tube"); }
 async function loadLeg3(){ leg3 = await planned(ST.MYB.naptan, ST.AMS.rail, "national-rail"); }
+let statusAt=0;
 async function loadStatus(){
+  if(Date.now()-statusAt<STATUS_TTL) return;
   const s = await getJSON("/Line/metropolitan,hammersmith-city,circle,chiltern-railways/Status");
   const names={"metropolitan":"Metropolitan","hammersmith-city":"Hammersmith & City","circle":"Circle","chiltern-railways":"Chiltern"};
   $("status").innerHTML = s.map(l=>{
@@ -273,6 +281,7 @@ async function loadStatus(){
     const cls = sev===10||sev===18||sev===19 ? "" : (sev>=7?"warn":"bad");
     return '<span class="pill '+cls+'" title="'+esc(st.reason||"")+'"><i></i>'+names[l.id]+': '+esc(st.statusSeverityDescription||"Unknown")+'</span>';
   }).join("");
+  statusAt=Date.now();
 }
 
 /* ---------- rendering ---------- */
@@ -349,12 +358,16 @@ async function refresh(){
   const results = await Promise.allSettled([loadLeg1(),loadLeg2(),loadLeg3(),loadStatus(),loadDirect()]);
   const fail = results.find(r=>r.status==="rejected");
   const why = r => esc((r.reason&&r.reason.message)||String(r.reason)) + ' · page origin: '+esc(location.protocol+'//'+(location.host||'(local file)'));
-  if(results[0].status==="fulfilled") renderLeg1(); else $("leg1").innerHTML='<li class="empty err">Couldn’t load Liverpool Street departures.<br><small>'+why(results[0])+'</small></li>';
-  if(results[1].status==="fulfilled") renderPlanned("leg2",leg2,leg2live); else $("leg2").innerHTML='<li class="empty err">Couldn’t load Met trains to Amersham.<br><small>'+why(results[1])+'</small></li>';
-  if(results[2].status==="fulfilled") renderPlanned("leg3",leg3); else $("leg3").innerHTML='<li class="empty err">Couldn’t load Chiltern trains from Marylebone.<br><small>'+why(results[2])+'</small></li>';
+  // a failed call keeps the last good data on screen, minus trains that have gone
+  const ok = i => results[i].status==="fulfilled", soon = x => (x.dep||x.when)>Date.now()-45000;
+  leg1=leg1.filter(soon); leg2=leg2.filter(soon); leg3=leg3.filter(soon); direct=direct.filter(soon);
+  const failMsg = (i,what) => '<li class="empty err">Couldn’t load '+what+'.<br><small>'+why(results[i])+'</small></li>';
+  if(ok(0)||leg1.length) renderLeg1(); else $("leg1").innerHTML=failMsg(0,"Liverpool Street departures");
+  if(ok(1)||leg2.length) renderPlanned("leg2",leg2,leg2live); else $("leg2").innerHTML=failMsg(1,"Met trains to Amersham");
+  if(ok(2)||leg3.length) renderPlanned("leg3",leg3); else $("leg3").innerHTML=failMsg(2,"Chiltern trains from Marylebone");
   renderConnections();
   document.querySelectorAll("section > ul").forEach(u=>{u.classList.remove("fresh");void u.offsetWidth;u.classList.add("fresh")});
-  $("updated").textContent = fail ? "Some data failed · "+hm(new Date()) : "Updated "+hm(new Date());
+  $("updated").textContent = fail ? "Some data is stale ("+((fail.reason&&fail.reason.message)||"network error")+") · "+hm(new Date()) : "Updated "+hm(new Date());
 }
 $("refresh").addEventListener("click",refresh);
 setInterval(()=>{const d=new Date();$("clock").textContent=hm(d)+":"+pad(d.getSeconds());},1000);
