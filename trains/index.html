@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#14121a">
+<title>Amersham Home Run</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* Layout: a single departure-board column — connection summary on top, then the three legs in travel order. */
+:root{
+  --bg:#f5f3f7; --surface:#ffffff; --ink:#1b1820; --muted:#6c6675; --rule:#e2dee8;
+  --met:#9b0056; --hc:#d799af; --circle:#e8b500; --chiltern:#3a7bd5;
+  --good:#1f8a52; --warn:#c77700; --bad:#c62828;
+  --best-bg:#f7e8f0;
+  --display:"Barlow Semi Condensed","Arial Narrow",system-ui,sans-serif;
+  --body:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#14121a; --surface:#1e1b25; --ink:#f0edf4; --muted:#a29bab; --rule:#2f2a37;
+  --met:#e0408f; --hc:#e6a9c0; --circle:#ffd02a; --chiltern:#6ea4ff;
+  --good:#4cc283; --warn:#f0a43a; --bad:#ff6b6b; --best-bg:#33192a; color-scheme:dark}}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.45 var(--body);
+  padding:calc(env(safe-area-inset-top,0px) + 16px) 16px calc(env(safe-area-inset-bottom,0px) + 32px)}
+.wrap{max-width:720px;margin:0 auto;display:grid;gap:18px}
+header{display:flex;justify-content:space-between;align-items:end;gap:12px;flex-wrap:wrap}
+h1{font:700 2rem/1 var(--display);margin:0;letter-spacing:.01em;text-wrap:balance}
+h1 small{display:block;font:500 .8rem/1.4 var(--body);color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px}
+.clock{font:700 1.6rem/1 var(--mono);font-variant-numeric:tabular-nums}
+.meta{font-size:.8rem;color:var(--muted);text-align:right}
+button{font:600 .85rem var(--body);cursor:pointer;border-radius:8px;border:1px solid var(--rule);background:var(--surface);color:var(--ink);padding:7px 12px}
+button:focus-visible,a:focus-visible{outline:2px solid var(--met);outline-offset:2px}
+.status{display:flex;flex-wrap:wrap;gap:8px}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:.8rem;font-weight:600;padding:4px 10px;border-radius:999px;background:var(--surface);border:1px solid var(--rule)}
+.pill i{width:8px;height:8px;border-radius:50%;background:var(--good)}
+.pill.warn i{background:var(--warn)} .pill.bad i{background:var(--bad)}
+section{background:var(--surface);border:1px solid var(--rule);border-radius:12px;overflow:hidden}
+.sec-head{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--rule);flex-wrap:wrap}
+.sec-head h2{margin:0;font:700 1.15rem/1.2 var(--display);letter-spacing:.02em;display:flex;align-items:center;gap:10px}
+.leg-no{font:700 .75rem var(--mono);color:var(--muted)}
+.bar{width:6px;align-self:stretch;border-radius:3px;background:var(--met)}
+.links{display:flex;gap:6px}
+.links a{font:600 .78rem var(--body);text-decoration:none;color:var(--ink);border:1px solid var(--rule);border-radius:6px;padding:5px 9px;white-space:nowrap}
+.links a:hover{border-color:var(--ink)}
+ul{list-style:none;margin:0;padding:0}
+li.row{display:grid;grid-template-columns:4.2rem 1fr auto;gap:12px;align-items:center;padding:10px 14px;border-top:1px solid var(--rule)}
+li.row:first-child{border-top:0}
+.t{font:700 1.1rem var(--mono);font-variant-numeric:tabular-nums}
+.due{font:700 1rem var(--mono);font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+.t small{display:block;font:500 .68rem var(--body);color:var(--muted)}
+.due small{font:500 .72rem var(--body);color:var(--muted);display:block}
+.desc{min-width:0}
+.desc b{font-weight:600}
+.desc>span{display:block;font-size:.8rem;color:var(--muted);overflow-wrap:anywhere}
+.line-tag{display:inline-block;font:700 .66rem var(--body);letter-spacing:.06em;text-transform:uppercase;padding:2px 6px;border-radius:4px;color:#fff;background:var(--met);margin-right:6px;vertical-align:2px}
+.line-tag.hammersmith-city{background:var(--hc);color:#2a0b18}
+.line-tag.circle{background:var(--circle);color:#231c00}
+.line-tag.chiltern{background:var(--chiltern)}
+.through{color:var(--met);font-weight:600}
+.empty{padding:16px 14px;color:var(--muted);font-size:.9rem}
+.err{color:var(--bad)}
+/* connections */
+.conn li.row{grid-template-columns:4.2rem 1fr 1fr;align-items:start}
+.opt{min-width:0;border-radius:8px;padding:6px 8px}
+.opt .k{font:600 .68rem var(--body);letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.opt .v{font:700 1.05rem var(--mono);font-variant-numeric:tabular-nums}
+.opt .s{font-size:.75rem;color:var(--muted)}
+.opt .v .s{font:500 .75rem var(--body)}
+.opt .links{margin-top:6px;flex-wrap:wrap}
+.opt .links a{font-size:.72rem;padding:3px 7px}
+.opt.best{background:var(--best-bg)}
+.opt .dur{font-size:.8rem;color:var(--muted)}
+.opt .dur b{font:700 .9rem var(--mono);color:var(--ink)}
+/* journey timeline inside each option: coloured rail per line, dotted where you are on foot */
+.tl{margin-top:8px;font-size:.8rem}
+.tl li{position:relative;padding:0 0 10px 18px;line-height:1.25}
+.tl li:last-child{padding-bottom:0}
+.tl li::before{content:"";position:absolute;left:0;top:.15em;width:10px;height:10px;border-radius:50%;background:var(--seg)}
+.tl li::after{content:"";position:absolute;left:3.5px;top:calc(.15em + 10px);bottom:-.15em;width:3px;background:var(--seg)}
+.tl li:last-child::after{display:none}
+.tl li.walk::after,.tl li.gap::after{width:0;background:none;border-left:3px dotted var(--muted)}
+.tl li.gap::before,.tl li.ride::before{display:none}
+.tl li.gap::after,.tl li.ride::after{top:-.15em}
+.tl li.ride{font-size:.72rem;color:var(--muted)}
+.tl b{font:700 .8rem var(--mono);font-variant-numeric:tabular-nums}
+.chip{display:inline-block;font-weight:600;font-size:.72rem;padding:2px 8px;border-radius:999px;color:var(--surface);background:var(--good)}
+.chip.tight{background:var(--warn)}
+.tl .sub{display:block;font-size:.72rem;color:var(--muted);margin-top:2px}
+.opt.best .k{color:var(--met)}
+.note{font-size:.78rem;color:var(--muted);padding:10px 14px;border-top:1px solid var(--rule)}
+.sort-note{border-top:0;border-bottom:1px solid var(--rule)}
+.settings{display:flex;gap:14px;flex-wrap:wrap;font-size:.85rem;color:var(--muted);padding:10px 14px;border-top:1px solid var(--rule)}
+.settings label{display:flex;gap:6px;align-items:center}
+.settings input{width:3.4rem;font:600 .85rem var(--mono);padding:4px 6px;border:1px solid var(--rule);border-radius:6px;background:var(--bg);color:var(--ink)}
+@media (max-width:480px){
+  li.row{grid-template-columns:3.6rem 1fr auto;gap:8px}
+  .conn li.row{grid-template-columns:1fr 1fr}
+  .conn li.row .t{grid-column:1/-1}
+  h1{font-size:1.7rem}
+}
+@media (prefers-reduced-motion:no-preference){.fresh{animation:fl .6s ease-out}@keyframes fl{from{background:var(--best-bg)}}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1><small>Liverpool Street → Amersham</small>Amersham Home Run</h1>
+    <div class="meta"><div class="clock" id="clock">--:--</div><div id="updated">Loading…</div></div>
+  </header>
+
+  <div class="status" id="status"></div>
+
+  <section class="conn" aria-labelledby="h-conn">
+    <div class="sec-head">
+      <h2 id="h-conn"><span class="bar"></span>Leave Liverpool Street on…</h2>
+      <button id="refresh" type="button">Refresh</button>
+    </div>
+    <div class="note sort-note">Soonest into Amersham first. For the same arrival, the latest Liverpool Street departure comes first.</div>
+    <ul id="conn"><li class="empty">Working out connections…</li></ul>
+    <div class="settings">
+      <label for="ride">Liverpool St → Baker St <input id="ride" type="number" min="5" max="30" value="14"> min</label>
+      <label for="chg">Change at Baker St <input id="chg" type="number" min="0" max="15" value="6"> min</label>
+      <label for="walk">Walk to Marylebone <input id="walk" type="number" min="3" max="20" value="9"> min</label>
+    </div>
+  </section>
+
+  <section aria-labelledby="h1l">
+    <div class="sec-head">
+      <h2 id="h1l"><span class="bar"></span><span class="leg-no">1</span>Liverpool Street → Baker Street</h2>
+      <div class="links" data-from="LVT" data-to="BST"></div>
+    </div>
+    <ul id="leg1"><li class="empty">Loading live departures…</li></ul>
+  </section>
+
+  <section aria-labelledby="h2l">
+    <div class="sec-head">
+      <h2 id="h2l"><span class="bar"></span><span class="leg-no">2</span>Baker Street → Amersham <span class="line-tag">Met</span></h2>
+      <div class="links" data-from="BST" data-to="AMS"></div>
+    </div>
+    <ul id="leg2"><li class="empty">Loading…</li></ul>
+  </section>
+
+  <section aria-labelledby="h3l">
+    <div class="sec-head">
+      <h2 id="h3l"><span class="bar" style="background:var(--chiltern)"></span><span class="leg-no">3</span>Marylebone → Amersham <span class="line-tag chiltern">Chiltern</span></h2>
+      <div class="links" data-from="MYB" data-to="AMS"></div>
+    </div>
+    <ul id="leg3"><li class="empty">Loading…</li></ul>
+  </section>
+
+  <section aria-labelledby="h-whole">
+    <div class="sec-head">
+      <h2 id="h-whole"><span class="bar"></span>Whole journey</h2>
+      <div class="links" data-from="LVT" data-to="AMS"></div>
+    </div>
+    <div class="note">Live data from the TfL Unified API, refreshed every 30 seconds. Tube times are live countdowns; Met and Chiltern rows from the journey planner are timetabled, so check the board at the station.</div>
+  </section>
+</div>
+
+<script>
+const API = "https://api.tfl.gov.uk";
+const ST = {
+  LVT:{name:"Liverpool Street",naptan:"940GZZLULVT",lat:51.5178,lon:-0.0823},
+  BST:{name:"Baker Street",naptan:"940GZZLUBST",lat:51.5226,lon:-0.1571},
+  MYB:{name:"London Marylebone",naptan:"910GMARYLBN",lat:51.5225,lon:-0.1631},
+  AMS:{name:"Amersham",naptan:"940GZZLUAMS",rail:"910GAMERSHM",lat:51.6740,lon:-0.6074}
+};
+const LINE_NAME = {"metropolitan":"Met","hammersmith-city":"H&C","circle":"Circle"};
+const $ = id => document.getElementById(id);
+const pad = n => String(n).padStart(2,"0");
+const hm = d => pad(d.getHours())+":"+pad(d.getMinutes());
+const mins = d => Math.round((d - Date.now())/60000);
+const esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+/* ---------- deep links ---------- */
+function citymapper(a,b){
+  return "https://citymapper.com/directions?startcoord="+a.lat+","+a.lon+"&startname="+encodeURIComponent(a.name)+
+    "&endcoord="+b.lat+","+b.lon+"&endname="+encodeURIComponent(b.name);
+}
+function gmaps(a,b){
+  return "https://www.google.com/maps/dir/?api=1&origin="+encodeURIComponent(a.name+" station, London")+
+    "&destination="+encodeURIComponent(b.name+" station")+"&travelmode=transit";
+}
+const NR_LIVE = "https://www.nationalrail.co.uk/live-trains/departures/london-marylebone/amersham/";
+const link = (href,label) => '<a href="'+href+'" target="_blank" rel="noopener">'+label+'</a>';
+document.querySelectorAll(".links").forEach(el=>{
+  const a=ST[el.dataset.from], b=ST[el.dataset.to];
+  el.innerHTML=link(citymapper(a,b),"Citymapper")+link(gmaps(a,b),"Google Maps")+
+               (el.dataset.from==="MYB"?link(NR_LIVE,"Live board"):"");
+});
+
+/* ---------- settings (remembered per device) ---------- */
+["ride","chg","walk"].forEach(id=>{
+  try{const v=localStorage.getItem("ahr-"+id); if(v) $(id).value=v;}catch(e){}
+  $(id).addEventListener("change",()=>{try{localStorage.setItem("ahr-"+id,$(id).value)}catch(e){} renderConnections();});
+});
+const num = id => Math.max(0, Number($(id).value)||0);
+
+/* ---------- data ---------- */
+async function getJSON(path){
+  const r = await fetch(API+path,{cache:"no-store"});
+  if(!r.ok) throw new Error("TfL returned "+r.status);
+  return r.json();
+}
+function plannerParams(d){
+  return "date="+d.getFullYear()+pad(d.getMonth()+1)+pad(d.getDate())+"&time="+pad(d.getHours())+pad(d.getMinutes());
+}
+/* Journey planner returns ~3 journeys; ask twice to cover a longer window. */
+async function planned(from,to,mode){
+  const out=[]; let when=new Date();
+  for(let i=0;i<2;i++){
+    const j = await getJSON("/Journey/JourneyResults/"+from+"/to/"+to+"?mode="+mode+"&"+plannerParams(when));
+    for(const jr of j.journeys||[]){
+      if(jr.legs.length!==1) continue;               // direct trains only
+      const leg=jr.legs[0];
+      const dep=new Date(leg.departureTime), arr=new Date(leg.arrivalTime);
+      if(out.some(x=>+x.dep===+dep)) continue;
+      const sp = leg.path && leg.path.stopPoints;      // calling points after departure, destination last
+      out.push({dep,arr,dur:jr.duration, stops: sp&&sp.length ? sp.length-1 : null,
+        towards:(leg.instruction&&leg.instruction.detailed||"").replace(/^.*towards\s*/i,""),
+        disrupted:!!leg.isDisrupted, cancelled: leg.isDisrupted && (leg.disruptions||[]).some(d=>/cancel/i.test(d.description||""))});
+    }
+    if(!out.length) break;
+    when=new Date(+out[out.length-1].dep+60000);
+  }
+  return out.filter(x=>x.dep>Date.now()-60000).sort((a,b)=>a.dep-b.dep);
+}
+
+let leg1=[], leg2=[], leg2live=[], leg3=[], direct=[];
+
+async function loadLeg1(){
+  const raw = await getJSON("/StopPoint/"+ST.LVT.naptan+"/Arrivals");
+  const seen=[];
+  leg1 = raw
+    .filter(p=>["metropolitan","hammersmith-city","circle"].includes(p.lineId) && /westbound/i.test(p.platformName||""))
+    .sort((a,b)=>a.timeToStation-b.timeToStation)
+    .filter(p=>{ // same physical train is listed under Met and H&C on shared track
+      if(seen.some(x=>x.id===p.vehicleId && Math.abs(x.tts-p.timeToStation)<150)) return false;
+      seen.push({id:p.vehicleId,tts:p.timeToStation}); return true;
+    })
+    .map(p=>({
+      line:p.lineId,
+      when:new Date(p.expectedArrival),
+      towards: (p.towards && p.towards!=="Check Front of Train") ? p.towards : (p.destinationName||"").replace(/ Underground Station$/,"") || "Check front of train",
+      unknown: !p.destinationNaptanId,
+      through: p.destinationNaptanId===ST.AMS.naptan,
+      where:p.currentLocation, platform:p.platformName
+    }));
+}
+async function loadLeg2(){
+  const [plan, arr] = await Promise.all([
+    planned(ST.BST.naptan, ST.AMS.naptan, "tube"),
+    getJSON("/StopPoint/"+ST.BST.naptan+"/Arrivals?mode=tube").catch(()=>[])
+  ]);
+  leg2 = plan;
+  leg2live = arr.filter(p=>p.lineId==="metropolitan" && p.destinationNaptanId===ST.AMS.naptan)
+               .map(p=>({when:new Date(p.expectedArrival),platform:p.platformName,where:p.currentLocation}));
+}
+/* Timetabled through trains: live arrivals only reveal a train's destination a few minutes out. */
+async function loadDirect(){ direct = await planned(ST.LVT.naptan, ST.AMS.naptan, "tube"); }
+async function loadLeg3(){ leg3 = await planned(ST.MYB.naptan, ST.AMS.rail, "national-rail"); }
+async function loadStatus(){
+  const s = await getJSON("/Line/metropolitan,hammersmith-city,circle,chiltern-railways/Status");
+  const names={"metropolitan":"Metropolitan","hammersmith-city":"Hammersmith & City","circle":"Circle","chiltern-railways":"Chiltern"};
+  $("status").innerHTML = s.map(l=>{
+    const st=l.lineStatuses[0]||{}, sev=st.statusSeverity;
+    const cls = sev===10||sev===18||sev===19 ? "" : (sev>=7?"warn":"bad");
+    return '<span class="pill '+cls+'" title="'+esc(st.reason||"")+'"><i></i>'+names[l.id]+': '+esc(st.statusSeverityDescription||"Unknown")+'</span>';
+  }).join("");
+}
+
+/* ---------- rendering ---------- */
+const stopsLabel = n => n==null ? "" : n===0 ? " · non-stop" : " · "+n+(n===1?" stop":" stops");
+function dueLabel(d){const m=mins(d); return m<=0?"Due":m+" min";}
+function renderLeg1(){
+  if(!leg1.length){$("leg1").innerHTML='<li class="empty">No westbound Met, H&amp;C or Circle trains in the next half hour.</li>';return;}
+  $("leg1").innerHTML = leg1.slice(0,8).map(t=>
+    '<li class="row"><span class="t">'+hm(t.when)+'</span><span class="desc"><b><span class="line-tag '+t.line+'">'+LINE_NAME[t.line]+'</span>'+esc(t.towards)+'</b>'+
+    (t.through?'<span class="through">Runs through to Amersham — no change</span>':'')+
+    '<span>'+esc(t.where||"")+'</span></span><span class="due">'+dueLabel(t.when)+'</span></li>').join("");
+}
+function renderPlanned(id,list,live){
+  if(!list.length){$(id).innerHTML='<li class="empty">No direct trains found in the next couple of hours.</li>';return;}
+  $(id).innerHTML = list.slice(0,6).map(t=>{
+    const l = live && live.find(x=>Math.abs(x.when-t.dep)<5*60000);
+    const sub = l ? 'Live: '+hm(l.when)+(l.platform?' · '+esc(l.platform.replace(/^.*- /,"")):'') : (t.disrupted?'<span class="err">Disruption reported</span>':'Timetabled');
+    return '<li class="row"><span class="t">'+hm(t.dep)+'</span><span class="desc"><b>Arrives Amersham '+hm(t.arr)+'</b><span>'+t.dur+' min'+stopsLabel(t.stops)+' · '+sub+'</span></span><span class="due">'+dueLabel(l?l.when:t.dep)+'</span></li>';
+  }).join("");
+}
+const SEG = {"metropolitan":"var(--met)","hammersmith-city":"var(--hc)","circle":"var(--circle)"};
+const MET = "var(--met)", CHI = "var(--chiltern)";
+function timeline(items){
+  return '<ul class="tl">'+items.map(i=> i.chip
+    ? '<li class="gap"><span class="chip'+(i.tight?' tight':'')+'">'+i.chip+'</span><span class="sub">'+i.sub+'</span></li>'
+    : i.mins!=null ? '<li class="ride" style="--seg:'+i.seg+'">'+i.mins+' min'+(i.note||"")+'</li>'
+    : '<li'+(i.walk?' class="walk"':'')+' style="--seg:'+(i.seg||"var(--muted)")+'"><b>'+i.time+'</b> '+i.name+'</li>').join("")+'</ul>';
+}
+function renderConnections(){
+  const ride=num("ride")*60000, chg=num("chg")*60000, walk=num("walk")*60000;
+  // live departures, plus the next timetabled through trains that live data hasn't identified yet
+  const rows = leg1.filter((t,i)=>i<5||t.through).map(t=>({...t,direct:t.through&&direct.find(d=>Math.abs(d.dep-t.when)<5*60000)}));
+  direct.filter(d=>d.dep>Date.now() && !rows.some(t=>t.direct===d)).slice(0,2)
+    .forEach(d=>rows.push({line:"metropolitan",when:d.dep,through:true,direct:d,timetabled:true}));
+  rows.sort((a,b)=>a.when-b.when);
+  if(!rows.length){$("conn").innerHTML='<li class="empty">No Liverpool Street departures to plan from right now.</li>';return;}
+  $("conn").innerHTML = rows.map(t=>{
+    let atBST = new Date(+t.when+ride);
+    let met;
+    if(t.through){ // stay on: find the same train in the Baker St timetable
+      const d=t.direct;
+      met = (d && leg2.find(x=>Math.abs(x.arr-d.arr)<2*60000)) || leg2.find(x=>Math.abs(x.dep-atBST)<6*60000) || (d ? {dep:atBST,arr:d.arr,stops:null} : null);
+      if(met){ met={...met,stay:true}; atBST=new Date(+met.dep); }
+    }
+    if(!met) met = leg2.find(x=>x.dep>=+atBST+chg);
+    const chi = leg3.find(x=>x.dep>=+atBST+walk && !x.cancelled);
+    const best = met&&chi ? (met.arr<=chi.arr?"met":"chi") : (met?"met":chi?"chi":null);
+    const first = {time:hm(t.when),name:"Liverpool St",seg:SEG[t.line]};
+    const ride1 = {mins:Math.round((atBST-t.when)/60000),seg:SEG[t.line]};
+    const rideOn = (x,seg) => ({mins:Math.round((x.arr-x.dep)/60000),seg,note:stopsLabel(x.stops)});
+    const atBaker = {time:(met&&met.stay?"":"~")+hm(atBST),name:"Baker St",walk:true};   // ~ = estimated from the ride setting
+    const gap = (x,need,what) => {
+      const g=Math.round((x.dep-atBST)/60000), spare=g-need;
+      return {chip:g+" min to change", tight:spare<2, sub:what+(spare>0?spare+" min spare":"no spare")};
+    };
+    const metTl = met && timeline(met.stay
+      ? [first,{mins:Math.round((met.dep-t.when)/60000),seg:MET},{time:hm(met.dep),name:"Baker St · stay on",seg:MET},rideOn(met,MET),{time:hm(met.arr),name:"Amersham",seg:MET}]
+      : [first,ride1,atBaker,gap(met,num("chg"),""),{time:hm(met.dep),name:"Baker St · Met",seg:MET},rideOn(met,MET),{time:hm(met.arr),name:"Amersham",seg:MET}]);
+    const chiTl = chi && timeline(
+        [first,ride1,atBaker,gap(chi,num("walk"),num("walk")+" min walk, "),{time:hm(chi.dep),name:"Marylebone",seg:CHI},rideOn(chi,CHI),{time:hm(chi.arr),name:"Amersham",seg:CHI}]);
+    const opt=(key,label,x,tl,links)=> x
+      ? '<div class="opt'+(best===key?' best':'')+'"><div class="k">'+label+(best===key?' · fastest':'')+'</div><div class="v">'+hm(x.arr)+' <span class="s">at Amersham</span></div><div class="dur"><b>'+Math.max(0,mins(x.arr))+' min</b> from now</div>'+tl+'<div class="links">'+links+'</div></div>'
+      : '<div class="opt"><div class="k">'+label+'</div><div class="v">—</div><div class="s">No train found</div></div>';
+    const html = '<li class="row"><span class="t"><span class="line-tag '+t.line+'">'+LINE_NAME[t.line]+'</span>'+hm(t.when)+'<small>'+(mins(t.when)<=0?'Due':'in '+mins(t.when)+' min')+(t.timetabled?' · timetabled':'')+'</small>'+'</span>'+
+      opt("met",met&&met.stay?"Direct Met":"Via Met",met,metTl,link(citymapper(ST.BST,ST.AMS),"Citymapper"))+
+      opt("chi","Via Chiltern",chi,chiTl,link(citymapper(ST.MYB,ST.AMS),"Citymapper")+link(NR_LIVE,"Live board"))+'</li>';
+    return {html, when:+t.when, arr: best==="met" ? +met.arr : best==="chi" ? +chi.arr : Infinity};
+  }).sort((a,b)=>a.arr-b.arr||b.when-a.when).map(r=>r.html).join("");   // soonest into Amersham first
+}
+
+/* ---------- loop ---------- */
+async function refresh(){
+  $("updated").textContent="Updating…";
+  const results = await Promise.allSettled([loadLeg1(),loadLeg2(),loadLeg3(),loadStatus(),loadDirect()]);
+  const fail = results.find(r=>r.status==="rejected");
+  const why = r => esc((r.reason&&r.reason.message)||String(r.reason)) + ' · page origin: '+esc(location.protocol+'//'+(location.host||'(local file)'));
+  if(results[0].status==="fulfilled") renderLeg1(); else $("leg1").innerHTML='<li class="empty err">Couldn’t load Liverpool Street departures.<br><small>'+why(results[0])+'</small></li>';
+  if(results[1].status==="fulfilled") renderPlanned("leg2",leg2,leg2live); else $("leg2").innerHTML='<li class="empty err">Couldn’t load Met trains to Amersham.<br><small>'+why(results[1])+'</small></li>';
+  if(results[2].status==="fulfilled") renderPlanned("leg3",leg3); else $("leg3").innerHTML='<li class="empty err">Couldn’t load Chiltern trains from Marylebone.<br><small>'+why(results[2])+'</small></li>';
+  renderConnections();
+  document.querySelectorAll("section > ul").forEach(u=>{u.classList.remove("fresh");void u.offsetWidth;u.classList.add("fresh")});
+  $("updated").textContent = fail ? "Some data failed · "+hm(new Date()) : "Updated "+hm(new Date());
+}
+$("refresh").addEventListener("click",refresh);
+setInterval(()=>{const d=new Date();$("clock").textContent=hm(d)+":"+pad(d.getSeconds());},1000);
+refresh();
+setInterval(()=>{ if(!document.hidden) refresh(); },30000);
+document.addEventListener("visibilitychange",()=>{ if(!document.hidden) refresh(); });
+</script>
+</body>
+</html>
